@@ -33,17 +33,19 @@ node tools/test_solver.js
 ## Update rules
 
 * A recipe runs when its clock is above 0%.
-* Editing a recipe's clock or floor re-sizes it to cover the consumption of
-  its first output by the running recipes, plus the floor.
+* Machine counts are whole numbers. Editing a recipe's clock or floor
+  re-sizes it to the fewest machines that cover the consumption of its first
+  output by the running recipes, plus the floor. Any recipe's count can also
+  be typed in; its suppliers follow.
 * Then each input of that recipe (power included) is checked. If exactly one
   running recipe produces it, that producer is re-sized the same way, and the
   check repeats from there (a worklist that stops when nothing changes, or
   after 20 000 steps in a runaway feedback loop).
 * If two or more running recipes produce an input, none is touched. Deficits
-  show as yellow on the consumers' inputs and red on the producers' outputs;
-  red rows get an editable machine count. A power deficit marks every running
-  generator red.
-* A floor is a lower bound on the item's net production; when several running
+  show as yellow on the consumers' inputs and red on the producers' outputs.
+  A power deficit marks every running generator red.
+* A floor is a lower bound on the item's net production. Generators have no
+  floor; they follow power demand. when several running
   recipes share an output, the largest floor applies. A by-product also drives
   sizing when its recipe is the only running producer of it.
 * Orange: the item's floor is below the rate needed to build every building
@@ -86,5 +88,7 @@ Numbers entered by hand, worth checking if something looks off:
   stop propagation. One fueled augmentor, one Main Portal, one pressurizer.
 * The old plan had no producer for Compacted Coal, so Alternate: Compacted
   Coal is added.
-* Finally each running recipe's floor is set to its current net output, so
-  the sheet reproduces itself when you change a clock.
+* End products that nothing consumes and that had no need get a floor equal
+  to what they make, so they keep their machines when a clock changes.
+* Balancing runs with fractional counts; at the end every count is rounded
+  up, and any multi-producer item the rounding left short is raised again.

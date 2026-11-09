@@ -6,7 +6,7 @@
  * State per recipe r:
  *   c[r]  clock as a fraction (0 = recipe disabled, 1 = 100%)
  *   f[r]  net production floor for the recipe's primary (first) output, per min
- *   n[r]  number of machines (continuous; buildings are ceil(n))
+ *   n[r]  number of machines (always a whole number)
  *
  * Flows are kept incrementally: prod[k] and cons[k] are the total
  * production and consumption of item k over the whole sheet.  Power is an
@@ -16,8 +16,8 @@
  * Policies (see README for the reasoning):
  *  - target(k) = max floor over active recipes whose primary output is k.
  *  - An item is in deficit when net(k) < target(k).
- *  - Sizing a recipe: the smallest n that makes net(primary) reach its target,
- *    with the other producers held fixed.  A by-product also drives sizing
+ *  - Sizing a recipe: the smallest whole n that makes net(primary) reach its
+ *    target, with the other producers held fixed.  A by-product also drives sizing
  *    when this recipe is that by-product's only active producer.
  *  - Propagation: when a recipe's consumption changes, each of its inputs is
  *    checked; if that input has exactly one active producer, that producer is
@@ -30,6 +30,8 @@
   const REL = 1e-9;
   const MANUAL = { augment: 1, manual: 1 };
   const MAX_STEPS = 20000;
+  /* Round up to a whole machine, forgiving float noise just above an integer. */
+  const whole = (x) => (x > 1e-6 ? Math.ceil(x - 1e-6) : 0);
 
   function Solver(game) {
     this.game = game;
@@ -40,6 +42,7 @@
     this.P = this.itemIdx.Power;
     const R = game.recipes;
     this.R = R;
+    this.integer = true; // whole machine counts; tools may switch it off
     this.rIdx = {};
     R.forEach((r, i) => (this.rIdx[r.id] = i));
     const NI = itemKeys.length;
@@ -89,6 +92,8 @@
     if (rec.p > 0) this.cons[this.P] += sign * n * rec.p * Math.pow(c, rec.pe);
     if (rec.boost) this.B += s * rec.boost;
   };
+
+  Solver.prototype.whole = whole;
 
   Solver.prototype.setN = function (r, n) {
     this.contrib(r, -1);
@@ -150,7 +155,7 @@
       const need = (this.target(k) + consOthers - m * prodOthers) / per;
       if (need > best) best = need;
     });
-    return best;
+    return this.integer ? whole(best) : best;
   };
 
   /* Re-size the sole active producers of r's inputs, recursively. */
@@ -196,14 +201,22 @@
     this.propagate(r);
   };
 
+  /* Generators, augmentors and recipes without products take no floor. */
+  Solver.prototype.hasFloor = function (r) {
+    const o = this.outs[r];
+    return !this.manual[r] && o.length > 0 && o[0][0] !== this.P;
+  };
+
   Solver.prototype.setFloor = function (r, f) {
+    if (!this.hasFloor(r)) return;
     this.f[r] = Math.max(0, +f || 0);
     if (!this.manual[r]) this.setN(r, this.size(r));
     this.propagate(r);
   };
 
   Solver.prototype.setCount = function (r, n) {
-    this.setN(r, Math.max(0, +n || 0));
+    n = Math.max(0, +n || 0);
+    this.setN(r, this.integer ? whole(n) : n);
     this.propagate(r);
   };
 
@@ -215,10 +228,11 @@
       if (r !== undefined && !this.manual[r]) this.c[r] = v;
     }
     for (const [id, v] of Object.entries(s.f || {})) {
-      const r = this.rIdx[id]; if (r !== undefined) this.f[r] = v;
+      const r = this.rIdx[id];
+      if (r !== undefined && this.hasFloor(r)) this.f[r] = v;
     }
     for (const [id, v] of Object.entries(s.n || {})) {
-      const r = this.rIdx[id]; if (r !== undefined) this.n[r] = v;
+      const r = this.rIdx[id]; if (r !== undefined) this.n[r] = this.integer ? whole(v) : v;
     }
     for (let r = 0; r < this.R.length; r++) this.contrib(r, +1);
   };
@@ -246,7 +260,7 @@
 
   Solver.prototype.buildings = function (r) {
     if (this.R[r].kind === "gather" || !this.isActive(r)) return 0;
-    return Math.max(0, Math.ceil(this.n[r] - 1e-6));
+    return this.n[r];
   };
 
   /* Power summary: produced (with boost), consumed, net, target. */

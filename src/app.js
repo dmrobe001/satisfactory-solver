@@ -78,8 +78,7 @@
     if (manual) clockCell = `<span class="fixed">fixed 100%</span>`;
     else if (fixedClock(rec)) clockCell = `<label class="fixed"><input type="checkbox" class="clk" id="clk-${r}"> on</label>`;
     else clockCell = `<input class="cell-in clk" type="number" id="clk-${r}" min="0" max="${rec.mc * 100}" step="any" aria-label="Clock %">`;
-    const hasOut = rec.outs.length > 0;
-    const floorCell = hasOut && !manual
+    const floorCell = S.hasFloor(r)
       ? `<input class="cell-in flr" type="number" id="flr-${r}" min="0" step="any" aria-label="Floor per minute">`
       : `<span class="fixed">—</span>`;
     const field = (label, inner, cls = "") => `<div class="fld ${cls}"><span class="fl">${label}</span>${inner}</div>`;
@@ -88,13 +87,15 @@
         `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}</span>` +
         `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}</span></div>` +
         `<div class="fields">` +
-          field("Clock %", clockCell) + field("Floor /min", floorCell) + field("Build need", `<span class="need c-need"></span>`) +
+          field("Clock %", clockCell) +
+          field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
+          (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
+          field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
       `<div class="band b-in"><span class="fl">Inputs <i>per machine · total</i></span><div class="flow"></div></div>` +
-      `<div class="band b-out"><span class="fl">Outputs <i>per machine · total</i></span><div class="flow"></div>` +
-        `<div class="fields">` +
-          field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="any" readonly aria-label="Machines"><span class="bld"></span>`, "f-cnt") +
+      `<div class="band b-out"><div class="outs"><span class="fl">Outputs <i>per machine · total</i></span><div class="flow"></div></div>` +
+        `<div class="fields pwr">` +
           field("MW @100%", `<span class="pw c-p100"></span>`) + field("MW @clock", `<span class="pw c-pclk"></span>`) + field("MW total", `<span class="pw c-ptot"></span>`) +
         `</div>` +
       `</div>`;
@@ -102,7 +103,7 @@
     return {
       tr, rec, search,
       inFlow: $(".b-in .flow", tr), outFlow: $(".b-out .flow", tr),
-      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr), bld: $(".bld", tr),
+      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr),
       need: $(".c-need", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
       flags: { in: false, mid: false, out: false },
     };
@@ -121,7 +122,7 @@
       if (t.value !== "" && isNaN(+t.value)) return;
       S.setFloor(r, +t.value || 0);
     } else if (t.classList.contains("cnt")) {
-      if (t.readOnly || t.value === "" || isNaN(+t.value)) return;
+      if (t.value === "" || isNaN(+t.value)) return;
       S.setCount(r, +t.value);
     } else return;
     hideBanner();
@@ -132,6 +133,24 @@
     // normalise what is shown once the user leaves a field (e.g. clamped clocks)
     if (e.target.classList.contains("cell-in")) { e.target.dataset.dirty = ""; refresh(); }
   });
+
+  /* ---- which fields each recipe shows ---- */
+  const VIEW = ["mach", "in", "out", "power"];
+  let view = { mach: true, in: true, out: true, power: true };
+  try { view = Object.assign(view, JSON.parse(localStorage.getItem(STORE + ".view") || "{}")); } catch (e) { /* ignore */ }
+  function applyView() {
+    VIEW.forEach((k) => {
+      $("#sheet").classList.toggle("hide-" + k, !view[k]);
+      const cb = $("#view-" + k); if (cb) cb.checked = view[k];
+    });
+  }
+  $("#viewSet").addEventListener("change", (e) => {
+    const k = e.target.dataset.v; if (!k) return;
+    view[k] = e.target.checked;
+    try { localStorage.setItem(STORE + ".view", JSON.stringify(view)); } catch (err) { /* ignore */ }
+    applyView();
+  });
+  applyView();
 
   /* ---- derived numbers ---- */
   let derived = null;
@@ -180,11 +199,6 @@
         (active && n > 0 ? ` <i>· ${fmt(per * n)}</i>` : "") + `</span>`;
     }
     const rec = R[r];
-    if (!isOut && rec.p > 0) {
-      const pw = S.machinePower(r, cc);
-      h += `<span class="it">Power</span><span class="rt">${fmt(pw)} MW` +
-        (active && n > 0 ? ` <i>· ${fmt(pw * n)}</i>` : "") + `</span>`;
-    }
     if (isOut && rec.boost) h += `<span class="it">Grid boost</span><span class="rt">+${rec.boost * 100}%</span>`;
     return h || `<span class="it fixed">—</span><span></span>`;
   }
@@ -230,11 +244,7 @@
       row.tr.classList.toggle("w-mid", fmid);
       row.flags = { in: fin, mid: fmid, out: fout };
       // count
-      const editable = S.manual[r] || (fout && active);
-      row.cnt.readOnly = !editable;
-      setVal(row.cnt, S.n[r] ? trim(S.n[r].toFixed(3)) : "0");
-      const b = S.buildings(r);
-      row.bld.textContent = rec.kind === "gather" ? (active ? "gatherers" : "") : b ? b + " bldg" : "";
+      setVal(row.cnt, String(S.n[r] || 0));
       // flows
       row.inFlow.innerHTML = flowHTML(S.ins[r], r, active, false);
       row.outFlow.innerHTML = flowHTML(S.outs[r], r, active, true);

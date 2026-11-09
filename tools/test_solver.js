@@ -12,6 +12,7 @@ function check(name, got, want, tol = 1e-6) {
   if (!ok) fails++;
   console.log((ok ? "ok   " : "FAIL ") + name + ": got " + got + (ok ? "" : ", want " + want));
 }
+function truthy(name, v) { if (!v) fails++; console.log((v ? "ok   " : "FAIL ") + name); }
 
 // Chain: ore -> ingot -> plate, powered by coal.
 for (const r of ["Miner2_Normal_OreIron", "IngotIron", "IronPlate", "Miner1_Normal_Coal",
@@ -19,25 +20,34 @@ for (const r of ["Miner2_Normal_OreIron", "IngotIron", "IronPlate", "Miner1_Norm
 s.setFloor(id("IronPlate"), 60);
 check("plates: 60/min at 20/min per constructor", s.n[id("IronPlate")], 3);
 check("ingots: 90/min at 30 per smelter", s.n[id("IngotIron")], 3);
-check("ore miners: 90/120", s.n[id("Miner2_Normal_OreIron")], 0.75);
+check("ore miners: 90/120 rounds up to 1", s.n[id("Miner2_Normal_OreIron")], 1);
 check("iron plate net = floor", s.net(item("IronPlate")), 60);
 const pw = s.power();
-check("power balanced", pw.net, 0);
-check("coal gens sized from demand", s.n[id("Burn_Coal_GeneratorCoal")], pw.demand / 75);
-check("water extractor follows generators", s.n[id("WaterExtractor")], s.n[id("Burn_Coal_GeneratorCoal")] * 45 / 120);
+truthy("power covered", pw.net >= 0 && !pw.deficit);
+check("coal gens: whole number covering demand", s.n[id("Burn_Coal_GeneratorCoal")], Math.ceil(pw.demand / 75 - 1e-6));
+truthy("every count is whole", Array.from(s.n).every((x) => x === Math.round(x)));
 
 // Halving the plate clock doubles constructors but keeps ingot demand.
 s.setClock(id("IronPlate"), 0.5);
 check("plates at 50% clock", s.n[id("IronPlate")], 6);
 check("ingots unchanged", s.n[id("IngotIron")], 3);
 
+// A typed count is rounded to a whole machine and pushes upstream.
+s.setCount(id("IronPlate"), 7.4);
+check("typed 7.4 plates -> 8", s.n[id("IronPlate")], 8);
+check("ingots follow typed count: 8 x 15/min / 30 -> 4", s.n[id("IngotIron")], 4);
+
 // A second active ingot recipe blocks propagation: nothing upstream moves.
+s.setCount(id("IronPlate"), 6);
 s.setClock(id("Alternate_IngotIron"), 1);
 const before = s.n[id("IngotIron")];
 s.setFloor(id("IronPlate"), 120);
 check("two ingot producers: ingots not updated", s.n[id("IngotIron")], before);
-console.log("ingot deficit flagged:", s.inDeficit(item("IronIngot")));
-if (!s.inDeficit(item("IronIngot"))) fails++;
+truthy("ingot deficit flagged", s.inDeficit(item("IronIngot")));
+
+// Generators take no floor.
+s.setFloor(id("Burn_Coal_GeneratorCoal"), 1000);
+check("generator floor ignored", s.f[id("Burn_Coal_GeneratorCoal")], 0);
 
 // Turning the recipe off removes its consumption again.
 s.reset();
@@ -45,22 +55,30 @@ s.setClock(id("IngotIron"), 1); s.setClock(id("Miner1_Normal_OreIron"), 1);
 s.setFloor(id("IngotIron"), 30); s.setClock(id("IngotIron"), 0);
 check("disabled recipe frees its miners", s.n[id("Miner1_Normal_OreIron")], 0);
 
-// Augmentor boost: 1 x 10% augmentor plus coal; generators shrink by 1/1.1.
+// Augmentor boost: 1 x 10% augmentor plus coal generators against a fixed
+// 1000 MW demand (4 Main Portals).
 s.reset();
-s.setClock(id("Burn_Coal_GeneratorCoal"), 1); s.setFloor(id("Burn_Coal_GeneratorCoal"), 1100);
-check("coal only: 1100/75 gens", s.n[id("Burn_Coal_GeneratorCoal")], 1100 / 75);
-
+s.setClock(id("Burn_Coal_GeneratorCoal"), 1);
 s.setCount(id("Augmenter10"), 1);
-s.setFloor(id("Burn_Coal_GeneratorCoal"), 1100);
-check("with augmentor: (1100/1.1 - 500)/75 gens", s.n[id("Burn_Coal_GeneratorCoal")], (1100 / 1.1 - 500) / 75);
-check("net power = floor", s.net(s.P), 1100);
+s.setCount(id("MainPortal"), 4);
+s.setClock(id("Burn_Coal_GeneratorCoal"), 1); // re-size now that demand exists
+const p2 = s.power();
+const want = Math.ceil((1000 / 1.1 - 500) / 75 - 1e-6);
+check("with augmentor: ceil((demand/1.1 - 500)/75) gens", s.n[id("Burn_Coal_GeneratorCoal")], want);
+truthy("net power >= 0", p2.net >= -1e-6);
 
 // A feedback loop (plastic <-> rubber alternates) still converges.
 s.reset();
 for (const r of ["Alternate_RecycledRubber", "Alternate_Plastic_1", "Rubber", "Plastic",
                  "OilExtractor_Normal", "WaterExtractor"]) s.setClock(id(r), 1);
 s.setFloor(id("Alternate_RecycledRubber"), 100);
-console.log("loop converged:", s.converged, "rubber net", s.net(item("Rubber")).toFixed(3));
-if (!s.converged) fails++;
+truthy("loop converged (rubber net " + s.net(item("Rubber")).toFixed(3) + ")", s.converged);
+
+// The default plan loads without deficits.
+s.reset();
+s.load(JSON.parse(fs.readFileSync(path.join(__dirname, "../data/default_plan.json"))));
+const def = s.itemKeys.filter((k, i) => s.inDeficit(i));
+truthy("default plan has no deficits " + JSON.stringify(def), def.length === 0);
+
 console.log(fails ? fails + " FAILED" : "all passed");
 process.exit(fails ? 1 : 0);

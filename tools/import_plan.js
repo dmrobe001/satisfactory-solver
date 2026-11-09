@@ -26,6 +26,7 @@ const game = JSON.parse(fs.readFileSync(path.join(ROOT, "data/game.json")));
 const oldPath = process.argv[2] || path.join(ROOT, "data/old_plan_factory_ledger.json");
 const old = JSON.parse(fs.readFileSync(oldPath));
 const S = new Solver(game);
+S.integer = false; // balance with fractional counts, round up at the end
 const idx = (id) => S.rIdx[id];
 
 // ---- defaults that replace the old plan's extraction --------------------
@@ -127,18 +128,45 @@ for (let i = 0; i < 200; i++, rounds++) {
 }
 }
 for (let i = 0; i < 5; i++) { balance(); sweep(); }
+
+// ---- floors: end products nothing consumes keep what they make --------
+for (const r of order) {
+  const k = S.outs[r][0] && S.outs[r][0][0];
+  if (k === undefined || !S.hasFloor(r) || S.target(k) > 0) continue;
+  if (S.consumersOf[k].some((q) => S.isActive(q))) continue;
+  const net = S.net(k);
+  if (net > 1e-6) S.f[r] = Math.round(net * 1e4) / 1e4;
+}
+
+// ---- whole machines -------------------------------------------------------
+// Round every count up, re-size the driven recipes top-down (size() now
+// rounds up), then raise multi-producer items that rounding left short.
+S.integer = true;
+for (const r of order) if (!S.manual[r]) S.setN(r, S.whole(S.n[r]));
+sweep(); sweep();
+for (let i = 0; i < 100; i++) {
+  let moved = false;
+  for (let k = 0; k < S.itemKeys.length; k++) {
+    if (!S.inDeficit(k)) continue;
+    const prods = S.primaryOf[k].filter((r) => S.isActive(r) && !S.manual[r]);
+    if (!prods.length) continue;
+    const gap = S.target(k) - S.net(k);
+    let made = 0;
+    for (const r of prods) made += S.n[r] * S.outs[r][0][1] * S.c[r] * S.mult(k);
+    const scale = made > 0 ? (made + gap) / made : 1;
+    for (const r of prods) {
+      const nn = made > 0 ? S.whole(S.n[r] * scale) : S.whole(gap / (S.outs[r][0][1] * S.c[r] * S.mult(k)));
+      if (nn > S.n[r]) { S.setN(r, nn); S.propagate(r); moved = true; }
+    }
+  }
+  if (!moved) break;
+  sweep();
+}
+
 // Drop added producers that ended up unused.
 for (const id of Object.keys(added)) {
   const r = idx(id);
   if (S.n[r] < 1e-9) { S.setClock(r, 0); S.f[r] = 0; }
-}
-
-// ---- floors: lock in the surplus each running recipe now makes ----------
-for (const r of order) {
-  const k = S.outs[r][0] && S.outs[r][0][0];
-  if (k === undefined || k === S.P) continue;
-  const net = S.net(k);
-  if (net > 1e-6) S.f[r] = Math.round(net * 1e4) / 1e4;
 }
 
 const out = S.dump();

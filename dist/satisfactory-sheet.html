@@ -123,33 +123,31 @@ td.n, th.n { text-align: right; white-space: nowrap; }
 .band-l { border-right: 2px solid var(--line); }
 .band-r { border-left: 2px solid var(--line); }
 
-/* Recipe rows: three bands that sit side by side on wide screens and wrap
-   (recipe on top, inputs | outputs below, then one column) as space shrinks. */
+/* Recipe rows: up to three bands (inputs | recipe | outputs & power) that sit
+   side by side on wide screens and wrap as space shrinks; the field toggles
+   remove bands and the flex layout closes the gap. */
 #sheet { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
-.sheet-head, .row {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.5fr);
-  grid-template-areas: "in mid out";
-}
+.sheet-head, .row { display: flex; flex-wrap: wrap; }
 .sheet-head {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3; background: var(--surface-2);
   border-bottom: 1px solid var(--line); font-family: var(--font-display); text-transform: uppercase;
   letter-spacing: 0.06em; font-size: 0.78rem; color: var(--muted);
 }
 .sheet-head span { padding: 5px 10px; }
-.h-in { grid-area: in; } .h-mid { grid-area: mid; } .h-out { grid-area: out; }
+.h-in, .b-in { order: 1; flex: 1 1 240px; }
+.h-mid, .b-mid { order: 2; flex: 1.3 1 330px; }
+.h-out, .b-out { order: 3; flex: 1.5 1 300px; }
 .row { border-bottom: 1px solid var(--line); background: var(--surface); }
 .row:last-child { border-bottom: 0; }
 .band { padding: 6px 10px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.b-in { grid-area: in; }
-.b-mid { grid-area: mid; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
-.b-out { grid-area: out; }
-.b-in > .fl, .b-out > .fl { display: none; }
+.b-mid { border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+.b-in > .fl, .outs > .fl { display: none; }
+.outs { display: flex; flex-direction: column; gap: 2px; }
 .fl { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; color: var(--muted); }
 .fl i { font-style: normal; text-transform: none; letter-spacing: 0; }
 .fields { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: flex-start; }
 .fld { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .pw { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.85rem; min-width: 4.5em; }
-.f-cnt { flex-direction: column; }
 .row.idle { color: var(--muted); }
 .row.on .rn { font-weight: 600; }
 .rn { display: block; }
@@ -161,30 +159,37 @@ td.n, th.n { text-align: right; white-space: nowrap; }
 .flow .rt { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
 .flow .rt i { font-style: normal; color: var(--muted); }
 
+/* Field toggles */
+#sheet.hide-mach .rm, #sheet.hide-in .b-in, #sheet.hide-in .h-in,
+#sheet.hide-out .outs, #sheet.hide-power .pwr,
+#sheet.hide-out.hide-power .b-out, #sheet.hide-out.hide-power .h-out { display: none; }
+#sheet.hide-in .b-mid { border-left: 0; }
+.checks { display: inline-flex; flex-wrap: wrap; gap: 2px 12px; }
+.checks label { color: var(--ink); }
+.seg-label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); font-size: 0.85rem; }
+
+/* Warnings: yellow inputs, orange recipe, red outputs (and the count). */
 .row.w-in .b-in { background: var(--yel-bg); box-shadow: inset 4px 0 0 var(--yel-edge); }
 .row.w-mid .b-mid { background: var(--ora-bg); box-shadow: inset 4px 0 0 var(--ora-edge); }
 .row.w-out .b-out { background: var(--red-bg); box-shadow: inset -4px 0 0 var(--red-edge); }
+.row.w-out .cnt { border-color: var(--red-edge); background: var(--red-bg); }
 
 @media (max-width: 1000px) {
-  .row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "mid mid" "in out"; }
   .sheet-head { display: none; }
-  .b-mid { border: 0; border-bottom: 1px dashed var(--line); }
-  .b-in > .fl, .b-out > .fl { display: block; }
+  .b-mid { order: 0; flex-basis: 100%; border: 0; border-bottom: 1px dashed var(--line); }
+  .b-in > .fl, .outs > .fl { display: block; }
   .b-in { border-right: 1px dashed var(--line); }
+  #sheet.hide-out.hide-power .b-in, #sheet.hide-in .b-mid { border-right: 0; }
 }
 @media (max-width: 620px) {
-  .row { grid-template-columns: minmax(0, 1fr); grid-template-areas: "mid" "in" "out"; }
-  .b-in { border-right: 0; border-bottom: 1px dashed var(--line); }
+  .b-in { flex-basis: 100%; border-right: 0; border-bottom: 1px dashed var(--line); }
 }
+
 .cell-in {
   width: 6.4em; font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right;
   background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px;
 }
-.cell-in[readonly] { background: transparent; border-color: transparent; }
-.cnt:not([readonly]) { border-color: var(--red-edge); }
-.row.manual .cnt:not([readonly]) { border-color: var(--accent); }
 .cell-in:disabled { opacity: 0.4; }
-.bld { display: block; font-size: 0.74rem; color: var(--muted); text-align: right; }
 .gen { color: var(--gen); }
 .need { font-family: var(--font-mono); font-size: 0.82rem; white-space: nowrap; }
 .fixed { font-size: 0.78rem; color: var(--muted); }
@@ -221,7 +226,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
   <div class="legend" aria-label="Colour key">
     <span class="ly">input in deficit</span>
     <span class="lo">floor below build-material need</span>
-    <span class="lr">output in deficit (count editable)</span>
+    <span class="lr">output in deficit</span>
   </div>
 </header>
 
@@ -268,6 +273,14 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
         </span>
         <button class="btn" type="button" id="sortDir" aria-label="Reverse sort order">▲</button>
       </label>
+      <span class="seg-label">Show fields
+        <span class="checks" id="viewSet">
+          <label><input type="checkbox" id="view-mach" data-v="mach" checked> Machine &amp; layer</label>
+          <label><input type="checkbox" id="view-in" data-v="in" checked> Inputs</label>
+          <label><input type="checkbox" id="view-out" data-v="out" checked> Outputs</label>
+          <label><input type="checkbox" id="view-power" data-v="power" checked> Power</label>
+        </span>
+      </span>
       <span class="count" id="rowCount"></span>
     </div>
     <div id="sheet">
@@ -336,12 +349,12 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     </div>
     <div class="prose">
       <h3>How the sheet updates</h3>
-      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, none of them is touched; the shortfall shows in yellow on the consumers and red on the producers, whose machine counts become editable.</p>
+      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough whole machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, none of them is touched; the shortfall shows in yellow on the consumers and red on the producers. You can type any recipe’s machine count; its suppliers follow.</p>
       <p>Power is treated as one more input. A single running generator recipe follows the power demand automatically. With several generator recipes running, a power shortfall marks all of them red.</p>
       <p>The floor is a lower limit on the item’s net production. If several running recipes share an output, the largest of their floors applies. A by-product also drives sizing when its recipe is the only running producer of it.</p>
       <h3>Modelling choices</h3>
       <ul>
-        <li>Machine counts are fractional, as if the last machine were underclocked. Building counts round up.</li>
+        <li>Machine counts are whole numbers, rounded up, so most recipes run a small surplus. Lower the clock to trim it. Generators take no floor; they follow power demand.</li>
         <li>Consumer power scales as clock<sup>1.32</sup>; generator output and fuel use scale linearly. Converter, Particle Accelerator and Quantum Encoder use the average of their power cycle.</li>
         <li>Alien Power Augmentors add 500 MW each and multiply total grid production by 1 + 10% (or 30% when fed 5 Alien Power Matrix/min) per augmentor. Augmentors, the Main Portal (250 MW, 2 Singularity Cells/min) and the Resource Well Pressurizer (150 MW) take a typed machine count.</li>
         <li>Resource well extractors, geothermal generators and hand-gathered items have a fixed clock: on or off.</li>
@@ -360,6 +373,7 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
 window.DEFAULT_PLAN = {
  "c": {
   "RocketFuel": 0.953035,
+  "DarkEnergy": 1,
   "QuantumEnergy": 0.943829,
   "SuperpositionOscillator": 0.9,
   "TemporalProcessor": 0.589334,
@@ -486,7 +500,6 @@ window.DEFAULT_PLAN = {
   "Burn_RocketFuel_GeneratorFuel": 0.995237
  },
  "f": {
-  "DarkEnergy": 7.4672,
   "SuperpositionOscillator": 1.032,
   "TemporalProcessor": 1,
   "SpaceElevatorPart_12": 0.768,
@@ -505,7 +518,6 @@ window.DEFAULT_PLAN = {
   "AluminumSheet": 14,
   "EncasedIndustrialBeam": 40,
   "Stator": 0.05,
-  "Alternate_HeavyOilResidue": 162.4975,
   "Alternate_HeavyFlexibleFrame": 7,
   "Alternate_FusedWire": 13,
   "Alternate_CopperRotor": 21,
@@ -549,132 +561,133 @@ window.DEFAULT_PLAN = {
   "Nobelisk": 0.94
  },
  "n": {
-  "RocketFuel": 5.294144564144957,
-  "QuantumEnergy": 4.478565502861217,
+  "RocketFuel": 6,
+  "DarkEnergy": 1,
+  "QuantumEnergy": 5,
   "SuperpositionOscillator": 4,
-  "TemporalProcessor": 0.9999988687795603,
+  "TemporalProcessor": 1,
   "SpaceElevatorPart_12": 1,
   "IonizedFuel": 1,
   "PackagedIonizedFuel": 1,
   "SAMFluctuator": 4,
-  "FicsiteMesh": 4.9999960790495,
-  "TimeCrystal": 18.551857911349934,
-  "IngotSAM": 10.999993311912345,
+  "FicsiteMesh": 5,
+  "TimeCrystal": 21,
+  "IngotSAM": 13,
   "SpaceElevatorPart_10": 2,
-  "FicsiteIngot_AL": 1.9999984316197994,
-  "Alternate_EnrichedCoal": 1.0315097244441465,
-  "PetroleumCoke": 9.61611687938092,
-  "ResidualRubber": 21.08503226373718,
-  "Alternate_Diamond_OilBased": 5.56555737340498,
-  "Alternate_DarkMatter_Trap": 2.6485092017839644,
-  "Alternate_DarkMatter_Crystallization": 2.6485092017839644,
-  "SteelPipe": 12.999985217749678,
-  "Alternate_SteamedCopperSheet": 21.26205900488241,
-  "Alternate_RubberConcrete": 14.265991663974805,
-  "Alternate_RecycledRubber": 32.12957297331379,
-  "Alternate_PureQuartzCrystal": 14.236804079083413,
-  "Alternate_PureIronIngot": 8.175000658791255,
-  "Alternate_PureCopperIngot": 154.22068780020987,
-  "Alternate_PureCateriumIngot": 13.61514630841563,
-  "PureAluminumIngot": 82.64605917755023,
-  "AluminumCasing": 18.125174307689846,
-  "AluminumSheet": 9.802510164445884,
-  "AluminaSolution": 13.85093924066751,
+  "FicsiteIngot_AL": 2,
+  "Alternate_EnrichedCoal": 3,
+  "PetroleumCoke": 11,
+  "ResidualRubber": 23,
+  "Alternate_Diamond_OilBased": 7,
+  "Alternate_DarkMatter_Trap": 3,
+  "Alternate_DarkMatter_Crystallization": 3,
+  "SteelPipe": 16,
+  "Alternate_SteamedCopperSheet": 24,
+  "Alternate_RubberConcrete": 15,
+  "Alternate_RecycledRubber": 35,
+  "Alternate_PureQuartzCrystal": 15,
+  "Alternate_PureIronIngot": 10,
+  "Alternate_PureCopperIngot": 161,
+  "Alternate_PureCateriumIngot": 17,
+  "PureAluminumIngot": 88,
+  "AluminumCasing": 19,
+  "AluminumSheet": 10,
+  "AluminaSolution": 17,
   "Alternate_PlasticSmartPlating": 1,
   "Alternate_HighSpeedWiring": 1,
-  "EncasedIndustrialBeam": 17.680351854772287,
-  "Stator": 7.9999906906070235,
-  "Alternate_HeavyOilResidue": 40.45694155462435,
-  "Alternate_HeavyFlexibleFrame": 6.408586875024662,
+  "EncasedIndustrialBeam": 19,
+  "Stator": 10,
+  "Alternate_HeavyOilResidue": 45,
+  "Alternate_HeavyFlexibleFrame": 7,
   "SpaceElevatorPart_4": 2,
   "SpaceElevatorPart_5": 2,
-  "Alternate_FusedWire": 10.999986191737644,
+  "Alternate_FusedWire": 12,
   "Alternate_FlexibleFramework": 1,
-  "Alternate_ElectroAluminumScrap": 16.529211835510043,
-  "Alternate_CopperRotor": 4.9999949719973,
-  "Alternate_CoatedIronPlate": 12.292997129976735,
-  "Alternate_BoltedFrame": 25.327544063177307,
-  "Alternate_AdheredIronPlate": 63.60858241532689,
-  "PlutoniumCell": 1.3333333333333333,
+  "Alternate_ElectroAluminumScrap": 18,
+  "Alternate_CopperRotor": 6,
+  "Alternate_CoatedIronPlate": 14,
+  "Alternate_BoltedFrame": 28,
+  "Alternate_AdheredIronPlate": 69,
+  "PlutoniumCell": 2,
   "PressureConversionCube": 4,
-  "NitricAcid": 2.1232901382219413,
-  "NonFissileUranium": 1.3333333333333333,
-  "CopperDust": 14.999994932434145,
-  "Plutonium": 0.6666666666666667,
-  "PlutoniumFuelRod": 1.3333333333333335,
+  "NitricAcid": 3,
+  "NonFissileUranium": 2,
+  "CopperDust": 15,
+  "Plutonium": 1,
+  "PlutoniumFuelRod": 2,
   "SpaceElevatorPart_9": 8,
-  "Alternate_TurboBlendFuel": 7.280661900188669,
-  "SulfuricAcid": 0.9999999999999999,
+  "Alternate_TurboBlendFuel": 9,
+  "SulfuricAcid": 2,
   "SpaceElevatorPart_7": 1,
-  "Alternate_SuperStateComputer": 2.999995949683284,
+  "Alternate_SuperStateComputer": 3,
   "SpaceElevatorPart_6": 1,
   "Alternate_SloppyAlumina": 6,
-  "Alternate_RadioControlSystem": 4.999997291809185,
-  "FusedModularFrame": 7.866666666666667,
-  "GasTank": 0.9999950000249999,
-  "Alternate_DilutedFuel": 17.48188186627272,
+  "Alternate_RadioControlSystem": 5,
+  "FusedModularFrame": 8,
+  "GasTank": 1,
+  "Alternate_DilutedFuel": 20,
   "Alternate_CoolingDevice": 2,
-  "Alternate_ClassicBattery": 2.9999926357959232,
+  "Alternate_ClassicBattery": 3,
   "Alternate_AutomatedMiner": 1,
-  "Alternate_SteelBeam_Aluminum": 19.788876655763463,
-  "Alternate_AluminumRod": 0.9999990291271562,
-  "Alternate_AILimiter_Plastic": 7.458777128710596,
-  "Alternate_UraniumCell_1": 1.9999990075753054,
+  "Alternate_SteelBeam_Aluminum": 22,
+  "Alternate_AluminumRod": 2,
+  "Alternate_AILimiter_Plastic": 8,
+  "Alternate_UraniumCell_1": 4,
   "Alternate_TurboMotor_1": 1,
   "SpaceElevatorPart_8": 1,
-  "Alternate_Screw_2": 25.252264692327003,
-  "Alternate_Quickwire": 18.359573064949505,
-  "Alternate_Plastic_1": 23.86497245175522,
-  "Alternate_NuclearFuelRod_1": 1.3333333359021442,
-  "Alternate_Motor_1": 4.391666666666667,
-  "Alternate_IngotSteel_2": 30.99995340273733,
-  "Alternate_IngotSteel_1": 1.999996993724989,
-  "Alternate_HighSpeedConnector": 7.041893032726884,
-  "Alternate_HeatSink_1": 2.999997272729752,
-  "Alternate_Gunpowder_1": 0.07583333333333328,
-  "Alternate_ElectromagneticControlRod_1": 2.9999955211478224,
-  "Alternate_CrystalOscillator": 28.864997563356216,
-  "Alternate_Computer_2": 7.999992451673711,
-  "Alternate_CircuitBoard_1": 12.010558760511326,
-  "Alternate_Cable_2": 3.9999996000000397,
+  "Alternate_Screw_2": 29,
+  "Alternate_Quickwire": 23,
+  "Alternate_Plastic_1": 26,
+  "Alternate_NuclearFuelRod_1": 2,
+  "Alternate_Motor_1": 5,
+  "Alternate_IngotSteel_2": 39,
+  "Alternate_IngotSteel_1": 3,
+  "Alternate_HighSpeedConnector": 9,
+  "Alternate_HeatSink_1": 4,
+  "Alternate_Gunpowder_1": 1,
+  "Alternate_ElectromagneticControlRod_1": 4,
+  "Alternate_CrystalOscillator": 30,
+  "Alternate_Computer_2": 8,
+  "Alternate_CircuitBoard_1": 13,
+  "Alternate_Cable_2": 4,
   "Ficsonium": 1,
   "FicsoniumFuelRod": 1,
   "SingularityCell": 1,
   "SpaceElevatorPart_11": 1,
   "FilterHazmat": 1,
   "AlienPowerFuel": 2,
-  "SpikedRebar": 1.0000000000000004,
-  "CartridgeSmart": 0.03333333333333333,
+  "SpikedRebar": 10,
+  "CartridgeSmart": 1,
   "Rebar_Stunshot": 1,
   "FilterGasMask": 1,
   "Alternate_PolyesterFabric": 1,
   "SyntheticPowerShard": 4,
-  "NobeliskShockwave": 0.024999999999999998,
+  "NobeliskShockwave": 1,
   "Rebar_Spreadshot": 1,
-  "CartridgeChaos": 0.03333333333333333,
-  "NobeliskNuke": 0.024999999999999998,
-  "Cartridge": 0.0375,
-  "Rebar_Explosive": 0.024999999999999998,
-  "NobeliskCluster": 0.024999999999999998,
-  "Nobelisk": 0.12111111111111107,
-  "GunpowderMK2": 0.030555555555555572,
-  "Miner3_Pure_OreIron": 0.34397651474231195,
-  "Miner3_Pure_Coal": 0.06240725813035844,
-  "Miner3_Pure_Sulfur": 0.26742602370779506,
-  "Miner3_Pure_SAM": 1.0233777777777777,
-  "Miner3_Pure_OreBauxite": 2.2806684009768015,
-  "Miner3_Pure_OreGold": 0.2723029261683126,
-  "Miner3_Pure_OreCopper": 1.9277585975026235,
-  "Miner3_Pure_RawQuartz": 0.7869187910854464,
-  "Miner3_Pure_Stone": 1.1568518518518514,
-  "Miner3_Pure_OreUranium": 0.02788194449796134,
-  "WaterExtractor": 29.501501065361175,
-  "OilExtractor_Pure": 3.8780328688662107,
-  "Well_Pure_NitrogenGas": 5.54016835489663,
+  "CartridgeChaos": 1,
+  "NobeliskNuke": 1,
+  "Cartridge": 1,
+  "Rebar_Explosive": 1,
+  "NobeliskCluster": 1,
+  "Nobelisk": 1,
+  "GunpowderMK2": 1,
+  "Miner3_Pure_OreIron": 1,
+  "Miner3_Pure_Coal": 1,
+  "Miner3_Pure_Sulfur": 1,
+  "Miner3_Pure_SAM": 2,
+  "Miner3_Pure_OreBauxite": 3,
+  "Miner3_Pure_OreGold": 1,
+  "Miner3_Pure_OreCopper": 3,
+  "Miner3_Pure_RawQuartz": 1,
+  "Miner3_Pure_Stone": 2,
+  "Miner3_Pure_OreUranium": 1,
+  "WaterExtractor": 35,
+  "OilExtractor_Pure": 5,
+  "Well_Pure_NitrogenGas": 7,
   "WellPressurizer": 1,
-  "Burn_NuclearFuelRod_GeneratorNuclear": 4.000000007706432,
+  "Burn_NuclearFuelRod_GeneratorNuclear": 6,
   "Burn_PlutoniumFuelRod_GeneratorNuclear": 2,
-  "Burn_RocketFuel_GeneratorFuel": 117.81325671411768,
+  "Burn_RocketFuel_GeneratorFuel": 118,
   "Augmenter30": 1,
   "MainPortal": 1
  }
@@ -689,7 +702,7 @@ window.DEFAULT_PLAN = {
  * State per recipe r:
  *   c[r]  clock as a fraction (0 = recipe disabled, 1 = 100%)
  *   f[r]  net production floor for the recipe's primary (first) output, per min
- *   n[r]  number of machines (continuous; buildings are ceil(n))
+ *   n[r]  number of machines (always a whole number)
  *
  * Flows are kept incrementally: prod[k] and cons[k] are the total
  * production and consumption of item k over the whole sheet.  Power is an
@@ -699,8 +712,8 @@ window.DEFAULT_PLAN = {
  * Policies (see README for the reasoning):
  *  - target(k) = max floor over active recipes whose primary output is k.
  *  - An item is in deficit when net(k) < target(k).
- *  - Sizing a recipe: the smallest n that makes net(primary) reach its target,
- *    with the other producers held fixed.  A by-product also drives sizing
+ *  - Sizing a recipe: the smallest whole n that makes net(primary) reach its
+ *    target, with the other producers held fixed.  A by-product also drives sizing
  *    when this recipe is that by-product's only active producer.
  *  - Propagation: when a recipe's consumption changes, each of its inputs is
  *    checked; if that input has exactly one active producer, that producer is
@@ -713,6 +726,8 @@ window.DEFAULT_PLAN = {
   const REL = 1e-9;
   const MANUAL = { augment: 1, manual: 1 };
   const MAX_STEPS = 20000;
+  /* Round up to a whole machine, forgiving float noise just above an integer. */
+  const whole = (x) => (x > 1e-6 ? Math.ceil(x - 1e-6) : 0);
 
   function Solver(game) {
     this.game = game;
@@ -723,6 +738,7 @@ window.DEFAULT_PLAN = {
     this.P = this.itemIdx.Power;
     const R = game.recipes;
     this.R = R;
+    this.integer = true; // whole machine counts; tools may switch it off
     this.rIdx = {};
     R.forEach((r, i) => (this.rIdx[r.id] = i));
     const NI = itemKeys.length;
@@ -772,6 +788,8 @@ window.DEFAULT_PLAN = {
     if (rec.p > 0) this.cons[this.P] += sign * n * rec.p * Math.pow(c, rec.pe);
     if (rec.boost) this.B += s * rec.boost;
   };
+
+  Solver.prototype.whole = whole;
 
   Solver.prototype.setN = function (r, n) {
     this.contrib(r, -1);
@@ -833,7 +851,7 @@ window.DEFAULT_PLAN = {
       const need = (this.target(k) + consOthers - m * prodOthers) / per;
       if (need > best) best = need;
     });
-    return best;
+    return this.integer ? whole(best) : best;
   };
 
   /* Re-size the sole active producers of r's inputs, recursively. */
@@ -879,14 +897,22 @@ window.DEFAULT_PLAN = {
     this.propagate(r);
   };
 
+  /* Generators, augmentors and recipes without products take no floor. */
+  Solver.prototype.hasFloor = function (r) {
+    const o = this.outs[r];
+    return !this.manual[r] && o.length > 0 && o[0][0] !== this.P;
+  };
+
   Solver.prototype.setFloor = function (r, f) {
+    if (!this.hasFloor(r)) return;
     this.f[r] = Math.max(0, +f || 0);
     if (!this.manual[r]) this.setN(r, this.size(r));
     this.propagate(r);
   };
 
   Solver.prototype.setCount = function (r, n) {
-    this.setN(r, Math.max(0, +n || 0));
+    n = Math.max(0, +n || 0);
+    this.setN(r, this.integer ? whole(n) : n);
     this.propagate(r);
   };
 
@@ -898,10 +924,11 @@ window.DEFAULT_PLAN = {
       if (r !== undefined && !this.manual[r]) this.c[r] = v;
     }
     for (const [id, v] of Object.entries(s.f || {})) {
-      const r = this.rIdx[id]; if (r !== undefined) this.f[r] = v;
+      const r = this.rIdx[id];
+      if (r !== undefined && this.hasFloor(r)) this.f[r] = v;
     }
     for (const [id, v] of Object.entries(s.n || {})) {
-      const r = this.rIdx[id]; if (r !== undefined) this.n[r] = v;
+      const r = this.rIdx[id]; if (r !== undefined) this.n[r] = this.integer ? whole(v) : v;
     }
     for (let r = 0; r < this.R.length; r++) this.contrib(r, +1);
   };
@@ -929,7 +956,7 @@ window.DEFAULT_PLAN = {
 
   Solver.prototype.buildings = function (r) {
     if (this.R[r].kind === "gather" || !this.isActive(r)) return 0;
-    return Math.max(0, Math.ceil(this.n[r] - 1e-6));
+    return this.n[r];
   };
 
   /* Power summary: produced (with boost), consumed, net, target. */
@@ -1025,8 +1052,7 @@ window.DEFAULT_PLAN = {
     if (manual) clockCell = `<span class="fixed">fixed 100%</span>`;
     else if (fixedClock(rec)) clockCell = `<label class="fixed"><input type="checkbox" class="clk" id="clk-${r}"> on</label>`;
     else clockCell = `<input class="cell-in clk" type="number" id="clk-${r}" min="0" max="${rec.mc * 100}" step="any" aria-label="Clock %">`;
-    const hasOut = rec.outs.length > 0;
-    const floorCell = hasOut && !manual
+    const floorCell = S.hasFloor(r)
       ? `<input class="cell-in flr" type="number" id="flr-${r}" min="0" step="any" aria-label="Floor per minute">`
       : `<span class="fixed">—</span>`;
     const field = (label, inner, cls = "") => `<div class="fld ${cls}"><span class="fl">${label}</span>${inner}</div>`;
@@ -1035,13 +1061,15 @@ window.DEFAULT_PLAN = {
         `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}</span>` +
         `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}</span></div>` +
         `<div class="fields">` +
-          field("Clock %", clockCell) + field("Floor /min", floorCell) + field("Build need", `<span class="need c-need"></span>`) +
+          field("Clock %", clockCell) +
+          field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
+          (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
+          field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
       `<div class="band b-in"><span class="fl">Inputs <i>per machine · total</i></span><div class="flow"></div></div>` +
-      `<div class="band b-out"><span class="fl">Outputs <i>per machine · total</i></span><div class="flow"></div>` +
-        `<div class="fields">` +
-          field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="any" readonly aria-label="Machines"><span class="bld"></span>`, "f-cnt") +
+      `<div class="band b-out"><div class="outs"><span class="fl">Outputs <i>per machine · total</i></span><div class="flow"></div></div>` +
+        `<div class="fields pwr">` +
           field("MW @100%", `<span class="pw c-p100"></span>`) + field("MW @clock", `<span class="pw c-pclk"></span>`) + field("MW total", `<span class="pw c-ptot"></span>`) +
         `</div>` +
       `</div>`;
@@ -1049,7 +1077,7 @@ window.DEFAULT_PLAN = {
     return {
       tr, rec, search,
       inFlow: $(".b-in .flow", tr), outFlow: $(".b-out .flow", tr),
-      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr), bld: $(".bld", tr),
+      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr),
       need: $(".c-need", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
       flags: { in: false, mid: false, out: false },
     };
@@ -1068,7 +1096,7 @@ window.DEFAULT_PLAN = {
       if (t.value !== "" && isNaN(+t.value)) return;
       S.setFloor(r, +t.value || 0);
     } else if (t.classList.contains("cnt")) {
-      if (t.readOnly || t.value === "" || isNaN(+t.value)) return;
+      if (t.value === "" || isNaN(+t.value)) return;
       S.setCount(r, +t.value);
     } else return;
     hideBanner();
@@ -1079,6 +1107,24 @@ window.DEFAULT_PLAN = {
     // normalise what is shown once the user leaves a field (e.g. clamped clocks)
     if (e.target.classList.contains("cell-in")) { e.target.dataset.dirty = ""; refresh(); }
   });
+
+  /* ---- which fields each recipe shows ---- */
+  const VIEW = ["mach", "in", "out", "power"];
+  let view = { mach: true, in: true, out: true, power: true };
+  try { view = Object.assign(view, JSON.parse(localStorage.getItem(STORE + ".view") || "{}")); } catch (e) { /* ignore */ }
+  function applyView() {
+    VIEW.forEach((k) => {
+      $("#sheet").classList.toggle("hide-" + k, !view[k]);
+      const cb = $("#view-" + k); if (cb) cb.checked = view[k];
+    });
+  }
+  $("#viewSet").addEventListener("change", (e) => {
+    const k = e.target.dataset.v; if (!k) return;
+    view[k] = e.target.checked;
+    try { localStorage.setItem(STORE + ".view", JSON.stringify(view)); } catch (err) { /* ignore */ }
+    applyView();
+  });
+  applyView();
 
   /* ---- derived numbers ---- */
   let derived = null;
@@ -1127,11 +1173,6 @@ window.DEFAULT_PLAN = {
         (active && n > 0 ? ` <i>· ${fmt(per * n)}</i>` : "") + `</span>`;
     }
     const rec = R[r];
-    if (!isOut && rec.p > 0) {
-      const pw = S.machinePower(r, cc);
-      h += `<span class="it">Power</span><span class="rt">${fmt(pw)} MW` +
-        (active && n > 0 ? ` <i>· ${fmt(pw * n)}</i>` : "") + `</span>`;
-    }
     if (isOut && rec.boost) h += `<span class="it">Grid boost</span><span class="rt">+${rec.boost * 100}%</span>`;
     return h || `<span class="it fixed">—</span><span></span>`;
   }
@@ -1177,11 +1218,7 @@ window.DEFAULT_PLAN = {
       row.tr.classList.toggle("w-mid", fmid);
       row.flags = { in: fin, mid: fmid, out: fout };
       // count
-      const editable = S.manual[r] || (fout && active);
-      row.cnt.readOnly = !editable;
-      setVal(row.cnt, S.n[r] ? trim(S.n[r].toFixed(3)) : "0");
-      const b = S.buildings(r);
-      row.bld.textContent = rec.kind === "gather" ? (active ? "gatherers" : "") : b ? b + " bldg" : "";
+      setVal(row.cnt, String(S.n[r] || 0));
       // flows
       row.inFlow.innerHTML = flowHTML(S.ins[r], r, active, false);
       row.outFlow.innerHTML = flowHTML(S.outs[r], r, active, true);
