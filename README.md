@@ -55,6 +55,14 @@ node tools/test_solver.js
 
 Recipe data is the game's Docs.json as extracted by
 [SatisfactoryTools](https://github.com/greeny/SatisfactoryTools) (`data/data1.0.json`).
+Buildables added in updates 1.1 and 1.2 (Personnel Elevator, Buffer Stop,
+Priority Merger, Conveyor Wall Hole and Throughput Monitor, Hypertube
+Junction/Branch, new beams, Roll-Up Gates, Corner Road Barrier, Basic Shelf
+Unit, Large Fan/Vent, Fluid Truck and Station, SPWN, Pipeline T-Junction,
+walkways, vehicle paths, FICSMAS pieces) come from the Official Satisfactory
+Wiki's copy of the current game data (`Template:DocsRecipes.json` and friends
+on satisfactory.wiki.gg). Comparing the two sources, 1.1 and 1.2 changed no
+existing production recipe or build cost.
 Numbers entered by hand, worth checking if something looks off:
 
 * Miners Mk.1/2/3: 60/120/240 per minute on a normal node; impure ×0.5, pure ×2.

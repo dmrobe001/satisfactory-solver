@@ -25,6 +25,12 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "raw" / "data1.0.json"
 OUT = ROOT / "data" / "game.json"
 URL = "https://raw.githubusercontent.com/greeny/SatisfactoryTools/master/data/data1.0.json"
+# The Official Satisfactory Wiki keeps the current game data (1.2) as JSON.
+# It only supplements the 1.0 extraction above: 1.1 and 1.2 changed no
+# existing recipe or build cost, but added buildables.
+WIKI = ROOT / "raw" / "wiki"
+WIKI_URL = "https://satisfactory.wiki.gg/index.php?title=Template:{}.json&action=raw"
+WIKI_FILES = ["DocsRecipes", "DocsBuildings", "DocsItems"]
 
 # ---- Hand-entered game constants (1.0) ------------------------------------
 PURITY = [("Impure", 0.5), ("Normal", 1.0), ("Pure", 2.0)]
@@ -71,11 +77,8 @@ MATERIAL_ADDON = {
     "plastic": [("Plastic", 2.0)],       # Coated (polished) concrete foundations
     "glass": [("Silica", 2.0)],          # Glass roofs
 }
-# Pieces missing from the extracted data entirely (wiki: Stairs; the data has
-# only the 1 m coated-concrete foundation).  Material add-ons are applied below.
+# Pieces missing from both data sources (wiki Walls page: Stairs).
 EXTRA_BUILDINGS = {
-    "Foundation_ConcretePolished_8x2": {"n": "Foundation (2\u202fm) (Polished)", "cost": [["Cement", 5.0]]},
-    "Foundation_ConcretePolished_8x4": {"n": "Foundation (4\u202fm) (Polished)", "cost": [["Cement", 5.0]]},
     "Stairs_Left_01": {"n": "Stairs Left", "cost": [["Cement", 5.0], ["IronPlate", 4.0]]},
     "Stairs_Right_01": {"n": "Stairs Right", "cost": [["Cement", 5.0], ["IronPlate", 4.0]]},
 }
@@ -140,6 +143,14 @@ def main():
         RAW.parent.mkdir(exist_ok=True)
         print("downloading", URL)
         urllib.request.urlretrieve(URL, RAW)
+    WIKI.mkdir(parents=True, exist_ok=True)
+    for n in WIKI_FILES:
+        f = WIKI / f"{n}.json"
+        if "--fetch" in sys.argv or not f.exists():
+            print("downloading", WIKI_URL.format(n))
+            req = urllib.request.Request(WIKI_URL.format(n), headers={"User-Agent": "satisfactory-solver-build/1.0"})
+            f.write_bytes(urllib.request.urlopen(req).read())
+    wiki = {n: {k: v[-1] for k, v in json.loads((WIKI / f"{n}.json").read_text()).items()} for n in WIKI_FILES}
     d = json.loads(RAW.read_text())
     items_src, recipes_src, bsrc = d["items"], d["recipes"], d["buildings"]
 
@@ -150,7 +161,7 @@ def main():
         if k not in items:
             src = items_src.get(cls)
             if src is None:
-                src = bsrc.get(cls, {"name": k})
+                src = bsrc.get(cls) or wiki["DocsItems"].get(cls) or wiki["DocsBuildings"].get(cls) or {"name": k}
                 items[k] = {"n": src["name"], "f": 0}
             else:
                 items[k] = {"n": src["name"], "f": 1 if src.get("liquid") else 0}
@@ -307,6 +318,21 @@ def main():
             else:
                 bn = bk
             buildings[bk] = {"n": bn, "cost": [[item(i["item"]), i["amount"]] for i in r["ingredients"]]}
+    # Buildables added in 1.1 and 1.2 (and anything else the 1.0 extraction
+    # lacks), taken from the wiki's build-gun recipes.
+    added = []
+    for cls, r in sorted(wiki["DocsRecipes"].items()):
+        if not r.get("inBuildGun"):
+            continue
+        for p in r["products"]:
+            bk = short(p["item"])
+            if bk in buildings:
+                continue
+            wb = wiki["DocsBuildings"].get(p["item"]) or wiki["DocsItems"].get(p["item"]) or {}
+            bn = wb.get("name") or r["name"]
+            buildings[bk] = {"n": bn, "cost": [[item(i["item"]), float(i["amount"])] for i in r["ingredients"]]}
+            added.append(bn)
+    print(f"added {len(added)} buildables from the wiki (1.1/1.2):", ", ".join(added))
     add_material_costs(buildings)
     for r in recipes:
         if r["m"] == "Gathering":
