@@ -214,3 +214,22 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 .linkish:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: no-preference) { .tabs button, .btn { transition: background-color 0.12s, border-color 0.12s; } }
 @media (max-width: 600px) { h1 { font-size: 1.4rem; } .scroll { max-height: 75vh; } }
+
+/* Item and building tables: rendered as grid rows instead of table rows so
+   that off-screen rows can skip style and layout (content-visibility does
+   not work on real table rows).  Up to ~550 rows on the Buildings tab. */
+#buildings, #balance, #materials { display: block; }
+#buildings { min-width: 720px; } #balance { min-width: 820px; } #materials { min-width: 700px; }
+#buildings > thead, #balance > thead, #materials > thead { display: block; position: sticky; top: 0; z-index: 2; }
+#buildings > tbody, #balance > tbody, #materials > tbody { display: block; }
+#buildings tr, #balance tr, #materials tr { display: grid; align-items: start; border-bottom: 1px solid var(--line); }
+#buildings td, #balance td, #materials td, #buildings th, #balance th, #materials th { border-bottom: 0; }
+#buildings thead tr, #balance thead tr, #materials thead tr { background: var(--surface-2); }
+#buildings tbody tr, #balance tbody tr, #materials tbody tr { content-visibility: auto; contain-intrinsic-size: auto 34px; }
+#buildings thead th, #balance thead th, #materials thead th { position: static; }
+#buildings tr { grid-template-columns: minmax(10em, 1.3fr) 6em 8em 6em minmax(12em, 2fr); }
+#balance tr { grid-template-columns: minmax(10em, 1.6fr) repeat(5, minmax(6.5em, 1fr)) 9.5em; }
+#materials tr { grid-template-columns: minmax(10em, 1.6fr) repeat(4, minmax(6.5em, 1fr)) 9.5em; }
+#buildings tr.empty, #balance tr.empty, #materials tr.empty { grid-template-columns: 1fr; }
+#buildings td, #balance td, #materials td { min-width: 0; }
+#buildings td:not(.n), #balance td:not(.n), #materials td:not(.n) { overflow-wrap: anywhere; }

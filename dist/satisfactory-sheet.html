@@ -221,6 +221,25 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 @media (prefers-reduced-motion: no-preference) { .tabs button, .btn { transition: background-color 0.12s, border-color 0.12s; } }
 @media (max-width: 600px) { h1 { font-size: 1.4rem; } .scroll { max-height: 75vh; } }
 
+/* Item and building tables: rendered as grid rows instead of table rows so
+   that off-screen rows can skip style and layout (content-visibility does
+   not work on real table rows).  Up to ~550 rows on the Buildings tab. */
+#buildings, #balance, #materials { display: block; }
+#buildings { min-width: 720px; } #balance { min-width: 820px; } #materials { min-width: 700px; }
+#buildings > thead, #balance > thead, #materials > thead { display: block; position: sticky; top: 0; z-index: 2; }
+#buildings > tbody, #balance > tbody, #materials > tbody { display: block; }
+#buildings tr, #balance tr, #materials tr { display: grid; align-items: start; border-bottom: 1px solid var(--line); }
+#buildings td, #balance td, #materials td, #buildings th, #balance th, #materials th { border-bottom: 0; }
+#buildings thead tr, #balance thead tr, #materials thead tr { background: var(--surface-2); }
+#buildings tbody tr, #balance tbody tr, #materials tbody tr { content-visibility: auto; contain-intrinsic-size: auto 34px; }
+#buildings thead th, #balance thead th, #materials thead th { position: static; }
+#buildings tr { grid-template-columns: minmax(10em, 1.3fr) 6em 8em 6em minmax(12em, 2fr); }
+#balance tr { grid-template-columns: minmax(10em, 1.6fr) repeat(5, minmax(6.5em, 1fr)) 9.5em; }
+#materials tr { grid-template-columns: minmax(10em, 1.6fr) repeat(4, minmax(6.5em, 1fr)) 9.5em; }
+#buildings tr.empty, #balance tr.empty, #materials tr.empty { grid-template-columns: 1fr; }
+#buildings td, #balance td, #materials td { min-width: 0; }
+#buildings td:not(.n), #balance td:not(.n), #materials td:not(.n) { overflow-wrap: anywhere; }
+
 </style>
 
 <header class="top">
@@ -1240,20 +1259,33 @@ window.DEFAULT_PLAN = {
     renderActiveTab();
   }
 
+  // Summary tiles are built once; refreshes only change their text and state.
+  const sumEl = $("#summary");
+  sumEl.innerHTML =
+    `<div class="stat" id="st-pw"><span class="lbl">Power supply / demand</span><span class="val"><span id="sv-pw"></span> <small>MW</small></span></div>` +
+    `<div class="stat" id="st-net"><span class="lbl">Net power</span><span class="val"><span id="sv-net"></span> <small id="sv-boost"></small></span></div>` +
+    `<div class="stat"><span class="lbl">Production buildings</span><span class="val" id="sv-mach"></span></div>` +
+    `<div class="stat"><span class="lbl">Lanes solid / fluid</span><span class="val" id="sv-lanes"></span></div>` +
+    `<div class="stat" id="st-def"><span class="lbl">Items in deficit</span><span class="val" id="sv-def"></span></div>` +
+    `<div class="stat"><span class="lbl"><label for="sum-ts">Build time (min)</label></span><span class="val"><input type="number" id="sum-ts" min="0.01" step="any"></span></div>` +
+    `<div class="stat warn" id="st-loop" hidden><span class="lbl">Feedback loop</span><span class="val"><small>update stopped after 20 000 steps</small></span></div>`;
+  const SV = {};
+  ["st-pw", "sv-pw", "st-net", "sv-net", "sv-boost", "sv-mach", "sv-lanes", "st-def", "sv-def", "sum-ts", "st-loop"].forEach((id) => (SV[id] = document.getElementById(id)));
   function renderSummary(pw) {
     const def = derived.deficit.reduce((a, b) => a + b, 0);
-    const orange = rows.filter((x) => x.flags.mid && x.tr.classList.contains("on")).length;
-    const warn = !S.converged;
-    $("#summary").innerHTML =
-      `<div class="stat ${pw.deficit ? "bad" : ""}"><span class="lbl">Power supply / demand</span><span class="val">${fmt(pw.supply)} / ${fmt(pw.demand)} <small>MW</small></span></div>` +
-      `<div class="stat ${pw.deficit ? "bad" : ""}"><span class="lbl">Net power</span><span class="val">${fmt(pw.net)} <small>MW${pw.boost ? ` · boost +${fmt(pw.boost * 100)}%` : ""}</small></span></div>` +
-      `<div class="stat"><span class="lbl">Production buildings</span><span class="val">${derived.machines.toLocaleString("en-US")}</span></div>` +
-      `<div class="stat"><span class="lbl">Lanes solid / fluid</span><span class="val">${derived.solid} / ${derived.fluid}</span></div>` +
-      `<div class="stat ${def ? "bad" : ""}"><span class="lbl">Items in deficit</span><span class="val">${def}</span></div>` +
-      `<div class="stat"><span class="lbl"><label for="sum-ts">Build time (min)</label></span><span class="val"><input type="number" id="sum-ts" min="0.01" step="any" value="${esc(settings.timescale)}"></span></div>` +
-      (warn ? `<div class="stat warn"><span class="lbl">Feedback loop</span><span class="val"><small>update stopped after 20 000 steps</small></span></div>` : "");
+    SV["st-pw"].classList.toggle("bad", pw.deficit);
+    SV["st-net"].classList.toggle("bad", pw.deficit);
+    setText(SV["sv-pw"], `${fmt(pw.supply)} / ${fmt(pw.demand)}`);
+    setText(SV["sv-net"], fmt(pw.net));
+    setText(SV["sv-boost"], `MW${pw.boost ? ` · boost +${fmt(pw.boost * 100)}%` : ""}`);
+    setText(SV["sv-mach"], derived.machines.toLocaleString("en-US"));
+    setText(SV["sv-lanes"], `${derived.solid} / ${derived.fluid}`);
+    SV["st-def"].classList.toggle("bad", def > 0);
+    setText(SV["sv-def"], String(def));
+    setVal(SV["sum-ts"], String(settings.timescale));
+    if (SV["st-loop"].hidden === S.converged) SV["st-loop"].hidden = S.converged;
   }
-  $("#summary").addEventListener("change", (e) => {
+  sumEl.addEventListener("change", (e) => {
     if (e.target.id === "sum-ts") { settings.timescale = +e.target.value || 60; save(); refresh(); }
   });
 
@@ -1324,49 +1356,101 @@ window.DEFAULT_PLAN = {
     else if (tab === "settings") renderSettings();
   }
 
-  function status(k) {
-    if (derived.deficit[k]) return `<span class="pill bad">deficit</span>`;
-    if (derived.need[k] > 1e-9 && derived.target[k] < derived.need[k] - 1e-9) return `<span class="pill warn">floor below need</span>`;
-    const net = S.net(k);
-    if (net > S.tol(k) + derived.target[k]) return `<span class="pill">surplus</span>`;
-    return `<span class="pill ok">balanced</span>`;
+
+  // The three tables below are built once at load, one row per item or
+  // building.  Rendering only shows/hides rows and updates changed numbers,
+  // so switching tabs or typing never rebuilds them.
+  function hide(el, h) { if (el.hidden !== h) el.hidden = h; }
+  function pill(k) {
+    if (derived.deficit[k]) return ["bad", "deficit"];
+    if (derived.need[k] > 1e-9 && derived.target[k] < derived.need[k] - 1e-9) return ["warn", "floor below need"];
+    if (S.net(k) > S.tol(k) + derived.target[k]) return ["", "surplus"];
+    return ["ok", "balanced"];
+  }
+  function setPill(el, k) {
+    const [cls, txt] = pill(k);
+    if (el._c !== cls) { el._c = cls; el.className = "pill " + cls; }
+    setText(el, txt);
   }
   function findItem(k) {
     $("#q").value = iname(k);
     $("#show").value = "all"; $("#kind").value = "all";
     showTab("recipes"); applyFilter();
   }
-
-  function renderBalance() {
-    const tb = $("#balance tbody");
-    const ks = [];
-    for (let k = 0; k < KEYS.length; k++) if (S.prod[k] > 1e-9 || S.cons[k] > 1e-9 || derived.target[k] > 0) ks.push(k);
-    ks.sort((a, b) => (derived.deficit[b] - derived.deficit[a]) || iname(a).localeCompare(iname(b)));
-    tb.innerHTML = ks.length ? ks.map((k) => {
-      const m = S.mult(k);
-      return `<tr><td><button class="linkish" type="button" data-k="${k}">${esc(iname(k))}</button></td>` +
-        `<td class="n">${fmt(S.prod[k] * m)}${unit(k)}</td><td class="n">${fmt(S.cons[k])}${unit(k)}</td>` +
-        `<td class="n">${fmt(S.net(k))}${unit(k)}</td><td class="n">${derived.target[k] ? fmt(derived.target[k]) : ""}</td>` +
-        `<td class="n">${derived.need[k] > 1e-9 ? fmt(derived.need[k]) : ""}</td><td>${status(k)}</td></tr>`;
-    }).join("") : `<tr><td colspan="7" class="note">Nothing is running yet. Set a clock above 0% on a recipe to start.</td></tr>`;
+  const itemOrder = KEYS.map((_, k) => k).sort((a, b) => iname(a).localeCompare(iname(b)));
+  function buildRows(tbodySel, keys, cells) {
+    const tb = $(tbodySel);
+    tb.innerHTML = keys.map((k) => `<tr data-k="${k}" hidden>${cells(k)}</tr>`).join("") +
+      `<tr class="empty" hidden><td colspan="9" class="note"></td></tr>`;
+    const out = {};
+    tb.querySelectorAll("tr[data-k]").forEach((tr) => {
+      out[tr.dataset.k] = { tr, td: tr.querySelectorAll("td"), pill: tr.querySelector(".pill"), input: tr.querySelector("input") };
+    });
+    return { tb, rows: out, empty: tb.querySelector("tr.empty") };
   }
-  $("#balance").addEventListener("click", (e) => { const b = e.target.closest("[data-k]"); if (b) findItem(+b.dataset.k); });
+  const itemLink = (k) => `<td><button class="linkish" type="button" data-k="${k}">${esc(iname(k))}</button></td>`;
+
+  const balT = buildRows("#balance tbody", itemOrder,
+    (k) => itemLink(k) + `<td class="n"></td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n"></td><td><span class="pill"></span></td>`);
+  setText(balT.empty.firstChild, "Nothing is running yet. Set a clock above 0% on a recipe to start.");
+  let balDefFirst = "";
+  function renderBalance() {
+    let n = 0;
+    const order = [];
+    for (const k of itemOrder) {
+      const x = balT.rows[k];
+      const show = S.prod[k] > 1e-9 || S.cons[k] > 1e-9 || derived.target[k] > 0;
+      hide(x.tr, !show);
+      if (!show) continue;
+      n++;
+      if (derived.deficit[k]) order.push(k);
+      const td = x.td;
+      setText(td[1], fmt(S.prod[k] * S.mult(k)) + unit(k));
+      setText(td[2], fmt(S.cons[k]) + unit(k));
+      setText(td[3], fmt(S.net(k)) + unit(k));
+      setText(td[4], derived.target[k] ? fmt(derived.target[k]) : "");
+      setText(td[5], derived.need[k] > 1e-9 ? fmt(derived.need[k]) : "");
+      setPill(x.pill, k);
+    }
+    // Deficits go to the top; rows only move when that set changes.
+    const sig = order.join(",");
+    if (sig !== balDefFirst) {
+      balDefFirst = sig;
+      const frag = document.createDocumentFragment();
+      const first = new Set(order);
+      order.forEach((k) => frag.appendChild(balT.rows[k].tr));
+      itemOrder.forEach((k) => { if (!first.has(k)) frag.appendChild(balT.rows[k].tr); });
+      frag.appendChild(balT.empty);
+      balT.tb.appendChild(frag);
+    }
+    hide(balT.empty, n > 0);
+  }
+  $("#balance").addEventListener("click", (e) => { const b = e.target.closest("button[data-k]"); if (b) findItem(+b.dataset.k); });
 
   const bKeys = Object.keys(B).sort((a, b) => B[a].n.localeCompare(B[b].n));
+  const bldT = buildRows("#buildings tbody", bKeys, (k) => {
+    const cost = B[k].cost.map(([it, q2]) => `${fmt(q2)} ${esc(IT[it].n)}`).join(", ");
+    return `<td>${esc(B[k].n)}</td><td class="n"></td>` +
+      `<td class="n"><input class="cell-in" type="number" min="0" step="1" id="ex-${esc(k)}" data-b="${esc(k)}" aria-label="Extra ${esc(B[k].n)}"></td>` +
+      `<td class="n"><b></b></td><td class="note">${cost}</td>`;
+  });
+  bKeys.forEach((k) => { const x = bldT.rows[k]; x.total = x.td[3].firstChild; x.lname = B[k].n.toLowerCase(); });
+  setText(bldT.empty.firstChild, "No buildings yet. Switch Show to “All buildings” to add some by hand.");
   function renderBuildings() {
-    const tb = $("#buildings tbody");
     const q = $("#bq").value.trim().toLowerCase();
     const all = $("#bshow").value === "all";
-    const ks = bKeys.filter((k) => (settings.ficsmas || !B[k].xmas) && (all || derived.total[k] || +settings.extra[k]) && (!q || B[k].n.toLowerCase().includes(q)));
-    // keep focus while typing in an Extra field
-    const fid = document.activeElement && document.activeElement.id;
-    tb.innerHTML = ks.length ? ks.map((k) => {
-      const cost = B[k].cost.map(([it, q2]) => `${fmt(q2)} ${esc(IT[it].n)}`).join(", ");
-      return `<tr><td>${esc(B[k].n)}</td><td class="n">${fmt(derived.comp[k] || 0)}</td>` +
-        `<td class="n"><input class="cell-in" type="number" min="0" step="1" id="ex-${esc(k)}" data-b="${esc(k)}" value="${settings.extra[k] || ""}" aria-label="Extra ${esc(B[k].n)}"></td>` +
-        `<td class="n"><b>${fmt(derived.total[k] || 0)}</b></td><td class="note">${cost}</td></tr>`;
-    }).join("") : `<tr><td colspan="5" class="note">No buildings yet. Switch Show to “All buildings” to add some by hand.</td></tr>`;
-    if (fid && fid.startsWith("ex-")) { const el = document.getElementById(fid); if (el) { el.focus(); const v = el.value; el.value = ""; el.value = v; } }
+    let n = 0;
+    for (const k of bKeys) {
+      const x = bldT.rows[k];
+      const show = (settings.ficsmas || !B[k].xmas) && (all || derived.total[k] || +settings.extra[k]) && (!q || x.lname.includes(q));
+      hide(x.tr, !show);
+      if (!show) continue;
+      n++;
+      setText(x.td[1], fmt(derived.comp[k] || 0));
+      setVal(x.input, settings.extra[k] ? String(settings.extra[k]) : "");
+      setText(x.total, fmt(derived.total[k] || 0));
+    }
+    hide(bldT.empty, n > 0);
   }
   $("#buildings").addEventListener("input", (e) => {
     const k = e.target.dataset.b; if (!k) return;
@@ -1374,20 +1458,29 @@ window.DEFAULT_PLAN = {
     if (v > 0) settings.extra[k] = v; else delete settings.extra[k];
     save(); refresh();
   });
-  ["#bq", "#bshow"].forEach((s) => $(s).addEventListener("input", renderBuildings));
+  ["#bq", "#bshow"].forEach((sel) => $(sel).addEventListener("input", renderBuildings));
 
+  const matT = buildRows("#materials tbody", itemOrder,
+    (k) => itemLink(k) + `<td class="n"></td><td class="n"></td><td class="n"></td><td class="n"></td><td><span class="pill"></span></td>`);
+  setText(matT.empty.firstChild, "No buildings yet, so nothing to build.");
   function renderMaterials() {
-    $("#bomNote").textContent = `Total build cost of every building on the Buildings tab, divided by the build time of ${fmt(derived.ts)} min.`;
-    const tb = $("#materials tbody");
-    const ks = [];
-    for (let k = 0; k < KEYS.length; k++) if (derived.bom[k] > 1e-9) ks.push(k);
-    ks.sort((a, b) => iname(a).localeCompare(iname(b)));
-    tb.innerHTML = ks.length ? ks.map((k) => `<tr><td><button class="linkish" type="button" data-k="${k}">${esc(iname(k))}</button></td>` +
-      `<td class="n">${fmt(derived.bom[k])}</td><td class="n">${fmt(derived.need[k])}</td><td class="n">${fmt(S.net(k))}</td>` +
-      `<td class="n">${derived.target[k] ? fmt(derived.target[k]) : ""}</td><td>${status(k)}</td></tr>`).join("")
-      : `<tr><td colspan="6" class="note">No buildings yet, so nothing to build.</td></tr>`;
+    setText($("#bomNote"), `Total build cost of every building on the Buildings tab, divided by the build time of ${fmt(derived.ts)} min.`);
+    let n = 0;
+    for (const k of itemOrder) {
+      const x = matT.rows[k];
+      const show = derived.bom[k] > 1e-9;
+      hide(x.tr, !show);
+      if (!show) continue;
+      n++;
+      setText(x.td[1], fmt(derived.bom[k]));
+      setText(x.td[2], fmt(derived.need[k]));
+      setText(x.td[3], fmt(S.net(k)));
+      setText(x.td[4], derived.target[k] ? fmt(derived.target[k]) : "");
+      setPill(x.pill, k);
+    }
+    hide(matT.empty, n > 0);
   }
-  $("#materials").addEventListener("click", (e) => { const b = e.target.closest("[data-k]"); if (b) findItem(+b.dataset.k); });
+  $("#materials").addEventListener("click", (e) => { const b = e.target.closest("button[data-k]"); if (b) findItem(+b.dataset.k); });
 
   function kvInputs(el, keys, obj, group) {
     if (!el.dataset.built) {
