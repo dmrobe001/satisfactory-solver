@@ -233,3 +233,6 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 #buildings tr.empty, #balance tr.empty, #materials tr.empty { grid-template-columns: 1fr; }
 #buildings td, #balance td, #materials td { min-width: 0; }
 #buildings td:not(.n), #balance td:not(.n), #materials td:not(.n) { overflow-wrap: anywhere; }
+
+.io-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.io-top label.btn { display: inline-block; }

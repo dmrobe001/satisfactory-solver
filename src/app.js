@@ -99,7 +99,8 @@
         `<div class="fields">` +
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
-          (S.hasFloor(r) ? field("Floor /min", floorCell) + field("Surplus /min", `<span class="need c-sur" title="Net production of ${esc(IT[rec.outs[0][0]].n)} after every running consumer"></span>`) : "") +
+          (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
+          (rec.outs.length ? field("Surplus /min", `<span class="need c-sur" title="Total net production of ${esc(IT[rec.outs[0][0]].n)} across the sheet: made by every running recipe, by-products included, minus all consumption"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
@@ -257,7 +258,7 @@
       setHTML(row.need, needH);
       if (row.sur) {
         const k0 = S.outs[r][0][0];
-        setText(row.sur, active ? fmt(S.net(k0)) + unit(k0) : "");
+        setText(row.sur, fmt(S.net(k0)) + unit(k0));
       }
       row.tr.classList.toggle("w-in", fin);
       row.tr.classList.toggle("w-out", fout);
@@ -541,6 +542,39 @@
     if (!clearArmed) { clearArmed = true; e.target.textContent = "Click again to clear"; setTimeout(() => { clearArmed = false; e.target.textContent = "Clear sheet"; }, 3000); return; }
     clearArmed = false; e.target.textContent = "Clear sheet";
     S.reset(); settings = DEFAULTS(); applyFicsmas(); save(); refresh(); $("#ioMsg").textContent = "Sheet cleared.";
+  });
+
+  /* ---- import / export (a .json file) ---- */
+  const ioTop = (m) => setText($("#ioTopMsg"), m);
+  let downloads = null;
+  if (window.claude && window.claude.use) {
+    window.claude.use("downloads").then((d) => { downloads = d; $("#btnExport").hidden = !d; }).catch(() => {});
+  }
+  $("#btnExport").addEventListener("click", async () => {
+    if (!downloads) return;
+    const day = new Date().toISOString().slice(0, 10);
+    const data = JSON.stringify(Object.assign({ app: "satisfactory-production-sheet" }, snapshot()), null, 1);
+    try {
+      await downloads.save({ filename: `satisfactory-sheet-${day}.json`, data });
+      ioTop("Exported.");
+    } catch (e) {
+      const code = e && e.code;
+      ioTop(code === "declined" ? "Export cancelled." : code === "rate_limited" ? "A save prompt is already open."
+        : "Export isn't available here. Copy the text under Settings & notes instead.");
+      if (code !== "declined" && code !== "rate_limited") $("#btnExport").hidden = true;
+    }
+  });
+  $("#fileImport").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    f.text().then((txt) => {
+      let o;
+      try { o = JSON.parse(txt); } catch (err) { ioTop(`${f.name} is not a JSON file.`); return; }
+      if (!o || !o.sheet) { ioTop(`${f.name} is not a sheet exported from this page.`); return; }
+      applySnapshot(o); hideBanner(); save(); refresh();
+      ioTop(`Imported ${f.name}.`);
+    }, () => ioTop(`Could not read ${f.name}.`));
   });
 
   function hideBanner() { $("#exampleBanner").hidden = true; }

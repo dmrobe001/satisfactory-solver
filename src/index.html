@@ -10,7 +10,13 @@
 <header class="top">
   <div>
     <h1>Satisfactory Production Sheet</h1>
-    <div class="sub">Every recipe in Satisfactory 1.0. Set clocks and floors; machine counts follow.</div>
+    <div class="sub">Every recipe in Satisfactory 1.2. Set clocks and floors; machine counts follow.</div>
+  </div>
+  <div class="io-top">
+    <button class="btn" type="button" id="btnExport" hidden>Export sheet</button>
+    <label class="btn" for="fileImport">Import sheet</label>
+    <input type="file" id="fileImport" accept=".json,application/json" hidden>
+    <span class="count" id="ioTopMsg" role="status"></span>
   </div>
   <div class="legend" aria-label="Colour key">
     <span class="ly">input in deficit</span>
@@ -126,7 +132,7 @@
         <div class="kv" id="machSet"></div>
         <p class="note">Multiplied by the total number of production buildings in the sheet.</p>
         <h2>Save and load</h2>
-        <p class="note">Edits save in this browser automatically. To move a sheet elsewhere, copy the text below and paste it into another copy.</p>
+        <p class="note">Edits save in this browser automatically. To keep a sheet or move it elsewhere, use Export sheet and Import sheet at the top of the page (a .json file), or copy the text below and paste it into another copy.</p>
         <textarea id="io" aria-label="Sheet as text"></textarea>
         <div class="tools">
           <button class="btn" type="button" id="ioCopy">Copy sheet</button>
@@ -141,7 +147,7 @@
       <h3>How the sheet updates</h3>
       <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough whole machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, none of them is touched; the shortfall shows in yellow on the consumers and red on the producers. You can type any recipe’s machine count; its suppliers follow.</p>
       <p>Power is treated as one more input. A single running generator recipe follows the power demand automatically. With several generator recipes running, a power shortfall marks all of them red.</p>
-      <p>The floor is the net production you want of an item: what is left after every running consumer. The recipe’s machines cover the consumers plus the floor, rounded up to whole machines at the current clock; Surplus shows the net production that actually results. If several running recipes share an output, the largest of their floors applies. A by-product also drives sizing when its recipe is the only running producer of it.</p>
+      <p>The floor is the net production you want of an item: what is left after every running consumer. The recipe’s machines cover the consumers plus the floor, rounded up to whole machines at the current clock. Surplus is the item’s total net production across the whole sheet: everything every running recipe makes of it, by-products included, minus everything consumed. If several running recipes share an output, the largest of their floors applies. A by-product also drives sizing when its recipe is the only running producer of it.</p>
       <h3>Modelling choices</h3>
       <ul>
         <li>Machine counts are whole numbers, rounded up, so most recipes run a small surplus. Lower the clock to trim it. Generators take no floor; they follow power demand.</li>

@@ -7,7 +7,9 @@ speeds and net-production floors; machine counts, power, lanes, buildings and
 the bill of materials follow.
 
 The finished page is `dist/satisfactory-sheet.html` (a single self-contained
-file; open it in a browser, or publish it as a claude.ai artifact).
+file; open it in a browser, or publish it as a claude.ai artifact). Sheets
+import from and export to `.json` files; export uses the artifact `downloads`
+capability, so the button only appears on claude.ai.
 
 ## Layout
 
@@ -48,6 +50,9 @@ node tools/test_solver.js
   floor; they follow power demand. when several running
   recipes share an output, the largest floor applies. A by-product also drives
   sizing when its recipe is the only running producer of it.
+* Surplus (on every recipe with outputs) is the item's total net production
+  across the sheet: everything every running recipe makes of it, by-products
+  included, minus all consumption.
 * Orange: the item's floor is below the rate needed to build every building
   on the sheet within the build time.
 
