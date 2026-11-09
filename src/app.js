@@ -7,7 +7,7 @@
   const IT = G.items;
   const KEYS = S.itemKeys;
   const B = G.buildings;
-  const STORE = "satisfactory-sheet.v2";
+  const STORE = "satisfactory-sheet.v3";
 
   const BELTS = [1, 2, 3, 4, 5, 6].map((k) => "ConveyorBeltMk" + k);
   const PIPES = ["Pipeline", "PipelineMK2"];
