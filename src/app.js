@@ -89,7 +89,7 @@
         `<div class="fields">` +
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
-          (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
+          (S.hasFloor(r) ? field("Floor /min", floorCell) + field("Surplus /min", `<span class="need c-sur"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
@@ -104,7 +104,7 @@
       tr, rec, search,
       inFlow: $(".b-in .flow", tr), outFlow: $(".b-out .flow", tr),
       clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr),
-      need: $(".c-need", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
+      need: $(".c-need", tr), sur: $(".c-sur", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
       flags: { in: false, mid: false, out: false },
     };
   });
@@ -239,6 +239,11 @@
         }
       }
       row.need.innerHTML = needH;
+      if (row.sur) {
+        const k0 = S.outs[r][0][0];
+        row.sur.textContent = active ? fmt(S.net(k0)) + unit(k0) : "";
+        row.sur.title = "Net production of " + iname(k0) + " after every running consumer";
+      }
       row.tr.classList.toggle("w-in", fin);
       row.tr.classList.toggle("w-out", fout);
       row.tr.classList.toggle("w-mid", fmid);

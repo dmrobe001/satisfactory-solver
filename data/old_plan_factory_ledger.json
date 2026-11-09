@@ -2086,18 +2086,10 @@
  },
  "recs": [
   {
-   "id": "rmv2879x3ca",
-   "r": "Recipe_RocketFuel_C",
-   "n": 8,
-   "c": 0.953035,
-   "s": 0,
-   "note": "Plan"
-  },
-  {
    "id": "rmv2879x3cb",
    "r": "Recipe_QuantumEnergy_C",
-   "n": 5,
-   "c": 0.943829,
+   "n": 6,
+   "c": 0.65,
    "s": 0,
    "note": "Plan"
   },
@@ -2113,7 +2105,7 @@
    "id": "rmv2879x3cd",
    "r": "Recipe_TemporalProcessor_C",
    "n": 1,
-   "c": 0.589334,
+   "c": 0.384,
    "s": 0,
    "note": "Plan"
   },
@@ -2129,7 +2121,7 @@
    "id": "rmv2879x3cf",
    "r": "Recipe_IonizedFuel_C",
    "n": 1,
-   "c": 0.4,
+   "c": 0.1,
    "s": 0,
    "note": "Plan"
   },
@@ -2137,7 +2129,7 @@
    "id": "rmv2879x3cg",
    "r": "Recipe_PackagedIonizedFuel_C",
    "n": 1,
-   "c": 0.2,
+   "c": 0.05,
    "s": 0,
    "note": "Plan"
   },
@@ -2216,16 +2208,16 @@
   {
    "id": "rmv2879x3cq",
    "r": "Recipe_Alternate_DarkMatter_Trap_C",
-   "n": 3,
-   "c": 0.824,
+   "n": 1,
+   "c": 1,
    "s": 0,
    "note": "Plan"
   },
   {
    "id": "rmv2879x3cr",
    "r": "Recipe_Alternate_DarkMatter_Crystallization_C",
-   "n": 3,
-   "c": 0.888381,
+   "n": 2,
+   "c": 0.7,
    "s": 0,
    "note": "Plan"
   },
@@ -2368,8 +2360,8 @@
   {
    "id": "rmv2879x3d9",
    "r": "Recipe_Alternate_HeavyFlexibleFrame_C",
-   "n": 6,
-   "c": 0.8447,
+   "n": 3,
+   "c": 1,
    "s": 0,
    "note": "Plan"
   },
@@ -2416,8 +2408,8 @@
   {
    "id": "rmv2879x3df",
    "r": "Recipe_Alternate_CopperRotor_C",
-   "n": 5,
-   "c": 0.810186,
+   "n": 3,
+   "c": 1,
    "s": 0,
    "note": "Plan"
   },
@@ -2432,8 +2424,8 @@
   {
    "id": "rmv2879x3dh",
    "r": "Recipe_Alternate_BoltedFrame_C",
-   "n": 24,
-   "c": 0.974907,
+   "n": 13,
+   "c": 1,
    "s": 0,
    "note": "Plan"
   },
@@ -2472,8 +2464,8 @@
   {
    "id": "rmv2879x3dm",
    "r": "Recipe_NonFissileUranium_C",
-   "n": 2,
-   "c": 0.6,
+   "n": 1,
+   "c": 0.8,
    "s": 0,
    "note": "Plan"
   },
@@ -2489,7 +2481,7 @@
    "id": "rmv2879x3do",
    "r": "Recipe_Plutonium_C",
    "n": 1,
-   "c": 0.6,
+   "c": 0.4,
    "s": 0,
    "note": "Plan"
   },
@@ -2506,14 +2498,6 @@
    "r": "Recipe_SpaceElevatorPart_9_C",
    "n": 8,
    "c": 0.925,
-   "s": 0,
-   "note": "Plan"
-  },
-  {
-   "id": "rmv2879x3dr",
-   "r": "Recipe_Alternate_TurboBlendFuel_C",
-   "n": 11,
-   "c": 0.924459,
    "s": 0,
    "note": "Plan"
   },
@@ -2536,8 +2520,8 @@
   {
    "id": "rmv2879x3du",
    "r": "Recipe_Alternate_SuperStateComputer_C",
-   "n": 3,
-   "c": 0.905279,
+   "n": 2,
+   "c": 1,
    "s": 0,
    "note": "Plan"
   },
@@ -2568,7 +2552,7 @@
   {
    "id": "rmv2879x3dy",
    "r": "Recipe_FusedModularFrame_C",
-   "n": 8,
+   "n": 5,
    "c": 1,
    "s": 0,
    "note": "Plan"
@@ -2640,8 +2624,8 @@
   {
    "id": "rmv2879x3e7",
    "r": "Recipe_Alternate_UraniumCell_1_C",
-   "n": 2,
-   "c": 0.669167,
+   "n": 4,
+   "c": 0.6,
    "s": 0,
    "note": "Plan"
   },
@@ -2649,7 +2633,7 @@
    "id": "rmv2879x3e8",
    "r": "Recipe_Alternate_TurboMotor_1_C",
    "n": 1,
-   "c": 0.6,
+   "c": 0.8,
    "s": 0,
    "note": "Plan"
   },
@@ -2688,7 +2672,7 @@
   {
    "id": "rmv2879x3ed",
    "r": "Recipe_Alternate_NuclearFuelRod_1_C",
-   "n": 3,
+   "n": 2,
    "c": 1,
    "s": 0,
    "note": "Plan"
@@ -2698,14 +2682,6 @@
    "r": "Recipe_Alternate_Motor_1_C",
    "n": 4,
    "c": 1,
-   "s": 0,
-   "note": "Plan"
-  },
-  {
-   "id": "rmv2879x3ef",
-   "r": "Recipe_Alternate_IngotSteel_2_C",
-   "n": 31,
-   "c": 0.997844,
    "s": 0,
    "note": "Plan"
   },
@@ -2833,7 +2809,7 @@
    "id": "rmv2879x3ev",
    "r": "Recipe_SpikedRebar_C",
    "n": 1,
-   "c": 0.03,
+   "c": 0.4,
    "s": 0,
    "note": "Plan"
   },
@@ -2849,7 +2825,7 @@
    "id": "rmv2879x3ex",
    "r": "Recipe_Rebar_Stunshot_C",
    "n": 1,
-   "c": 0.01,
+   "c": 0.05,
    "s": 0,
    "note": "Plan"
   },
@@ -2889,7 +2865,7 @@
    "id": "rmv2879x3f2",
    "r": "Recipe_Rebar_Spreadshot_C",
    "n": 1,
-   "c": 0.01,
+   "c": 0.05,
    "s": 0,
    "note": "Plan"
   },
@@ -2897,7 +2873,7 @@
    "id": "rmv2879x3f3",
    "r": "Recipe_CartridgeChaos_C",
    "n": 1,
-   "c": 0.3,
+   "c": 0.1,
    "s": 0,
    "note": "Plan"
   },
@@ -2905,7 +2881,7 @@
    "id": "rmv2879x3f4",
    "r": "Recipe_NobeliskNuke_C",
    "n": 1,
-   "c": 0.4,
+   "c": 0.8,
    "s": 0,
    "note": "Plan"
   },
@@ -3009,7 +2985,7 @@
    "id": "rmv2879x3fh",
    "r": "mine:Desc_MinerMk3_C:Desc_OreUranium_C:normal",
    "n": 1,
-   "c": 0.13941,
+   "c": 0.25,
    "s": 0,
    "note": "Plan"
   },
@@ -3056,7 +3032,7 @@
   {
    "id": "rmv2879x3fn",
    "r": "gen:Desc_GeneratorNuclear_C:Desc_NuclearFuelRod_C",
-   "n": 6,
+   "n": 4,
    "c": 1,
    "s": 0,
    "note": "Plan"
@@ -3084,6 +3060,62 @@
    "c": 2.5,
    "s": 0,
    "note": "Plan"
+  },
+  {
+   "id": "rmw8q4bjt1",
+   "r": "Recipe_DarkEnergy_C",
+   "n": 1,
+   "c": 0.9,
+   "s": 0,
+   "note": ""
+  },
+  {
+   "id": "rmw8q552k2",
+   "r": "Recipe_DarkMatter_C",
+   "n": 3,
+   "c": 1,
+   "s": 0,
+   "note": ""
+  },
+  {
+   "id": "rmw8spn603",
+   "r": "Recipe_Alternate_RocketFuel_Nitro_C",
+   "n": 6,
+   "c": 1,
+   "s": 0,
+   "note": ""
+  },
+  {
+   "id": "rmw8sr6044",
+   "r": "Recipe_Alternate_Turbofuel_C",
+   "n": 10,
+   "c": 1,
+   "s": 0,
+   "note": ""
+  },
+  {
+   "id": "rmw8ssoo85",
+   "r": "Recipe_Alternate_EnrichedCoal_C",
+   "n": 1,
+   "c": 0.46,
+   "s": 0,
+   "note": ""
+  },
+  {
+   "id": "rmw8suizi6",
+   "r": "gen:Desc_GeneratorFuel_C:Desc_LiquidTurboFuel_C",
+   "n": 10,
+   "c": 2.45,
+   "s": 0,
+   "note": ""
+  },
+  {
+   "id": "rmw8sw01z7",
+   "r": "Recipe_PackagedTurboFuel_C",
+   "n": 1,
+   "c": 0.1125,
+   "s": 0,
+   "note": ""
   }
  ]
 }

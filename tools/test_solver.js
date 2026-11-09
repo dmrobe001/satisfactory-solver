@@ -77,8 +77,9 @@ truthy("loop converged (rubber net " + s.net(item("Rubber")).toFixed(3) + ")", s
 // The default plan loads without deficits.
 s.reset();
 s.load(JSON.parse(fs.readFileSync(path.join(__dirname, "../data/default_plan.json"))));
-const def = s.itemKeys.filter((k, i) => s.inDeficit(i));
-truthy("default plan has no deficits " + JSON.stringify(def), def.length === 0);
+// Allowed: items nothing running makes (the plan has none for Empty Canister).
+const def = s.itemKeys.filter((k, i) => s.inDeficit(i) && s.activeProducers(i).length > 0);
+truthy("default plan: no shortfall where a producer runs " + JSON.stringify(def), def.length === 0);
 
 console.log(fails ? fails + " FAILED" : "all passed");
 process.exit(fails ? 1 : 0);

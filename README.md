@@ -77,8 +77,10 @@ Numbers entered by hand, worth checking if something looks off:
   only where nothing else decides them (end products, generators, items made
   by two or more running recipes); every recipe that is the only running
   producer of a consumed item is re-sized by propagation, top layer down.
-* The old plan's `needs` become floors, except Alien Power Matrix and
-  Singularity Cells, which the augmentor and portal now consume.
+* Only the counts and clocks in the export's `recs` are used; `needs`, `plan`
+  and `ban` are ignored. End products (items nothing in the sheet consumes)
+  get a floor equal to what the export's count and clock make, so they keep
+  their machines; everything consumed is sized to its consumers.
 * Items with several running producers can't propagate, so the script
   scales those producers, keeping their ratio, until supply meets demand
   (water, rubber, steel ingots, dark matter, power).
@@ -86,9 +88,5 @@ Numbers entered by hand, worth checking if something looks off:
   extractor run at 250%; other miners are off. Of the pure resource wells
   only nitrogen runs, since a second running water or oil producer would
   stop propagation. One fueled augmentor, one Main Portal, one pressurizer.
-* The old plan had no producer for Compacted Coal, so Alternate: Compacted
-  Coal is added.
-* End products that nothing consumes and that had no need get a floor equal
-  to what they make, so they keep their machines when a clock changes.
 * Balancing runs with fractional counts; at the end every count is rounded
   up, and any multi-producer item the rounding left short is raised again.

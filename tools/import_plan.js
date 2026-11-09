@@ -10,13 +10,14 @@
 // recipe consumes is re-sized by the solver, layer by layer from the top.
 // Extraction is replaced by the defaults below.
 //
-// The old plan's "needs" become floors (except Alien Power Matrix and
-// Singularity Cells, which the augmentor and portal recipes now consume).
-// Items with several running producers cannot propagate, so a balancing pass
-// scales those producers (keeping their ratio) until net production meets
-// the floor.  Finally each running recipe's floor is set to the net
-// production of its first output, so the sheet reproduces itself when a
-// clock is changed later.
+// Only the old plan's recipe counts and clocks are used ("needs", "plan" and
+// "ban" are ignored).  A floor is a net production the user chooses, so the
+// only floors set here are for end products, items nothing in the sheet
+// consumes: their floor is what the plan's count and clock make, so they keep
+// their machines.  Everything that is consumed is re-sized to its consumers:
+// driven recipes by propagation, and items with several running producers
+// (which cannot propagate) by scaling those producers, keeping their ratio.
+// Counts are rounded up to whole machines at the end.
 const fs = require("fs");
 const path = require("path");
 const Solver = require("../src/solver.js");
@@ -41,10 +42,6 @@ clocks.WaterExtractor = 2.5;
 // running extractor; a second running producer would stop propagation.
 clocks.Well_Pure_NitrogenGas = 1;
 const manual = { Augmenter30: 1, MainPortal: 1, WellPressurizer: 1 };
-// Producers the old plan was missing (it consumed these with no source).
-const added = { Alternate_EnrichedCoal: 1, DarkEnergy: 1 };
-// Needs that the new tool models as consumption instead of floors.
-const NOT_FLOORS = new Set(["AlienPowerFuel", "SingularityCell"]);
 
 // ---- recipes and clocks from the old plan --------------------------------
 const skipped = [];
@@ -62,19 +59,19 @@ for (const x of old.recs) {
 
 // ---- load: clocks, manual counts, old counts everywhere -----------------
 const sheet = { c: {}, f: {}, n: {} };
-Object.assign(clocks, added);
 for (const [id, c] of Object.entries(clocks)) if (c > 0) sheet.c[id] = c;
 for (const [id, n] of Object.entries(counts)) if (sheet.c[id]) sheet.n[id] = n;
 Object.assign(sheet.n, manual);
 S.load(sheet);
 
-// Floors from the old plan's needs.
-const short = (cls) => cls.replace(/^(Desc_|BP_)/, "").replace(/_C$/, "");
-for (const nd of old.opt.needs) {
-  const key = short(nd.it);
-  const k = S.itemIdx[key];
-  if (k === undefined || NOT_FLOORS.has(key)) continue;
-  for (const r of S.primaryOf[k]) if (S.isActive(r)) S.f[r] = nd.v;
+// Floors: end products keep what the plan makes of them.
+const floors = {};
+for (const r of S.R.map((_, i) => i)) {
+  if (!S.isActive(r) || !S.hasFloor(r)) continue;
+  const k = S.outs[r][0][0];
+  if (S.consumersOf[k].some((q) => S.isActive(q))) continue;
+  const net = S.net(k);
+  if (net > 1e-6) { S.f[r] = Math.round(net * 1e4) / 1e4; floors[S.itemKeys[k]] = S.f[r]; }
 }
 
 // Driven recipes (sole running producer of a consumed first output) start
@@ -129,15 +126,6 @@ for (let i = 0; i < 200; i++, rounds++) {
 }
 for (let i = 0; i < 5; i++) { balance(); sweep(); }
 
-// ---- floors: end products nothing consumes keep what they make --------
-for (const r of order) {
-  const k = S.outs[r][0] && S.outs[r][0][0];
-  if (k === undefined || !S.hasFloor(r) || S.target(k) > 0) continue;
-  if (S.consumersOf[k].some((q) => S.isActive(q))) continue;
-  const net = S.net(k);
-  if (net > 1e-6) S.f[r] = Math.round(net * 1e4) / 1e4;
-}
-
 // ---- whole machines -------------------------------------------------------
 // Round every count up, re-size the driven recipes top-down (size() now
 // rounds up), then raise multi-producer items that rounding left short.
@@ -163,12 +151,6 @@ for (let i = 0; i < 100; i++) {
   sweep();
 }
 
-// Drop added producers that ended up unused.
-for (const id of Object.keys(added)) {
-  const r = idx(id);
-  if (S.n[r] < 1e-9) { S.setClock(r, 0); S.f[r] = 0; }
-}
-
 const out = S.dump();
 fs.writeFileSync(path.join(ROOT, "data/default_plan.json"), JSON.stringify(out, null, 1));
 
@@ -186,11 +168,8 @@ const pw = S.power();
 console.log(`\npower: supply ${pw.supply.toFixed(0)} MW, demand ${pw.demand.toFixed(0)} MW, net ${pw.net.toFixed(0)}`);
 console.log("items in deficit:");
 for (let k = 0; k < S.itemKeys.length; k++) if (S.inDeficit(k)) console.log("  ", nm(k), "net", S.net(k).toFixed(3));
-console.log("\nold 'needs' vs new net production:");
-for (const nd of old.opt.needs) {
-  const k = S.itemIdx[nd.it.replace(/^(Desc_|BP_)/, "").replace(/_C$/, "")];
-  if (k === undefined) { console.log("  ?", nd.it); continue; }
-  const net = S.net(k);
-  const flag = net < nd.v - 1e-6 ? "  SHORT" : "";
-  console.log("  " + nm(k).padEnd(34), String(nd.v).padStart(8), net.toFixed(3).padStart(10) + flag);
+console.log("\nend-product floors (item: floor, net now):");
+for (const [key, f] of Object.entries(floors)) {
+  const k = S.itemIdx[key];
+  console.log("  " + nm(k).padEnd(34), String(f).padStart(10), S.net(k).toFixed(3).padStart(10));
 }
