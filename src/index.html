@@ -1,0 +1,176 @@
+<title>Satisfactory Production Sheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+</style>
+
+<header class="top">
+  <div>
+    <h1>Satisfactory Production Sheet</h1>
+    <div class="sub">Every recipe in Satisfactory 1.0. Set clocks and floors; machine counts follow.</div>
+  </div>
+  <div class="legend" aria-label="Colour key">
+    <span class="ly">input in deficit</span>
+    <span class="lo">floor below build-material need</span>
+    <span class="lr">output in deficit (count editable)</span>
+  </div>
+</header>
+
+<section class="summary" id="summary" aria-label="Summary"></section>
+<div class="banner" id="exampleBanner" hidden>
+  <span>Example factory loaded: iron plates and reinforced iron plates on coal power. Your edits are saved in this browser.</span>
+  <button class="btn" id="bannerClear" type="button">Start empty</button>
+</div>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" type="button" data-tab="recipes" aria-selected="true">Recipes</button>
+  <button role="tab" type="button" data-tab="balance" aria-selected="false">Item balance</button>
+  <button role="tab" type="button" data-tab="buildings" aria-selected="false">Buildings</button>
+  <button role="tab" type="button" data-tab="materials" aria-selected="false">Bill of materials</button>
+  <button role="tab" type="button" data-tab="settings" aria-selected="false">Settings &amp; notes</button>
+</nav>
+
+<main>
+  <section class="panel" id="tab-recipes" role="tabpanel">
+    <div class="tools">
+      <label>Search <input type="search" id="q" placeholder="recipe, machine or item"></label>
+      <label>Show
+        <select id="show">
+          <option value="all">All recipes</option>
+          <option value="active">Running only</option>
+          <option value="flag">Flagged only</option>
+        </select>
+      </label>
+      <label>Kind
+        <select id="kind">
+          <option value="all">All</option>
+          <option value="machine">Production</option>
+          <option value="extract">Extraction</option>
+          <option value="power">Power</option>
+          <option value="special">Special</option>
+        </select>
+      </label>
+      <label>Sort by
+        <span class="seg" id="sortSeg">
+          <button type="button" data-sort="output">Output</button>
+          <button type="button" data-sort="name">Name</button>
+          <button type="button" data-sort="machine">Machine</button>
+          <button type="button" data-sort="layer" aria-pressed="true">Layer</button>
+        </span>
+      </label>
+      <span class="count" id="rowCount"></span>
+    </div>
+    <div class="scroll">
+      <table id="sheet">
+        <thead>
+          <tr class="bands">
+            <th class="band-l">Inputs <span class="count">per machine · total</span></th>
+            <th colspan="5">Recipe</th>
+            <th class="band-r" colspan="5">Outputs &amp; power</th>
+          </tr>
+          <tr class="cols">
+            <th class="band-l">Consumes /min</th>
+            <th class="sortable" data-sort="name">Recipe · machine</th>
+            <th class="sortable" data-sort="layer">Layer</th>
+            <th class="n">Clock %</th>
+            <th class="n" title="Lower bound on net production of the first output, per minute">Floor /min</th>
+            <th class="n" title="Build-material rate needed: bill of materials ÷ build time">Build need</th>
+            <th class="band-r sortable" data-sort="output">Produces /min</th>
+            <th class="n">Machines</th>
+            <th class="n" title="Average MW for one machine at 100% clock; negative = generated">MW @100%</th>
+            <th class="n" title="MW for one machine at its current clock">MW @clock</th>
+            <th class="n" title="MW for all machines of this recipe">MW total</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-balance" role="tabpanel" hidden>
+    <div class="tools"><span class="note">Every item that is produced, consumed or has a floor. Click an item to find its recipes.</span></div>
+    <div class="scroll"><table id="balance"><thead><tr>
+      <th>Item</th><th class="n">Produced</th><th class="n">Consumed</th><th class="n">Net</th><th class="n">Floor</th><th class="n">Build need</th><th>Status</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel" id="tab-buildings" role="tabpanel" hidden>
+    <div class="tools">
+      <label>Search <input type="search" id="bq" placeholder="building"></label>
+      <label>Show
+        <select id="bshow"><option value="used">In use</option><option value="all">All buildings</option></select>
+      </label>
+      <span class="note">Computed counts come from the recipe sheet and the multipliers in Settings. Add your own in “Extra”.</span>
+    </div>
+    <div class="scroll"><table id="buildings"><thead><tr>
+      <th>Building</th><th class="n">Computed</th><th class="n">Extra</th><th class="n">Total</th><th>Build cost (each)</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel" id="tab-materials" role="tabpanel" hidden>
+    <div class="tools"><span class="note" id="bomNote"></span></div>
+    <div class="scroll"><table id="materials"><thead><tr>
+      <th>Material</th><th class="n">Total needed</th><th class="n">Rate /min</th><th class="n">Net production</th><th class="n">Floor</th><th>Status</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel" id="tab-settings" role="tabpanel" hidden>
+    <div class="grid2">
+      <div>
+        <h2>Build time</h2>
+        <div class="kv">
+          <label for="set-timescale">Minutes to build everything</label>
+          <input class="cell-in" type="number" id="set-timescale" min="0.01" step="any">
+        </div>
+        <p class="note">The bill of materials is divided by this to get the rate each building material must be produced at.</p>
+        <h2>Per lane</h2>
+        <div class="kv" id="laneSet"></div>
+        <p class="note">Each recipe uses one lane per distinct input or output, times its building count. Belts are billed per solid lane, pipes per fluid lane, railway per lane of either kind.</p>
+      </div>
+      <div>
+        <h2>Per production building</h2>
+        <div class="kv" id="machSet"></div>
+        <p class="note">Multiplied by the total number of production buildings in the sheet.</p>
+        <h2>Save and load</h2>
+        <p class="note">Edits save in this browser automatically. To move a sheet elsewhere, copy the text below and paste it into another copy.</p>
+        <textarea id="io" aria-label="Sheet as text"></textarea>
+        <div class="tools">
+          <button class="btn" type="button" id="ioCopy">Copy sheet</button>
+          <button class="btn" type="button" id="ioLoad">Load pasted sheet</button>
+          <button class="btn" type="button" id="ioExample">Load example</button>
+          <button class="btn danger" type="button" id="ioClear">Clear sheet</button>
+          <span class="count" id="ioMsg"></span>
+        </div>
+      </div>
+    </div>
+    <div class="prose">
+      <h3>How the sheet updates</h3>
+      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, none of them is touched; the shortfall shows in yellow on the consumers and red on the producers, whose machine counts become editable.</p>
+      <p>Power is treated as one more input. A single running generator recipe follows the power demand automatically. With several generator recipes running, a power shortfall marks all of them red.</p>
+      <p>The floor is a lower limit on the item’s net production. If several running recipes share an output, the largest of their floors applies. A by-product also drives sizing when its recipe is the only running producer of it.</p>
+      <h3>Modelling choices</h3>
+      <ul>
+        <li>Machine counts are fractional, as if the last machine were underclocked. Building counts round up.</li>
+        <li>Consumer power scales as clock<sup>1.32</sup>; generator output and fuel use scale linearly. Converter, Particle Accelerator and Quantum Encoder use the average of their power cycle.</li>
+        <li>Alien Power Augmentors add 500 MW each and multiply total grid production by 1 + 10% (or 30% when fed 5 Alien Power Matrix/min) per augmentor. Augmentors, the Main Portal (250 MW) and the Resource Well Pressurizer (150 MW) take a typed machine count.</li>
+        <li>Resource well extractors, geothermal generators and hand-gathered items have a fixed clock: on or off.</li>
+        <li>Hand-gathered items (leaves, wood, mycelia, remains, power slugs, Somersloops, Mercer Spheres) count as layer 0 with one “gatherer” per item per minute and no building.</li>
+        <li>Layer 0 is every recipe without inputs. A recipe is in layer N when all its inputs can come from layer N−1 or below.</li>
+      </ul>
+      <p class="note">Recipe data: the game’s Docs.json as extracted by the SatisfactoryTools project (game version 1.0). Miner, extractor, geothermal, nuclear-waste and augmentor numbers are entered by hand.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__SOLVER__*/
+</script>
+<script>
+/*__APP__*/
+</script>

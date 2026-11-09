@@ -1,0 +1,66 @@
+# Satisfactory Production Sheet
+
+A one-page tool for planning factories in Satisfactory 1.0. It lists every
+recipe in the game, plus synthetic "recipes" for miners, extractors,
+generators, the Alien Power Augmentor and the Main Portal. You set clock
+speeds and net-production floors; machine counts, power, lanes, buildings and
+the bill of materials follow.
+
+The finished page is `dist/satisfactory-sheet.html` (a single self-contained
+file; open it in a browser, or publish it as a claude.ai artifact).
+
+## Layout
+
+| Path | What it is |
+| --- | --- |
+| `tools/build_data.py` | Downloads the community game data and writes `data/game.json`. Hand-entered constants (miner rates, geothermal, augmentor, nuclear waste) live at the top. |
+| `data/game.json` | Compact recipe/item/building data the page uses. |
+| `src/solver.js` | The update rules, no DOM. Runs in node and in the browser. |
+| `src/app.js`, `src/style.css`, `src/index.html` | The page. |
+| `tools/build.py` | Inlines everything into `dist/satisfactory-sheet.html`. |
+| `tools/test_solver.js` | Command-line checks of the solver. |
+
+## Rebuild
+
+```sh
+python3 tools/build_data.py --fetch   # only when the game data changes
+python3 tools/build.py
+node tools/test_solver.js
+```
+
+## Update rules
+
+* A recipe runs when its clock is above 0%.
+* Editing a recipe's clock or floor re-sizes it to cover the consumption of
+  its first output by the running recipes, plus the floor.
+* Then each input of that recipe (power included) is checked. If exactly one
+  running recipe produces it, that producer is re-sized the same way, and the
+  check repeats from there (a worklist that stops when nothing changes, or
+  after 20 000 steps in a runaway feedback loop).
+* If two or more running recipes produce an input, none is touched. Deficits
+  show as yellow on the consumers' inputs and red on the producers' outputs;
+  red rows get an editable machine count. A power deficit marks every running
+  generator red.
+* A floor is a lower bound on the item's net production; when several running
+  recipes share an output, the largest floor applies. A by-product also drives
+  sizing when its recipe is the only running producer of it.
+* Orange: the item's floor is below the rate needed to build every building
+  on the sheet within the build time.
+
+## Data and assumptions
+
+Recipe data is the game's Docs.json as extracted by
+[SatisfactoryTools](https://github.com/greeny/SatisfactoryTools) (`data/data1.0.json`).
+Numbers entered by hand, worth checking if something looks off:
+
+* Miners Mk.1/2/3: 60/120/240 per minute on a normal node; impure ×0.5, pure ×2.
+* Water extractor 120 m³/min; oil extractor 120 m³/min normal; resource well
+  satellite 60 m³/min normal (pressurizer 150 MW, entered by count).
+* Geothermal average 100/200/400 MW (impure/normal/pure), fixed clock.
+* Nuclear waste: 50 per uranium rod, 10 per plutonium rod, none for ficsonium.
+* Alien Power Augmentor: +500 MW and +10% of grid production; +30% when fed
+  5 Alien Power Matrix/min. Boosts add up and multiply all generated power.
+  (The matrix rate and the stacking rule are from community sources, not the
+  game files.)
+* Main Portal: 250 MW from the game files; no running item cost is modelled.
+* Consumer power scales with clock^1.321929; generator output linearly.
