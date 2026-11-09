@@ -56,6 +56,85 @@ def short(cls):
     return s[:-2] if s.endswith("_C") else s
 
 
+# ---- Architecture material costs (Customizer) ------------------------------
+# The extracted build recipes hold only each piece's base cost; in 1.0 the
+# chosen material adds its own cost.  Source: satisfactory.wiki.gg pages
+# Foundations, Walls and Roofs (fetched 2026-11-09).  Every size, ramp,
+# quarter pipe and stair of a set costs the same.
+#   foundation-type pieces: 5 Concrete + material
+#   walls: 2 Concrete (windows: 2 Silica) + material
+#   roofs: 3 Concrete + material
+MATERIAL_ADDON = {
+    "ficsit": [("IronPlate", 2.0)],
+    "steel": [("SteelPlate", 2.0)],      # Steel Beam (walls, Metal roofs, Grip Metal)
+    "concrete": [("Cement", 2.0)],       # Concrete / Asphalt foundations, concrete walls, Tar roofs
+    "plastic": [("Plastic", 2.0)],       # Coated (polished) concrete foundations
+    "glass": [("Silica", 2.0)],          # Glass roofs
+}
+# Pieces missing from the extracted data entirely (wiki: Stairs; the data has
+# only the 1 m coated-concrete foundation).  Material add-ons are applied below.
+EXTRA_BUILDINGS = {
+    "Foundation_ConcretePolished_8x2": {"n": "Foundation (2\u202fm) (Polished)", "cost": [["Cement", 5.0]]},
+    "Foundation_ConcretePolished_8x4": {"n": "Foundation (4\u202fm) (Polished)", "cost": [["Cement", 5.0]]},
+    "Stairs_Left_01": {"n": "Stairs Left", "cost": [["Cement", 5.0], ["IronPlate", 4.0]]},
+    "Stairs_Right_01": {"n": "Stairs Right", "cost": [["Cement", 5.0], ["IronPlate", 4.0]]},
+}
+FOUNDATION_PREFIXES = ("Foundation_", "Ramp", "InvertedRamp", "QuarterPipe", "DownQuarterPipe", "Stair_")
+
+
+def piece_material(key):
+    """(kind, material) for an architecture piece, or None for anything else."""
+    k = key
+    if k.startswith("Roof_"):
+        if k.startswith("Roof_Orange"): return "roof", "ficsit"
+        if k.startswith("Roof_Tar"): return "roof", "concrete"
+        if k.startswith("Roof_Window"): return "roof", "glass"
+        # Roof_A_* are the straight pieces of the Metal set (its corners are
+        # Roof_Metal_*); the data labels them "(FICSIT)" by mistake.
+        if k.startswith("Roof_A_") or k.startswith("Roof_Metal"): return "roof", "steel"
+        return None
+    if k.startswith(("Wall_", "SteelWall_", "WallSet_")):
+        if "Frame" in k or "Thin" in k or k[-2:] in ("05", "06", "07"):
+            return None  # frame walls and steel-framed windows already cost their full price
+        if "Steel" in k or k == "Wall_8x4_02": return "wall", "steel"
+        if "Concrete" in k: return "wall", "concrete"
+        return "wall", "ficsit"
+    if k.startswith(FOUNDATION_PREFIXES) and "Frame" not in k and "Glass" not in k \
+            and "Passthrough" not in k:
+        if "Grip" in k or "Metal" in k: return "foundation", "steel"
+        if "Polished" in k: return "foundation", "plastic"
+        if "Asphalt" in k or "Concrete" in k: return "foundation", "concrete"
+        return "foundation", "ficsit"
+    return None
+
+
+BASE_COST = {"foundation": {"Cement": 5.0}, "wall": {"Cement": 2.0}, "roof": {"Cement": 3.0}}
+
+
+def add_material_costs(buildings):
+    for key, b in EXTRA_BUILDINGS.items():
+        buildings.setdefault(key, dict(b))
+    changed = 0
+    for key, b in buildings.items():
+        pm = piece_material(key)
+        if not pm:
+            continue
+        kind, mat = pm
+        cost = dict((i, q) for i, q in b["cost"])
+        base = BASE_COST[kind]
+        window = kind == "wall" and cost == {"Silica": 2.0}
+        if cost != base and not window:
+            print("warning: unexpected base cost, left alone:", key, b["cost"], file=sys.stderr)
+            continue
+        for item_key, q in MATERIAL_ADDON[mat]:
+            cost[item_key] = cost.get(item_key, 0.0) + q
+        b["cost"] = [[i, q] for i, q in cost.items()]
+        if key.startswith("Roof_A_"):
+            b["n"] = b["n"].replace("(FICSIT)", "(Metal)")
+        changed += 1
+    print(f"material costs added to {changed} architecture pieces")
+
+
 def main():
     if "--fetch" in sys.argv or not RAW.exists():
         RAW.parent.mkdir(exist_ok=True)
@@ -228,6 +307,7 @@ def main():
             else:
                 bn = bk
             buildings[bk] = {"n": bn, "cost": [[item(i["item"]), i["amount"]] for i in r["ingredients"]]}
+    add_material_costs(buildings)
     for r in recipes:
         if r["m"] == "Gathering":
             continue

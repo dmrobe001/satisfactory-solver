@@ -68,6 +68,19 @@ Numbers entered by hand, worth checking if something looks off:
   game files.)
 * Main Portal: 250 MW from the game files, plus 2 Singularity Cells/min.
 * Consumer power scales with clock^1.321929; generator output linearly.
+* Architecture build costs. The extracted recipes hold only each piece's base
+  cost; in 1.0 the Customizer material adds its own. From the wiki's
+  Foundations, Walls and Roofs pages, every size and shape in a set costs:
+  * foundations, ramps, quarter pipes, foundation stairs: 5 Concrete plus
+    FICSIT 2 Iron Plate, Grip Metal 2 Steel Beam, Coated Concrete 2 Plastic,
+    Concrete or Asphalt 2 Concrete;
+  * walls: 2 Concrete (windows 2 Silica) plus FICSIT 2 Iron Plate, Steel
+    2 Steel Beam, Concrete 2 Concrete (frame windows already include theirs);
+  * roofs: 3 Concrete plus FICSIT 2 Iron Plate, Tar 2 Concrete, Metal 2 Steel
+    Beam, Glass 2 Silica. `Roof_A_*` are the Metal set's straight pieces
+    (labelled FICSIT in the data).
+  * Added by hand: Stairs Left/Right (5 Concrete, 4 Iron Plate) and the 2 m
+    and 4 m Coated Concrete foundations, which the data lacks.
 
 ## Default sheet
 
