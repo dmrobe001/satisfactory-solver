@@ -69,6 +69,8 @@
     this.f = new Float64Array(NR);
     this.n = new Float64Array(NR);
     this.R.forEach((r, i) => { if (this.manual[i]) this.c[i] = 1; });
+    this.off = new Uint8Array(NR); // recipes switched out (e.g. FICSMAS) keep c/f/n but count for nothing
+    if (this.offGroups) for (const g of this.offGroups) this.R.forEach((r, i) => { if (r[g]) this.off[i] = 1; });
     this.prod = new Float64Array(NI);
     this.cons = new Float64Array(NI);
     this.B = 0;
@@ -83,6 +85,7 @@
   };
 
   Solver.prototype.contrib = function (r, sign) {
+    if (this.off[r]) return;
     const n = this.n[r], c = this.c[r];
     if (n === 0 || c === 0) return;
     const s = sign * n * c;
@@ -102,7 +105,7 @@
   };
 
   Solver.prototype.isActive = function (r) {
-    return this.c[r] > 0 && (!this.manual[r] || this.n[r] > 0);
+    return !this.off[r] && this.c[r] > 0 && (!this.manual[r] || this.n[r] > 0);
   };
 
   Solver.prototype.activeProducers = function (k) {
@@ -218,6 +221,21 @@
     n = Math.max(0, +n || 0);
     this.setN(r, this.integer ? whole(n) : n);
     this.propagate(r);
+  };
+
+  /* Switch a group of recipes (those with rec[flag] set, e.g. "xmas") on or
+   * off.  Off recipes keep their clock, floor and count but contribute
+   * nothing; their suppliers are re-sized either way. */
+  Solver.prototype.setGroup = function (flag, on) {
+    this.offGroups = this.offGroups || new Set();
+    if (on) this.offGroups.delete(flag); else this.offGroups.add(flag);
+    const touched = [];
+    this.R.forEach((rec, r) => {
+      if (!rec[flag] || !this.off[r] === !!on) return;
+      if (on) { this.off[r] = 0; this.contrib(r, +1); } else { this.contrib(r, -1); this.off[r] = 1; }
+      touched.push(r);
+    });
+    for (const r of touched) this.propagate(r);
   };
 
   /* ---- Bulk load (no propagation; trusts the saved numbers) ------------ */

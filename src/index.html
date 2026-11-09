@@ -62,6 +62,7 @@
         </span>
         <button class="btn" type="button" id="sortDir" aria-label="Reverse sort order">▲</button>
       </label>
+      <label class="xmas-toggle"><input type="checkbox" id="ficsmas"> FICSMAS</label>
       <span class="seg-label">Show fields
         <span class="checks" id="viewSet">
           <label><input type="checkbox" id="view-mach" data-v="mach" checked> Machine &amp; layer</label>
@@ -149,6 +150,7 @@
         <li>Resource well extractors, geothermal generators and hand-gathered items have a fixed clock: on or off.</li>
         <li>Hand-gathered items (leaves, wood, mycelia, remains, power slugs, Somersloops, Mercer Spheres) count as layer 0 with one “gatherer” per item per minute and no building.</li>
         <li>Foundations, walls and roofs cost their base Concrete (Silica for windows) plus 2 of the material’s item: Iron Plate for FICSIT, Steel Beam for Steel, Grip Metal and Metal roofs, Plastic for Coated Concrete, Concrete for Concrete, Asphalt and Tar, Silica for Glass roofs.</li>
+        <li>FICSMAS recipes and buildings are hidden and count for nothing unless the FICSMAS box is ticked; that includes the ordinary materials they would consume. FICSMAS Gifts are hand-gathered, one gatherer per gift per minute.</li>
         <li>Layer 0 is every recipe without inputs. A recipe is in layer N when all its inputs can come from layer N−1 or below.</li>
       </ul>
       <p class="note">Recipe data: the game’s Docs.json as extracted by the SatisfactoryTools project (game version 1.0). Miner, extractor, geothermal, nuclear-waste and augmentor numbers are entered by hand.</p>

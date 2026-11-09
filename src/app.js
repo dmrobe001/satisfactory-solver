@@ -18,6 +18,7 @@
     lane: Object.fromEntries(BELTS.concat(PIPES, [RAIL]).map((k) => [k, 1])),
     perMachine: { PipeHyper: 1, PowerLine: 2, Foundation_8x1_01: 4, PowerPoleMk1: 0, PowerPoleMk2: 0, PowerPoleMk3: 1, PowerTower: 0.05 },
     extra: {},
+    ficsmas: false,
   });
   let settings = DEFAULTS();
 
@@ -58,12 +59,21 @@
     settings.perMachine = Object.assign(DEFAULTS().perMachine, (o.settings || {}).perMachine || {});
     settings.extra = Object.assign({}, (o.settings || {}).extra || {});
     S.load(o.sheet || {});
+    applyFicsmas();
+  }
+
+  /* FICSMAS recipes and buildings only count while the toggle is on. */
+  function applyFicsmas() {
+    S.setGroup("xmas", !!settings.ficsmas);
+    const cb = document.getElementById("ficsmas");
+    if (cb) cb.checked = !!settings.ficsmas;
   }
 
   // Default sheet: built by tools/import_plan.js from the user's earlier plan.
   function loadDefault() {
     settings = DEFAULTS();
     S.load(window.DEFAULT_PLAN || {});
+    applyFicsmas();
   }
 
   /* ---- recipe rows ---- */
@@ -84,12 +94,12 @@
     const field = (label, inner, cls = "") => `<div class="fld ${cls}"><span class="fl">${label}</span>${inner}</div>`;
     tr.innerHTML =
       `<div class="band b-mid">` +
-        `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}</span>` +
+        `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}${rec.xmas ? '<span class="alt">FICSMAS</span>' : ""}</span>` +
         `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}</span></div>` +
         `<div class="fields">` +
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
-          (S.hasFloor(r) ? field("Floor /min", floorCell) + field("Surplus /min", `<span class="need c-sur"></span>`) : "") +
+          (S.hasFloor(r) ? field("Floor /min", floorCell) + field("Surplus /min", `<span class="need c-sur" title="Net production of ${esc(IT[rec.outs[0][0]].n)} after every running consumer"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
@@ -99,6 +109,7 @@
           field("MW @100%", `<span class="pw c-p100"></span>`) + field("MW @clock", `<span class="pw c-pclk"></span>`) + field("MW total", `<span class="pw c-ptot"></span>`) +
         `</div>` +
       `</div>`;
+    if (rec.xmas) tr.classList.add("xmas");
     const search = (rec.name + " " + mname(rec) + " " + rec.ins.concat(rec.outs).map(([k]) => IT[k].n).join(" ")).toLowerCase();
     return {
       tr, rec, search,
@@ -108,7 +119,7 @@
       flags: { in: false, mid: false, out: false },
     };
   });
-  rows.forEach((row) => tbody.appendChild(row.tr));
+  { const frag = document.createDocumentFragment(); rows.forEach((row) => frag.appendChild(row.tr)); tbody.appendChild(frag); }
 
   tbody.addEventListener("input", (e) => {
     const t = e.target;
@@ -172,6 +183,7 @@
     PER_MACHINE.forEach((k) => add(k, machines * (settings.perMachine[k] || 0)));
     const total = {};
     for (const k of Object.keys(B)) {
+      if (B[k].xmas && !settings.ficsmas) continue;
       const t = (comp[k] || 0) + (+settings.extra[k] || 0);
       if (t) total[k] = t;
     }
@@ -204,6 +216,10 @@
   }
 
   /* ---- refresh ---- */
+  // Only touch the DOM when a value actually changes: rewriting hundreds of
+  // unchanged cells makes the browser restyle and re-lay-out every row.
+  function setHTML(el, h) { if (el._h !== h) { el._h = h; el.innerHTML = h; } }
+  function setText(el, t) { if (el._t !== t) { el._t = t; el.textContent = t; } }
   function setVal(input, v) {
     if (!input) return;
     if (document.activeElement === input) return;
@@ -238,11 +254,10 @@
           if (derived.target[k] < nd - 1e-9) fmid = true;
         }
       }
-      row.need.innerHTML = needH;
+      setHTML(row.need, needH);
       if (row.sur) {
         const k0 = S.outs[r][0][0];
-        row.sur.textContent = active ? fmt(S.net(k0)) + unit(k0) : "";
-        row.sur.title = "Net production of " + iname(k0) + " after every running consumer";
+        setText(row.sur, active ? fmt(S.net(k0)) + unit(k0) : "");
       }
       row.tr.classList.toggle("w-in", fin);
       row.tr.classList.toggle("w-out", fout);
@@ -251,17 +266,16 @@
       // count
       setVal(row.cnt, String(S.n[r] || 0));
       // flows
-      row.inFlow.innerHTML = flowHTML(S.ins[r], r, active, false);
-      row.outFlow.innerHTML = flowHTML(S.outs[r], r, active, true);
+      setHTML(row.inFlow, flowHTML(S.ins[r], r, active, false));
+      setHTML(row.outFlow, flowHTML(S.outs[r], r, active, true));
       // power
       const p1 = S.machinePower(r, 1), pc = S.machinePower(r, c > 0 ? c : 0), pt = active ? pc * S.n[r] : 0;
-      const pcell = (el, v) => { el.textContent = rec.p === 0 ? "—" : fmt(v); el.classList.toggle("gen", v < 0); };
+      const pcell = (el, v) => { setText(el, rec.p === 0 ? "—" : fmt(v)); el.classList.toggle("gen", v < 0); };
       pcell(row.p100, p1); pcell(row.pclk, pc); pcell(row.ptot, pt);
     });
     renderSummary(pw);
     applyFilter();
     renderActiveTab();
-    $("#io").value = JSON.stringify(snapshot());
   }
 
   function renderSummary(pw) {
@@ -316,12 +330,18 @@
       if (vis && kind !== "all" && KIND_GROUP[row.rec.kind] !== kind) vis = false;
       if (vis && show === "active" && !S.isActive(r)) vis = false;
       if (vis && show === "flag" && !(row.flags.in || row.flags.mid || row.flags.out)) vis = false;
-      row.tr.hidden = !vis;
+      if (vis && row.rec.xmas && !settings.ficsmas) vis = false;
+      if (row.tr.hidden === vis) row.tr.hidden = !vis;
       if (vis) n++;
     });
-    $("#rowCount").textContent = `${n} of ${rows.length} recipes`;
+    const total = settings.ficsmas ? rows.length : rows.filter((x) => !x.rec.xmas).length;
+    setText($("#rowCount"), `${n} of ${total} recipes`);
   }
   ["#q", "#show", "#kind"].forEach((s) => $(s).addEventListener("input", applyFilter));
+  $("#ficsmas").addEventListener("change", (e) => {
+    settings.ficsmas = e.target.checked;
+    applyFicsmas(); hideBanner(); save(); refresh();
+  });
 
   /* ---- tabs ---- */
   let tab = "recipes";
@@ -375,7 +395,7 @@
     const tb = $("#buildings tbody");
     const q = $("#bq").value.trim().toLowerCase();
     const all = $("#bshow").value === "all";
-    const ks = bKeys.filter((k) => (all || derived.total[k] || +settings.extra[k]) && (!q || B[k].n.toLowerCase().includes(q)));
+    const ks = bKeys.filter((k) => (settings.ficsmas || !B[k].xmas) && (all || derived.total[k] || +settings.extra[k]) && (!q || B[k].n.toLowerCase().includes(q)));
     // keep focus while typing in an Extra field
     const fid = document.activeElement && document.activeElement.id;
     tb.innerHTML = ks.length ? ks.map((k) => {
@@ -416,6 +436,7 @@
     keys.forEach((k) => setVal(document.getElementById(`set-${group}-${k}`), obj[k]));
   }
   function renderSettings() {
+    setVal($("#io"), JSON.stringify(snapshot()));
     setVal($("#set-timescale"), settings.timescale);
     kvInputs($("#laneSet"), BELTS.concat(PIPES, [RAIL]), settings.lane, "lane");
     kvInputs($("#machSet"), PER_MACHINE, settings.perMachine, "perMachine");
@@ -445,11 +466,11 @@
   $("#ioClear").addEventListener("click", (e) => {
     if (!clearArmed) { clearArmed = true; e.target.textContent = "Click again to clear"; setTimeout(() => { clearArmed = false; e.target.textContent = "Clear sheet"; }, 3000); return; }
     clearArmed = false; e.target.textContent = "Clear sheet";
-    S.reset(); settings = DEFAULTS(); save(); refresh(); $("#ioMsg").textContent = "Sheet cleared.";
+    S.reset(); settings = DEFAULTS(); applyFicsmas(); save(); refresh(); $("#ioMsg").textContent = "Sheet cleared.";
   });
 
   function hideBanner() { $("#exampleBanner").hidden = true; }
-  $("#bannerClear").addEventListener("click", () => { S.reset(); settings = DEFAULTS(); hideBanner(); save(); refresh(); });
+  $("#bannerClear").addEventListener("click", () => { S.reset(); settings = DEFAULTS(); applyFicsmas(); hideBanner(); save(); refresh(); });
 
   /* ---- boot ---- */
   let saved = null;

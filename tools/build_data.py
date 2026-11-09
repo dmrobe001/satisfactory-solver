@@ -276,6 +276,39 @@ def main():
         add(id=f"Gather_{k}", name=f"Gathered {items[k]['n']}", m="Gathering", kind="gather",
             mc=1.0, outs=[(k, 1.0)], p=0.0, pe=1.0)
 
+    # ---- FICSMAS (seasonal event) -------------------------------------------
+    # FICSMAS items: products of the wiki's "ficsmas" season recipes, plus the
+    # Gift they all start from.  A recipe or building is FICSMAS if it touches
+    # one (this also catches the fireworks, which carry no season tag).
+    wr = wiki["DocsRecipes"]
+    xitems = {"Desc_Gift_C"}
+    for r in wr.values():
+        if "ficsmas" in r.get("seasons", []):
+            xitems.update(x["item"] for x in r["products"])
+    xkeys = {short(c) for c in xitems}
+    have = {r["id"] for r in recipes}
+    for cls, r in sorted(wr.items()):
+        if not r["producedIn"] or short(cls) in have:
+            continue
+        parts = r["ingredients"] + r["products"]
+        if not any(x["item"] in xitems for x in parts):
+            continue
+        mach = r["producedIn"][0]
+        per = 60.0 / r["duration"]
+        add(id=short(cls), name=r["name"], m=short(mach), alt=0,
+            ins=[(item(i["item"]), i["amount"] * per) for i in r["ingredients"]],
+            outs=[(item(i["item"]), i["amount"] * per) for i in r["products"]],
+            p=bpow(mach), vp=0)
+    k = item("Desc_Gift_C")
+    add(id="Gather_Gift", name=f"Gathered {items[k]['n']}", m="Gathering", kind="gather",
+        mc=1.0, outs=[(k, 1.0)], p=0.0, pe=1.0)
+    for r in recipes:
+        if any(k2 in xkeys for k2, _ in r["ins"] + r["outs"]):
+            r["xmas"] = 1
+    for k2 in xkeys:
+        if k2 in items:
+            items[k2]["xmas"] = 1
+
     # ---- Layers ------------------------------------------------------------
     # Layer 0: anything with no inputs (miners, extractors, geothermal, the
     # photonic-matter converter recipe, the unfueled augmenter).  Layer N:
@@ -343,6 +376,8 @@ def main():
     used = {r["m"] for r in recipes if r["m"] != "Gathering"}
     for k2, b in buildings.items():
         b["prod"] = 1 if k2 in used else 0
+        if any(i in xkeys for i, _ in b["cost"]) or "FICSMAS" in b["n"]:
+            b["xmas"] = 1
 
     out = {"version": "1.0", "source": URL, "items": items, "recipes": recipes, "buildings": buildings}
     OUT.parent.mkdir(exist_ok=True)

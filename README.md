@@ -63,6 +63,12 @@ walkways, vehicle paths, FICSMAS pieces) come from the Official Satisfactory
 Wiki's copy of the current game data (`Template:DocsRecipes.json` and friends
 on satisfactory.wiki.gg). Comparing the two sources, 1.1 and 1.2 changed no
 existing production recipe or build cost.
+
+FICSMAS (the seasonal event) is included behind a toggle: its 15 crafting
+recipes, a hand-gathered FICSMAS Gift source and its buildables. A recipe or
+building counts as FICSMAS if it touches an item made by the wiki's
+"ficsmas"-season recipes (or the Gift). With the toggle off they are hidden
+and contribute nothing, including the ordinary materials they would use.
 Numbers entered by hand, worth checking if something looks off:
 
 * Miners Mk.1/2/3: 60/120/240 per minute on a normal node; impure ×0.5, pure ×2.
