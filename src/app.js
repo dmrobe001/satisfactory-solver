@@ -7,7 +7,7 @@
   const IT = G.items;
   const KEYS = S.itemKeys;
   const B = G.buildings;
-  const STORE = "satisfactory-sheet.v1";
+  const STORE = "satisfactory-sheet.v2";
 
   const BELTS = [1, 2, 3, 4, 5, 6].map((k) => "ConveyorBeltMk" + k);
   const PIPES = ["Pipeline", "PipelineMK2"];
@@ -31,7 +31,7 @@
   function fmt(x) {
     if (!isFinite(x)) return "∞";
     const a = Math.abs(x);
-    if (a < 5e-7) return "0";
+    if (a < 1e-4) return "0";
     if (a >= 10000) return Math.round(x).toLocaleString("en-US");
     if (a >= 100) return trim(x.toFixed(1));
     if (a >= 1) return trim(x.toFixed(2));
@@ -60,22 +60,17 @@
     S.load(o.sheet || {});
   }
 
-  function loadExample() {
-    S.reset();
+  // Default sheet: built by tools/import_plan.js from the user's earlier plan.
+  function loadDefault() {
     settings = DEFAULTS();
-    const on = ["Miner2_Normal_OreIron", "IngotIron", "IronPlate", "IronRod", "Screw", "IronPlateReinforced",
-      "Miner1_Normal_Coal", "WaterExtractor", "Burn_Coal_GeneratorCoal", "Miner1_Normal_Stone", "Concrete"];
-    on.forEach((id) => { if (S.rIdx[id] !== undefined) S.setClock(S.rIdx[id], 1); });
-    const floor = (id, v) => { if (S.rIdx[id] !== undefined) S.setFloor(S.rIdx[id], v); };
-    floor("IronPlateReinforced", 5);
-    floor("IronPlate", 20);
-    floor("Concrete", 15);
+    S.load(window.DEFAULT_PLAN || {});
   }
 
   /* ---- recipe rows ---- */
   const tbody = $("#rows");
   const rows = R.map((rec, r) => {
-    const tr = document.createElement("tr");
+    const tr = document.createElement("div");
+    tr.className = "row";
     tr.dataset.r = r;
     const manual = S.manual[r];
     if (manual) tr.classList.add("manual");
@@ -87,20 +82,26 @@
     const floorCell = hasOut && !manual
       ? `<input class="cell-in flr" type="number" id="flr-${r}" min="0" step="any" aria-label="Floor per minute">`
       : `<span class="fixed">—</span>`;
+    const field = (label, inner, cls = "") => `<div class="fld ${cls}"><span class="fl">${label}</span>${inner}</div>`;
     tr.innerHTML =
-      `<td class="c-in band-l"><div class="flow"></div></td>` +
-      `<td class="c-name g-mid"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}</span><span class="rm">${esc(mname(rec))}</span></td>` +
-      `<td class="c-layer g-mid">${rec.layer}</td>` +
-      `<td class="n g-mid">${clockCell}</td>` +
-      `<td class="n g-mid">${floorCell}</td>` +
-      `<td class="n g-mid c-need"></td>` +
-      `<td class="c-out g-out band-r"><div class="flow"></div></td>` +
-      `<td class="n g-out"><input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="any" readonly aria-label="Machines"><span class="bld"></span></td>` +
-      `<td class="n g-out c-p100"></td><td class="n g-out c-pclk"></td><td class="n g-out c-ptot"></td>`;
+      `<div class="band b-mid">` +
+        `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}</span>` +
+        `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}</span></div>` +
+        `<div class="fields">` +
+          field("Clock %", clockCell) + field("Floor /min", floorCell) + field("Build need", `<span class="need c-need"></span>`) +
+        `</div>` +
+      `</div>` +
+      `<div class="band b-in"><span class="fl">Inputs <i>per machine · total</i></span><div class="flow"></div></div>` +
+      `<div class="band b-out"><span class="fl">Outputs <i>per machine · total</i></span><div class="flow"></div>` +
+        `<div class="fields">` +
+          field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="any" readonly aria-label="Machines"><span class="bld"></span>`, "f-cnt") +
+          field("MW @100%", `<span class="pw c-p100"></span>`) + field("MW @clock", `<span class="pw c-pclk"></span>`) + field("MW total", `<span class="pw c-ptot"></span>`) +
+        `</div>` +
+      `</div>`;
     const search = (rec.name + " " + mname(rec) + " " + rec.ins.concat(rec.outs).map(([k]) => IT[k].n).join(" ")).toLowerCase();
     return {
       tr, rec, search,
-      inFlow: $(".c-in .flow", tr), outFlow: $(".c-out .flow", tr),
+      inFlow: $(".b-in .flow", tr), outFlow: $(".b-out .flow", tr),
       clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr), bld: $(".bld", tr),
       need: $(".c-need", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
       flags: { in: false, mid: false, out: false },
@@ -110,7 +111,7 @@
 
   tbody.addEventListener("input", (e) => {
     const t = e.target;
-    const tr = t.closest("tr");
+    const tr = t.closest(".row");
     if (!tr) return;
     const r = +tr.dataset.r;
     if (t.classList.contains("clk")) {
@@ -206,7 +207,7 @@
       row.tr.classList.toggle("idle", !active);
       if (row.clk) {
         if (row.clk.type === "checkbox") row.clk.checked = c > 0;
-        else setVal(row.clk, c > 0 ? trim((c * 100).toFixed(4)) : "0");
+        else setVal(row.clk, c > 0 ? trim((c * 100).toFixed(3)) : "0");
       }
       if (row.flr) setVal(row.flr, S.f[r] ? trim(S.f[r].toFixed(4)) : "0");
       // flags
@@ -280,8 +281,7 @@
     sorted.forEach((x) => frag.appendChild(x.tr));
     tbody.appendChild(frag);
     document.querySelectorAll("#sortSeg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.sort === sortKey ? "true" : "false"));
-    document.querySelectorAll("#sheet th.sortable").forEach((th) =>
-      th.dataset.sort === sortKey ? th.setAttribute("aria-sort", sortDir > 0 ? "ascending" : "descending") : th.removeAttribute("aria-sort"));
+    $("#sortDir").textContent = sortDir > 0 ? "▲" : "▼";
   }
   function setSort(k) {
     if (k === sortKey) sortDir = -sortDir; else { sortKey = k; sortDir = 1; }
@@ -289,7 +289,7 @@
     applySort();
   }
   $("#sortSeg").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setSort(b.dataset.sort); });
-  document.querySelectorAll("#sheet th.sortable").forEach((th) => th.addEventListener("click", () => setSort(th.dataset.sort)));
+  $("#sortDir").addEventListener("click", () => setSort(sortKey));
 
   function applyFilter() {
     const q = $("#q").value.trim().toLowerCase();
@@ -425,7 +425,7 @@
       applySnapshot(o); save(); refresh(); $("#ioMsg").textContent = "Sheet loaded.";
     } catch (e) { $("#ioMsg").textContent = "That text is not a saved sheet. Paste the whole block copied from this page."; }
   });
-  $("#ioExample").addEventListener("click", () => { loadExample(); save(); refresh(); $("#ioMsg").textContent = "Example loaded."; });
+  $("#ioExample").addEventListener("click", () => { loadDefault(); save(); refresh(); $("#ioMsg").textContent = "Default plan loaded."; });
   let clearArmed = false;
   $("#ioClear").addEventListener("click", (e) => {
     if (!clearArmed) { clearArmed = true; e.target.textContent = "Click again to clear"; setTimeout(() => { clearArmed = false; e.target.textContent = "Clear sheet"; }, 3000); return; }
@@ -441,7 +441,7 @@
   try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { saved = null; }
   try { const s = JSON.parse(localStorage.getItem(STORE + ".sort") || "null"); if (s) { sortKey = s[0]; sortDir = s[1]; } } catch (e) { /* ignore */ }
   if (saved && saved.sheet) applySnapshot(saved);
-  else { loadExample(); $("#exampleBanner").hidden = false; }
+  else { loadDefault(); $("#exampleBanner").hidden = false; }
   applySort();
   refresh();
 })();

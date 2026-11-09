@@ -19,11 +19,13 @@ file; open it in a browser, or publish it as a claude.ai artifact).
 | `src/app.js`, `src/style.css`, `src/index.html` | The page. |
 | `tools/build.py` | Inlines everything into `dist/satisfactory-sheet.html`. |
 | `tools/test_solver.js` | Command-line checks of the solver. |
+| `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
 ## Rebuild
 
 ```sh
 python3 tools/build_data.py --fetch   # only when the game data changes
+node tools/import_plan.js             # re-derive the default sheet
 python3 tools/build.py
 node tools/test_solver.js
 ```
@@ -62,5 +64,27 @@ Numbers entered by hand, worth checking if something looks off:
   5 Alien Power Matrix/min. Boosts add up and multiply all generated power.
   (The matrix rate and the stacking rule are from community sources, not the
   game files.)
-* Main Portal: 250 MW from the game files; no running item cost is modelled.
+* Main Portal: 250 MW from the game files, plus 2 Singularity Cells/min.
 * Consumer power scales with clock^1.321929; generator output linearly.
+
+## Default sheet
+
+`tools/import_plan.js` builds the default from the old plan:
+
+* Recipes and clocks come from the old plan's `recs`. Machine counts are kept
+  only where nothing else decides them (end products, generators, items made
+  by two or more running recipes); every recipe that is the only running
+  producer of a consumed item is re-sized by propagation, top layer down.
+* The old plan's `needs` become floors, except Alien Power Matrix and
+  Singularity Cells, which the augmentor and portal now consume.
+* Items with several running producers can't propagate, so the script
+  scales those producers, keeping their ratio, until supply meets demand
+  (water, rubber, steel ingots, dark matter, power).
+* Extraction: every pure Mk.3 miner, the pure oil extractor and the water
+  extractor run at 250%; other miners are off. Of the pure resource wells
+  only nitrogen runs, since a second running water or oil producer would
+  stop propagation. One fueled augmentor, one Main Portal, one pressurizer.
+* The old plan had no producer for Compacted Coal, so Alternate: Compacted
+  Coal is added.
+* Finally each running recipe's floor is set to its current net output, so
+  the sheet reproduces itself when you change a clock.

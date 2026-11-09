@@ -21,7 +21,7 @@
 
 <section class="summary" id="summary" aria-label="Summary"></section>
 <div class="banner" id="exampleBanner" hidden>
-  <span>Example factory loaded: iron plates and reinforced iron plates on coal power. Your edits are saved in this browser.</span>
+  <span>Default plan loaded: your preferred recipes and clocks from the earlier factory ledger, with pure Mk.3 miners and extractors at 250%, one fueled Alien Power Augmentor and the Main Portal. Your edits are saved in this browser.</span>
   <button class="btn" id="bannerClear" type="button">Start empty</button>
 </div>
 
@@ -60,33 +60,15 @@
           <button type="button" data-sort="machine">Machine</button>
           <button type="button" data-sort="layer" aria-pressed="true">Layer</button>
         </span>
+        <button class="btn" type="button" id="sortDir" aria-label="Reverse sort order">▲</button>
       </label>
       <span class="count" id="rowCount"></span>
     </div>
-    <div class="scroll">
-      <table id="sheet">
-        <thead>
-          <tr class="bands">
-            <th class="band-l">Inputs <span class="count">per machine · total</span></th>
-            <th colspan="5">Recipe</th>
-            <th class="band-r" colspan="5">Outputs &amp; power</th>
-          </tr>
-          <tr class="cols">
-            <th class="band-l">Consumes /min</th>
-            <th class="sortable" data-sort="name">Recipe · machine</th>
-            <th class="sortable" data-sort="layer">Layer</th>
-            <th class="n">Clock %</th>
-            <th class="n" title="Lower bound on net production of the first output, per minute">Floor /min</th>
-            <th class="n" title="Build-material rate needed: bill of materials ÷ build time">Build need</th>
-            <th class="band-r sortable" data-sort="output">Produces /min</th>
-            <th class="n">Machines</th>
-            <th class="n" title="Average MW for one machine at 100% clock; negative = generated">MW @100%</th>
-            <th class="n" title="MW for one machine at its current clock">MW @clock</th>
-            <th class="n" title="MW for all machines of this recipe">MW total</th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
+    <div id="sheet">
+      <div class="sheet-head" aria-hidden="true">
+        <span class="h-mid">Recipe</span><span class="h-in">Inputs</span><span class="h-out">Outputs &amp; power</span>
+      </div>
+      <div id="rows"></div>
     </div>
   </section>
 
@@ -140,7 +122,7 @@
         <div class="tools">
           <button class="btn" type="button" id="ioCopy">Copy sheet</button>
           <button class="btn" type="button" id="ioLoad">Load pasted sheet</button>
-          <button class="btn" type="button" id="ioExample">Load example</button>
+          <button class="btn" type="button" id="ioExample">Load default plan</button>
           <button class="btn danger" type="button" id="ioClear">Clear sheet</button>
           <span class="count" id="ioMsg"></span>
         </div>
@@ -155,7 +137,7 @@
       <ul>
         <li>Machine counts are fractional, as if the last machine were underclocked. Building counts round up.</li>
         <li>Consumer power scales as clock<sup>1.32</sup>; generator output and fuel use scale linearly. Converter, Particle Accelerator and Quantum Encoder use the average of their power cycle.</li>
-        <li>Alien Power Augmentors add 500 MW each and multiply total grid production by 1 + 10% (or 30% when fed 5 Alien Power Matrix/min) per augmentor. Augmentors, the Main Portal (250 MW) and the Resource Well Pressurizer (150 MW) take a typed machine count.</li>
+        <li>Alien Power Augmentors add 500 MW each and multiply total grid production by 1 + 10% (or 30% when fed 5 Alien Power Matrix/min) per augmentor. Augmentors, the Main Portal (250 MW, 2 Singularity Cells/min) and the Resource Well Pressurizer (150 MW) take a typed machine count.</li>
         <li>Resource well extractors, geothermal generators and hand-gathered items have a fixed clock: on or off.</li>
         <li>Hand-gathered items (leaves, wood, mycelia, remains, power slugs, Somersloops, Mercer Spheres) count as layer 0 with one “gatherer” per item per minute and no building.</li>
         <li>Layer 0 is every recipe without inputs. A recipe is in layer N when all its inputs can come from layer N−1 or below.</li>
@@ -167,6 +149,9 @@
 
 <script>
 /*__DATA__*/
+</script>
+<script>
+/*__PLAN__*/
 </script>
 <script>
 /*__SOLVER__*/

@@ -1,0 +1,3089 @@
+{
+ "app": "satisfactory-factory-ledger",
+ "v": 1,
+ "world": {},
+ "opt": {
+  "needs": [
+   {
+    "it": "Desc_SpaceElevatorPart_9_C",
+    "v": 3,
+    "eq": false
+   },
+   {
+    "it": "Desc_SpaceElevatorPart_10_C",
+    "v": 3,
+    "eq": false
+   },
+   {
+    "it": "Desc_SpaceElevatorPart_12_C",
+    "v": 0.768,
+    "eq": false
+   },
+   {
+    "it": "Desc_SpaceElevatorPart_11_C",
+    "v": 0.6,
+    "eq": false
+   },
+   {
+    "it": "Desc_FicsoniumFuelRod_C",
+    "v": 1,
+    "eq": false
+   },
+   {
+    "it": "Desc_AlienPowerFuel_C",
+    "v": 5,
+    "eq": false
+   },
+   {
+    "it": "Desc_SingularityCell_C",
+    "v": 2,
+    "eq": false
+   },
+   {
+    "it": "Desc_Cement_C",
+    "v": 480,
+    "eq": false
+   },
+   {
+    "it": "Desc_Wire_C",
+    "v": 13,
+    "eq": false
+   },
+   {
+    "it": "Desc_Cable_C",
+    "v": 100,
+    "eq": false
+   },
+   {
+    "it": "Desc_CopperSheet_C",
+    "v": 66,
+    "eq": false
+   },
+   {
+    "it": "Desc_IronPlate_C",
+    "v": 60,
+    "eq": false
+   },
+   {
+    "it": "Desc_IronRod_C",
+    "v": 15,
+    "eq": false
+   },
+   {
+    "it": "Desc_IronScrew_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_IronPlateReinforced_C",
+    "v": 50,
+    "eq": false
+   },
+   {
+    "it": "Desc_Rotor_C",
+    "v": 21,
+    "eq": false
+   },
+   {
+    "it": "Desc_ModularFrame_C",
+    "v": 21,
+    "eq": false
+   },
+   {
+    "it": "Desc_HighSpeedWire_C",
+    "v": 35,
+    "eq": false
+   },
+   {
+    "it": "Desc_CircuitBoardHighSpeed_C",
+    "v": 1,
+    "eq": false
+   },
+   {
+    "it": "Desc_Silica_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_QuartzCrystal_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_SteelPlate_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_SteelPipe_C",
+    "v": 30,
+    "eq": false
+   },
+   {
+    "it": "Desc_SAMFluctuator_C",
+    "v": 12,
+    "eq": false
+   },
+   {
+    "it": "Desc_SteelPlateReinforced_C",
+    "v": 40,
+    "eq": false
+   },
+   {
+    "it": "Desc_Stator_C",
+    "v": 0.05,
+    "eq": false
+   },
+   {
+    "it": "Desc_Motor_C",
+    "v": 21,
+    "eq": false
+   },
+   {
+    "it": "Desc_Plastic_C",
+    "v": 44,
+    "eq": false
+   },
+   {
+    "it": "Desc_Rubber_C",
+    "v": 2,
+    "eq": false
+   },
+   {
+    "it": "Desc_CircuitBoard_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_HighSpeedConnector_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_CrystalOscillator_C",
+    "v": 10,
+    "eq": false
+   },
+   {
+    "it": "Desc_Computer_C",
+    "v": 3,
+    "eq": false
+   },
+   {
+    "it": "Desc_ModularFrameHeavy_C",
+    "v": 7,
+    "eq": false
+   },
+   {
+    "it": "Desc_AluminumPlate_C",
+    "v": 14,
+    "eq": false
+   },
+   {
+    "it": "Desc_AluminumCasing_C",
+    "v": 17,
+    "eq": false
+   },
+   {
+    "it": "Desc_ModularFrameLightweight_C",
+    "v": 6,
+    "eq": false
+   },
+   {
+    "it": "Desc_ComputerSuper_C",
+    "v": 4,
+    "eq": false
+   },
+   {
+    "it": "Desc_ElectromagneticControlRod_C",
+    "v": 1,
+    "eq": false
+   },
+   {
+    "it": "Desc_CoolingSystem_C",
+    "v": 8.2,
+    "eq": false
+   },
+   {
+    "it": "Desc_ModularFrameFused_C",
+    "v": 7.5,
+    "eq": false
+   },
+   {
+    "it": "Desc_MotorLightweight_C",
+    "v": 1.0875,
+    "eq": false
+   },
+   {
+    "it": "Desc_TimeCrystal_C",
+    "v": 5,
+    "eq": false
+   },
+   {
+    "it": "Desc_FicsiteMesh_C",
+    "v": 1,
+    "eq": false
+   },
+   {
+    "it": "Desc_QuantumOscillator_C",
+    "v": 1.032,
+    "eq": false
+   },
+   {
+    "it": "Desc_TemporalProcessor_C",
+    "v": 1,
+    "eq": false
+   },
+   {
+    "it": "Desc_Filter_C",
+    "v": 0.0375,
+    "eq": false
+   },
+   {
+    "it": "Desc_HazmatFilter_C",
+    "v": 0.0375,
+    "eq": false
+   },
+   {
+    "it": "Desc_SpikedRebar_C",
+    "v": 0.15,
+    "eq": false
+   },
+   {
+    "it": "Desc_Rebar_Spreadshot_C",
+    "v": 0.05,
+    "eq": false
+   },
+   {
+    "it": "Desc_Rebar_Stunshot_C",
+    "v": 0.1,
+    "eq": false
+   },
+   {
+    "it": "Desc_Rebar_Explosive_C",
+    "v": 0.05,
+    "eq": false
+   },
+   {
+    "it": "Desc_CartridgeStandard_C",
+    "v": 0.5,
+    "eq": false
+   },
+   {
+    "it": "Desc_CartridgeSmartProjectile_C",
+    "v": 0.25,
+    "eq": false
+   },
+   {
+    "it": "Desc_CartridgeChaos_C",
+    "v": 2.5,
+    "eq": false
+   },
+   {
+    "it": "Desc_NobeliskExplosive_C",
+    "v": 0.94,
+    "eq": false
+   },
+   {
+    "it": "Desc_NobeliskCluster_C",
+    "v": 0.025,
+    "eq": false
+   },
+   {
+    "it": "Desc_NobeliskShockwave_C",
+    "v": 0.05,
+    "eq": false
+   },
+   {
+    "it": "Desc_NobeliskNuke_C",
+    "v": 0.005,
+    "eq": false
+   },
+   {
+    "it": "BP_ItemDescriptorPortableMiner_C",
+    "v": 0.01,
+    "eq": false
+   },
+   {
+    "it": "Desc_PackagedIonizedFuel_C",
+    "v": 8,
+    "eq": false
+   }
+  ],
+  "base": false,
+  "tier": "Desc_MinerMk3_C",
+  "tie": "_bld",
+  "round": true,
+  "exact0": true,
+  "ban": [
+   "Recipe_Bauxite_Caterium_C",
+   "Recipe_Bauxite_Copper_C",
+   "Recipe_Caterium_Copper_C",
+   "Recipe_Caterium_Quartz_C",
+   "Recipe_Coal_Iron_C",
+   "Recipe_Coal_Limestone_C",
+   "Recipe_Copper_Quartz_C",
+   "Recipe_Copper_Sulfur_C",
+   "Recipe_Iron_Limestone_C",
+   "Recipe_Limestone_Sulfur_C",
+   "Recipe_Nitrogen_Bauxite_C",
+   "Recipe_Nitrogen_Caterium_C",
+   "Recipe_Quartz_Bauxite_C",
+   "Recipe_Quartz_Coal_C",
+   "Recipe_Sulfur_Coal_C",
+   "Recipe_Sulfur_Iron_C",
+   "Recipe_Uranium_Bauxite_C"
+  ]
+ },
+ "plan": {
+  "groups": [
+   {
+    "id": "rmv286id38t",
+    "r": "Recipe_RocketFuel_C",
+    "mode": "solve",
+    "drive": "Desc_RocketFuel_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id38u",
+    "r": "Recipe_QuantumEnergy_C",
+    "mode": "solve",
+    "drive": "Desc_QuantumEnergy_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id38v",
+    "r": "Recipe_SuperpositionOscillator_C",
+    "mode": "solve",
+    "drive": "Desc_DarkEnergy_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id38w",
+    "r": "Recipe_TemporalProcessor_C",
+    "mode": "solve",
+    "drive": "Desc_TemporalProcessor_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id38x",
+    "r": "Recipe_SpaceElevatorPart_12_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_12_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id38y",
+    "r": "Recipe_IonizedFuel_C",
+    "mode": "solve",
+    "drive": "Desc_IonizedFuel_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id38z",
+    "r": "Recipe_PackagedIonizedFuel_C",
+    "mode": "solve",
+    "drive": "Desc_PackagedIonizedFuel_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id390",
+    "r": "Recipe_SAMFluctuator_C",
+    "mode": "solve",
+    "drive": "Desc_SAMFluctuator_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id391",
+    "r": "Recipe_FicsiteMesh_C",
+    "mode": "solve",
+    "drive": "Desc_FicsiteMesh_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id392",
+    "r": "Recipe_TimeCrystal_C",
+    "mode": "solve",
+    "drive": "Desc_TimeCrystal_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id393",
+    "r": "Recipe_IngotSAM_C",
+    "mode": "solve",
+    "drive": "Desc_SAMIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id394",
+    "r": "Recipe_SpaceElevatorPart_10_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_10_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id395",
+    "r": "Recipe_FicsiteIngot_AL_C",
+    "mode": "solve",
+    "drive": "Desc_FicsiteIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id396",
+    "r": "Recipe_PetroleumCoke_C",
+    "mode": "solve",
+    "drive": "Desc_PetroleumCoke_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id397",
+    "r": "Recipe_ResidualRubber_C",
+    "mode": "top",
+    "drive": "Desc_Rubber_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "21",
+    "c": "479599/500000"
+   },
+   {
+    "id": "rmv286id398",
+    "r": "Recipe_Alternate_Diamond_OilBased_C",
+    "mode": "solve",
+    "drive": "Desc_Diamond_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id399",
+    "r": "Recipe_Alternate_DarkMatter_Trap_C",
+    "mode": "solve",
+    "drive": "Desc_DarkMatter_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39a",
+    "r": "Recipe_Alternate_DarkMatter_Crystallization_C",
+    "mode": "top",
+    "drive": "Desc_DarkMatter_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "3",
+    "c": "2332/2625"
+   },
+   {
+    "id": "rmv286id39b",
+    "r": "Recipe_SteelPipe_C",
+    "mode": "solve",
+    "drive": "Desc_SteelPipe_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39c",
+    "r": "Recipe_Alternate_SteamedCopperSheet_C",
+    "mode": "solve",
+    "drive": "Desc_CopperSheet_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39d",
+    "r": "Recipe_Alternate_RubberConcrete_C",
+    "mode": "solve",
+    "drive": "Desc_Cement_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39e",
+    "r": "Recipe_Alternate_RecycledRubber_C",
+    "mode": "solve",
+    "drive": "Desc_Rubber_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39f",
+    "r": "Recipe_Alternate_PureQuartzCrystal_C",
+    "mode": "solve",
+    "drive": "Desc_QuartzCrystal_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39g",
+    "r": "Recipe_Alternate_PureIronIngot_C",
+    "mode": "solve",
+    "drive": "Desc_IronIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39h",
+    "r": "Recipe_Alternate_PureCopperIngot_C",
+    "mode": "solve",
+    "drive": "Desc_CopperIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39i",
+    "r": "Recipe_Alternate_PureCateriumIngot_C",
+    "mode": "solve",
+    "drive": "Desc_GoldIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39j",
+    "r": "Recipe_PureAluminumIngot_C",
+    "mode": "solve",
+    "drive": "Desc_AluminumIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39k",
+    "r": "Recipe_AluminumCasing_C",
+    "mode": "solve",
+    "drive": "Desc_AluminumCasing_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39l",
+    "r": "Recipe_AluminumSheet_C",
+    "mode": "solve",
+    "drive": "Desc_AluminumPlate_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39m",
+    "r": "Recipe_AluminaSolution_C",
+    "mode": "solve",
+    "drive": "Desc_Silica_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39n",
+    "r": "Recipe_Alternate_PlasticSmartPlating_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_1_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39o",
+    "r": "Recipe_Alternate_HighSpeedWiring_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_3_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39p",
+    "r": "Recipe_EncasedIndustrialBeam_C",
+    "mode": "solve",
+    "drive": "Desc_SteelPlateReinforced_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39q",
+    "r": "Recipe_Stator_C",
+    "mode": "solve",
+    "drive": "Desc_Stator_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39r",
+    "r": "Recipe_Alternate_HeavyOilResidue_C",
+    "mode": "solve",
+    "drive": "Desc_HeavyOilResidue_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39s",
+    "r": "Recipe_Alternate_HeavyFlexibleFrame_C",
+    "mode": "solve",
+    "drive": "Desc_ModularFrameHeavy_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39t",
+    "r": "Recipe_SpaceElevatorPart_4_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_4_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39u",
+    "r": "Recipe_SpaceElevatorPart_5_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_5_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39v",
+    "r": "Recipe_Alternate_FusedWire_C",
+    "mode": "solve",
+    "drive": "Desc_Wire_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39w",
+    "r": "Recipe_Alternate_FlexibleFramework_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_2_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39x",
+    "r": "Recipe_Alternate_ElectroAluminumScrap_C",
+    "mode": "solve",
+    "drive": "Desc_AluminumScrap_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39y",
+    "r": "Recipe_Alternate_CopperRotor_C",
+    "mode": "solve",
+    "drive": "Desc_Rotor_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id39z",
+    "r": "Recipe_Alternate_CoatedIronPlate_C",
+    "mode": "solve",
+    "drive": "Desc_IronPlate_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a0",
+    "r": "Recipe_Alternate_BoltedFrame_C",
+    "mode": "solve",
+    "drive": "Desc_ModularFrame_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a1",
+    "r": "Recipe_Alternate_AdheredIronPlate_C",
+    "mode": "solve",
+    "drive": "Desc_IronPlateReinforced_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a2",
+    "r": "Recipe_PlutoniumCell_C",
+    "mode": "solve",
+    "drive": "Desc_PlutoniumCell_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a3",
+    "r": "Recipe_PressureConversionCube_C",
+    "mode": "solve",
+    "drive": "Desc_PressureConversionCube_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a4",
+    "r": "Recipe_NitricAcid_C",
+    "mode": "solve",
+    "drive": "Desc_NitricAcid_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a5",
+    "r": "Recipe_NonFissileUranium_C",
+    "mode": "solve",
+    "drive": "Desc_NonFissibleUranium_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a6",
+    "r": "Recipe_CopperDust_C",
+    "mode": "solve",
+    "drive": "Desc_CopperDust_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a7",
+    "r": "Recipe_Plutonium_C",
+    "mode": "solve",
+    "drive": "Desc_PlutoniumPellet_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a8",
+    "r": "Recipe_PlutoniumFuelRod_C",
+    "mode": "solve",
+    "drive": "Desc_PlutoniumFuelRod_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3a9",
+    "r": "Recipe_SpaceElevatorPart_9_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_9_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3aa",
+    "r": "Recipe_Alternate_TurboBlendFuel_C",
+    "mode": "solve",
+    "drive": "Desc_LiquidTurboFuel_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ab",
+    "r": "Recipe_SulfuricAcid_C",
+    "mode": "solve",
+    "drive": "Desc_SulfuricAcid_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ac",
+    "r": "Recipe_SpaceElevatorPart_7_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_7_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ad",
+    "r": "Recipe_Alternate_SuperStateComputer_C",
+    "mode": "solve",
+    "drive": "Desc_ComputerSuper_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ae",
+    "r": "Recipe_SpaceElevatorPart_6_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_6_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3af",
+    "r": "Recipe_Alternate_SloppyAlumina_C",
+    "mode": "solve",
+    "drive": "Desc_AluminaSolution_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ag",
+    "r": "Recipe_Alternate_RadioControlSystem_C",
+    "mode": "solve",
+    "drive": "Desc_ModularFrameLightweight_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ah",
+    "r": "Recipe_FusedModularFrame_C",
+    "mode": "solve",
+    "drive": "Desc_ModularFrameFused_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ai",
+    "r": "Recipe_GasTank_C",
+    "mode": "solve",
+    "drive": "Desc_GasTank_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3aj",
+    "r": "Recipe_Alternate_DilutedFuel_C",
+    "mode": "solve",
+    "drive": "Desc_LiquidFuel_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ak",
+    "r": "Recipe_Alternate_CoolingDevice_C",
+    "mode": "solve",
+    "drive": "Desc_CoolingSystem_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3al",
+    "r": "Recipe_Alternate_ClassicBattery_C",
+    "mode": "solve",
+    "drive": "Desc_Battery_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3am",
+    "r": "Recipe_Alternate_AutomatedMiner_C",
+    "mode": "solve",
+    "drive": "BP_ItemDescriptorPortableMiner_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3an",
+    "r": "Recipe_Alternate_SteelBeam_Aluminum_C",
+    "mode": "solve",
+    "drive": "Desc_SteelPlate_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ao",
+    "r": "Recipe_Alternate_AluminumRod_C",
+    "mode": "solve",
+    "drive": "Desc_IronRod_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ap",
+    "r": "Recipe_Alternate_AILimiter_Plastic_C",
+    "mode": "solve",
+    "drive": "Desc_CircuitBoardHighSpeed_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3aq",
+    "r": "Recipe_Alternate_UraniumCell_1_C",
+    "mode": "solve",
+    "drive": "Desc_UraniumCell_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ar",
+    "r": "Recipe_Alternate_TurboMotor_1_C",
+    "mode": "solve",
+    "drive": "Desc_MotorLightweight_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3as",
+    "r": "Recipe_SpaceElevatorPart_8_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_8_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3at",
+    "r": "Recipe_Alternate_Screw_2_C",
+    "mode": "solve",
+    "drive": "Desc_IronScrew_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3au",
+    "r": "Recipe_Alternate_Quickwire_C",
+    "mode": "solve",
+    "drive": "Desc_HighSpeedWire_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3av",
+    "r": "Recipe_Alternate_Plastic_1_C",
+    "mode": "solve",
+    "drive": "Desc_Plastic_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3aw",
+    "r": "Recipe_Alternate_NuclearFuelRod_1_C",
+    "mode": "solve",
+    "drive": "Desc_NuclearFuelRod_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ax",
+    "r": "Recipe_Alternate_Motor_1_C",
+    "mode": "solve",
+    "drive": "Desc_Motor_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ay",
+    "r": "Recipe_Alternate_IngotSteel_2_C",
+    "mode": "solve",
+    "drive": "Desc_SteelIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3az",
+    "r": "Recipe_Alternate_IngotSteel_1_C",
+    "mode": "top",
+    "drive": "Desc_SteelIngot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "2",
+    "c": "610013/1000000"
+   },
+   {
+    "id": "rmv286id3b0",
+    "r": "Recipe_Alternate_HighSpeedConnector_C",
+    "mode": "solve",
+    "drive": "Desc_HighSpeedConnector_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b1",
+    "r": "Recipe_Alternate_HeatSink_1_C",
+    "mode": "solve",
+    "drive": "Desc_AluminumPlateReinforced_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b2",
+    "r": "Recipe_Alternate_Gunpowder_1_C",
+    "mode": "solve",
+    "drive": "Desc_Gunpowder_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b3",
+    "r": "Recipe_Alternate_ElectromagneticControlRod_1_C",
+    "mode": "solve",
+    "drive": "Desc_ElectromagneticControlRod_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b4",
+    "r": "Recipe_Alternate_CrystalOscillator_C",
+    "mode": "solve",
+    "drive": "Desc_CrystalOscillator_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b5",
+    "r": "Recipe_Alternate_Computer_2_C",
+    "mode": "solve",
+    "drive": "Desc_Computer_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b6",
+    "r": "Recipe_Alternate_CircuitBoard_1_C",
+    "mode": "solve",
+    "drive": "Desc_CircuitBoard_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b7",
+    "r": "Recipe_Alternate_Cable_2_C",
+    "mode": "solve",
+    "drive": "Desc_Cable_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b8",
+    "r": "Recipe_Ficsonium_C",
+    "mode": "solve",
+    "drive": "Desc_Ficsonium_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3b9",
+    "r": "Recipe_FicsoniumFuelRod_C",
+    "mode": "solve",
+    "drive": "Desc_FicsoniumFuelRod_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3ba",
+    "r": "Recipe_SingularityCell_C",
+    "mode": "solve",
+    "drive": "Desc_SingularityCell_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bb",
+    "r": "Recipe_SpaceElevatorPart_11_C",
+    "mode": "solve",
+    "drive": "Desc_SpaceElevatorPart_11_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bc",
+    "r": "Recipe_FilterHazmat_C",
+    "mode": "solve",
+    "drive": "Desc_HazmatFilter_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bd",
+    "r": "Recipe_AlienPowerFuel_C",
+    "mode": "solve",
+    "drive": "Desc_AlienPowerFuel_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3be",
+    "r": "Recipe_SpikedRebar_C",
+    "mode": "solve",
+    "drive": "Desc_SpikedRebar_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bf",
+    "r": "Recipe_CartridgeSmart_C",
+    "mode": "solve",
+    "drive": "Desc_CartridgeSmartProjectile_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bg",
+    "r": "Recipe_Rebar_Stunshot_C",
+    "mode": "solve",
+    "drive": "Desc_Rebar_Stunshot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bh",
+    "r": "Recipe_FilterGasMask_C",
+    "mode": "solve",
+    "drive": "Desc_Filter_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bi",
+    "r": "Recipe_Alternate_PolyesterFabric_C",
+    "mode": "solve",
+    "drive": "Desc_Fabric_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bj",
+    "r": "Recipe_SyntheticPowerShard_C",
+    "mode": "solve",
+    "drive": "Desc_CrystalShard_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bk",
+    "r": "Recipe_NobeliskShockwave_C",
+    "mode": "solve",
+    "drive": "Desc_NobeliskShockwave_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bl",
+    "r": "Recipe_Rebar_Spreadshot_C",
+    "mode": "solve",
+    "drive": "Desc_Rebar_Spreadshot_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bm",
+    "r": "Recipe_CartridgeChaos_C",
+    "mode": "solve",
+    "drive": "Desc_CartridgeChaos_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bn",
+    "r": "Recipe_NobeliskNuke_C",
+    "mode": "solve",
+    "drive": "Desc_NobeliskNuke_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bo",
+    "r": "Recipe_Cartridge_C",
+    "mode": "solve",
+    "drive": "Desc_CartridgeStandard_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bp",
+    "r": "Recipe_Rebar_Explosive_C",
+    "mode": "solve",
+    "drive": "Desc_Rebar_Explosive_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bq",
+    "r": "Recipe_NobeliskCluster_C",
+    "mode": "solve",
+    "drive": "Desc_NobeliskCluster_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3br",
+    "r": "Recipe_Nobelisk_C",
+    "mode": "solve",
+    "drive": "Desc_NobeliskExplosive_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bs",
+    "r": "Recipe_GunpowderMK2_C",
+    "mode": "solve",
+    "drive": "Desc_GunpowderMK2_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bt",
+    "r": "mine:Desc_MinerMk3_C:Desc_OreIron_C:pure",
+    "mode": "solve",
+    "drive": "Desc_OreIron_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bu",
+    "r": "mine:Desc_MinerMk3_C:Desc_OreGold_C:pure",
+    "mode": "solve",
+    "drive": "Desc_OreGold_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bv",
+    "r": "mine:Desc_MinerMk3_C:Desc_OreCopper_C:pure",
+    "mode": "solve",
+    "drive": "Desc_OreCopper_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bw",
+    "r": "mine:Desc_MinerMk3_C:Desc_Stone_C:pure",
+    "mode": "solve",
+    "drive": "Desc_Stone_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bx",
+    "r": "mine:Desc_MinerMk3_C:Desc_Coal_C:pure",
+    "mode": "solve",
+    "drive": "Desc_Coal_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3by",
+    "r": "mine:Desc_MinerMk3_C:Desc_RawQuartz_C:pure",
+    "mode": "solve",
+    "drive": "Desc_RawQuartz_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3bz",
+    "r": "mine:Desc_MinerMk3_C:Desc_Sulfur_C:pure",
+    "mode": "solve",
+    "drive": "Desc_Sulfur_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c0",
+    "r": "mine:Desc_MinerMk3_C:Desc_OreUranium_C:normal",
+    "mode": "solve",
+    "drive": "Desc_OreUranium_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c1",
+    "r": "mine:Desc_MinerMk3_C:Desc_OreBauxite_C:pure",
+    "mode": "solve",
+    "drive": "Desc_OreBauxite_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c2",
+    "r": "mine:Desc_MinerMk3_C:Desc_SAM_C:pure",
+    "mode": "solve",
+    "drive": "Desc_SAM_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c3",
+    "r": "oil:pure",
+    "mode": "solve",
+    "drive": "Desc_LiquidOil_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c4",
+    "r": "water:extractor",
+    "mode": "solve",
+    "drive": "Desc_Water_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c5",
+    "r": "frack:Desc_NitrogenGas_C:pure",
+    "mode": "solve",
+    "drive": "Desc_NitrogenGas_C",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c6",
+    "r": "gen:Desc_GeneratorNuclear_C:Desc_NuclearFuelRod_C",
+    "mode": "top",
+    "drive": "Desc_NuclearWaste_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "4",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c7",
+    "r": "gen:Desc_GeneratorNuclear_C:Desc_PlutoniumFuelRod_C",
+    "mode": "top",
+    "drive": "Desc_PlutoniumWaste_C",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "2",
+    "c": "1"
+   },
+   {
+    "id": "rmv286id3c8",
+    "r": "gen:Desc_GeneratorFuel_C:Desc_RocketFuel_C",
+    "mode": "top",
+    "drive": "",
+    "cmax": "1",
+    "real": "uniform",
+    "n": "180",
+    "c": "995237/1000000"
+   },
+   {
+    "id": "rmv286id3c9",
+    "r": "pressurize:Desc_NitrogenGas_C",
+    "mode": "top",
+    "drive": "",
+    "cmax": "5/2",
+    "real": "uniform",
+    "n": "1/2",
+    "c": "5/2"
+   }
+  ],
+  "roles": {
+   "Desc_RocketFuel_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_CompactedCoal_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_LiquidTurboFuel_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_NitricAcid_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_QuantumEnergy_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_QuantumOscillator_C": {
+    "role": "acc",
+    "t": "129/125"
+   },
+   "Desc_DarkEnergy_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_DarkMatter_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_CrystalOscillator_C": {
+    "role": "acc",
+    "t": "10"
+   },
+   "Desc_AluminumPlate_C": {
+    "role": "acc",
+    "t": "14"
+   },
+   "Desc_TemporalProcessor_C": {
+    "role": "acc",
+    "t": "1"
+   },
+   "Desc_TimeCrystal_C": {
+    "role": "acc",
+    "t": "5"
+   },
+   "Desc_ComputerSuper_C": {
+    "role": "acc",
+    "t": "4"
+   },
+   "Desc_FicsiteMesh_C": {
+    "role": "acc",
+    "t": "1"
+   },
+   "Desc_SpaceElevatorPart_12_C": {
+    "role": "acc",
+    "t": "96/125"
+   },
+   "Desc_SpaceElevatorPart_6_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_IonizedFuel_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_CrystalShard_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_PackagedIonizedFuel_C": {
+    "role": "acc",
+    "t": "8"
+   },
+   "Desc_GasTank_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_SAMFluctuator_C": {
+    "role": "acc",
+    "t": "12"
+   },
+   "Desc_SAMIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Wire_C": {
+    "role": "acc",
+    "t": "13"
+   },
+   "Desc_SteelPipe_C": {
+    "role": "acc",
+    "t": "30"
+   },
+   "Desc_FicsiteIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Diamond_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_SAM_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_SpaceElevatorPart_10_C": {
+    "role": "acc",
+    "t": "3"
+   },
+   "Desc_SpaceElevatorPart_7_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Water_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_AluminumIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_PetroleumCoke_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_HeavyOilResidue_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_Rubber_C": {
+    "role": "acc",
+    "t": "2"
+   },
+   "Desc_PolymerResin_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_LiquidOil_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_SteelIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_CopperSheet_C": {
+    "role": "acc",
+    "t": "3817066919/63000000"
+   },
+   "Desc_CopperIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Cement_C": {
+    "role": "acc",
+    "t": "480"
+   },
+   "Desc_Stone_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Plastic_C": {
+    "role": "acc",
+    "t": "44"
+   },
+   "Desc_LiquidFuel_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_QuartzCrystal_C": {
+    "role": "acc",
+    "t": "10"
+   },
+   "Desc_RawQuartz_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_IronIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_OreIron_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_OreCopper_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_GoldIngot_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_OreGold_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_AluminumScrap_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_AluminumCasing_C": {
+    "role": "acc",
+    "t": "17"
+   },
+   "Desc_AluminaSolution_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_Silica_C": {
+    "role": "acc",
+    "t": "10"
+   },
+   "Desc_OreBauxite_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_SpaceElevatorPart_1_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_IronPlateReinforced_C": {
+    "role": "acc",
+    "t": "50"
+   },
+   "Desc_Rotor_C": {
+    "role": "acc",
+    "t": "21"
+   },
+   "Desc_SpaceElevatorPart_3_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Stator_C": {
+    "role": "acc",
+    "t": "1/20"
+   },
+   "Desc_HighSpeedConnector_C": {
+    "role": "acc",
+    "t": "1369191731/138600000"
+   },
+   "Desc_SteelPlateReinforced_C": {
+    "role": "acc",
+    "t": "40"
+   },
+   "Desc_SteelPlate_C": {
+    "role": "acc",
+    "t": "10"
+   },
+   "Desc_ModularFrameHeavy_C": {
+    "role": "acc",
+    "t": "7"
+   },
+   "Desc_ModularFrame_C": {
+    "role": "acc",
+    "t": "21"
+   },
+   "Desc_IronScrew_C": {
+    "role": "acc",
+    "t": "10"
+   },
+   "Desc_SpaceElevatorPart_4_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Motor_C": {
+    "role": "acc",
+    "t": "21"
+   },
+   "Desc_SpaceElevatorPart_5_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_CircuitBoard_C": {
+    "role": "acc",
+    "t": "10"
+   },
+   "Desc_Computer_C": {
+    "role": "acc",
+    "t": "3"
+   },
+   "Desc_SpaceElevatorPart_2_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_IronPlate_C": {
+    "role": "acc",
+    "t": "60"
+   },
+   "Desc_PlutoniumCell_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_PlutoniumPellet_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_PressureConversionCube_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_ModularFrameFused_C": {
+    "role": "acc",
+    "t": "3850986658639/620553780000"
+   },
+   "Desc_ModularFrameLightweight_C": {
+    "role": "acc",
+    "t": "6"
+   },
+   "Desc_NitrogenGas_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_NonFissibleUranium_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_NuclearWaste_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_SulfuricAcid_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_CopperDust_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_PlutoniumFuelRod_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_ElectromagneticControlRod_C": {
+    "role": "acc",
+    "t": "1"
+   },
+   "Desc_AluminumPlateReinforced_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_SpaceElevatorPart_9_C": {
+    "role": "acc",
+    "t": "3"
+   },
+   "Desc_Sulfur_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Battery_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_CoolingSystem_C": {
+    "role": "acc",
+    "t": "41/5"
+   },
+   "BP_ItemDescriptorPortableMiner_C": {
+    "role": "acc",
+    "t": "1/100"
+   },
+   "Desc_IronRod_C": {
+    "role": "acc",
+    "t": "15"
+   },
+   "Desc_CircuitBoardHighSpeed_C": {
+    "role": "acc",
+    "t": "1"
+   },
+   "Desc_HighSpeedWire_C": {
+    "role": "acc",
+    "t": "35"
+   },
+   "Desc_UraniumCell_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_OreUranium_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_MotorLightweight_C": {
+    "role": "acc",
+    "t": "87/80"
+   },
+   "Desc_SpaceElevatorPart_8_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_NuclearFuelRod_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Coal_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Gunpowder_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Cable_C": {
+    "role": "acc",
+    "t": "100"
+   },
+   "Desc_Ficsonium_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_PlutoniumWaste_C": {
+    "role": "exact",
+    "t": "0"
+   },
+   "Desc_SingularityCell_C": {
+    "role": "acc",
+    "t": "2"
+   },
+   "Desc_FicsoniumFuelRod_C": {
+    "role": "acc",
+    "t": "1"
+   },
+   "Desc_SpaceElevatorPart_11_C": {
+    "role": "acc",
+    "t": "3/5"
+   },
+   "Desc_HazmatFilter_C": {
+    "role": "acc",
+    "t": "3/80"
+   },
+   "Desc_Filter_C": {
+    "role": "acc",
+    "t": "3/80"
+   },
+   "Desc_AlienPowerFuel_C": {
+    "role": "acc",
+    "t": "5"
+   },
+   "Desc_SpikedRebar_C": {
+    "role": "acc",
+    "t": "3/20"
+   },
+   "Desc_CartridgeSmartProjectile_C": {
+    "role": "acc",
+    "t": "1/4"
+   },
+   "Desc_CartridgeStandard_C": {
+    "role": "acc",
+    "t": "1/2"
+   },
+   "Desc_Rebar_Stunshot_C": {
+    "role": "acc",
+    "t": "1/10"
+   },
+   "Desc_Fabric_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_NobeliskShockwave_C": {
+    "role": "acc",
+    "t": "1/20"
+   },
+   "Desc_NobeliskExplosive_C": {
+    "role": "acc",
+    "t": "47/50"
+   },
+   "Desc_Rebar_Spreadshot_C": {
+    "role": "acc",
+    "t": "1/20"
+   },
+   "Desc_CartridgeChaos_C": {
+    "role": "acc",
+    "t": "5/2"
+   },
+   "Desc_NobeliskNuke_C": {
+    "role": "acc",
+    "t": "1/200"
+   },
+   "Desc_GunpowderMK2_C": {
+    "role": "bal",
+    "t": "0"
+   },
+   "Desc_Rebar_Explosive_C": {
+    "role": "acc",
+    "t": "1/20"
+   },
+   "Desc_NobeliskCluster_C": {
+    "role": "acc",
+    "t": "1/40"
+   }
+  },
+  "grid": 40
+ },
+ "recs": [
+  {
+   "id": "rmv2879x3ca",
+   "r": "Recipe_RocketFuel_C",
+   "n": 8,
+   "c": 0.953035,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cb",
+   "r": "Recipe_QuantumEnergy_C",
+   "n": 5,
+   "c": 0.943829,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cc",
+   "r": "Recipe_SuperpositionOscillator_C",
+   "n": 4,
+   "c": 0.9,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cd",
+   "r": "Recipe_TemporalProcessor_C",
+   "n": 1,
+   "c": 0.589334,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ce",
+   "r": "Recipe_SpaceElevatorPart_12_C",
+   "n": 1,
+   "c": 0.192,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cf",
+   "r": "Recipe_IonizedFuel_C",
+   "n": 1,
+   "c": 0.4,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cg",
+   "r": "Recipe_PackagedIonizedFuel_C",
+   "n": 1,
+   "c": 0.2,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ch",
+   "r": "Recipe_SAMFluctuator_C",
+   "n": 4,
+   "c": 0.925,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ci",
+   "r": "Recipe_FicsiteMesh_C",
+   "n": 5,
+   "c": 0.850134,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cj",
+   "r": "Recipe_TimeCrystal_C",
+   "n": 20,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ck",
+   "r": "Recipe_IngotSAM_C",
+   "n": 11,
+   "c": 0.930344,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cl",
+   "r": "Recipe_SpaceElevatorPart_10_C",
+   "n": 2,
+   "c": 0.75,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cm",
+   "r": "Recipe_FicsiteIngot_AL_C",
+   "n": 2,
+   "c": 0.708445,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cn",
+   "r": "Recipe_PetroleumCoke_C",
+   "n": 10,
+   "c": 0.990378,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3co",
+   "r": "Recipe_ResidualRubber_C",
+   "n": 21,
+   "c": 0.959198,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cp",
+   "r": "Recipe_Alternate_Diamond_OilBased_C",
+   "n": 6,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cq",
+   "r": "Recipe_Alternate_DarkMatter_Trap_C",
+   "n": 3,
+   "c": 0.824,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cr",
+   "r": "Recipe_Alternate_DarkMatter_Crystallization_C",
+   "n": 3,
+   "c": 0.888381,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cs",
+   "r": "Recipe_SteelPipe_C",
+   "n": 13,
+   "c": 0.980854,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ct",
+   "r": "Recipe_Alternate_SteamedCopperSheet_C",
+   "n": 21,
+   "c": 0.96292,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cu",
+   "r": "Recipe_Alternate_RubberConcrete_C",
+   "n": 14,
+   "c": 0.973099,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cv",
+   "r": "Recipe_Alternate_RecycledRubber_C",
+   "n": 32,
+   "c": 0.979978,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cw",
+   "r": "Recipe_Alternate_PureQuartzCrystal_C",
+   "n": 15,
+   "c": 0.982641,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cx",
+   "r": "Recipe_Alternate_PureIronIngot_C",
+   "n": 8,
+   "c": 0.902075,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cy",
+   "r": "Recipe_Alternate_PureCopperIngot_C",
+   "n": 155,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3cz",
+   "r": "Recipe_Alternate_PureCateriumIngot_C",
+   "n": 14,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d0",
+   "r": "Recipe_PureAluminumIngot_C",
+   "n": 80,
+   "c": 0.999635,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d1",
+   "r": "Recipe_AluminumCasing_C",
+   "n": 17,
+   "c": 0.958554,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d2",
+   "r": "Recipe_AluminumSheet_C",
+   "n": 11,
+   "c": 0.986363,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d3",
+   "r": "Recipe_AluminaSolution_C",
+   "n": 13,
+   "c": 0.932519,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d4",
+   "r": "Recipe_Alternate_PlasticSmartPlating_C",
+   "n": 1,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d5",
+   "r": "Recipe_Alternate_HighSpeedWiring_C",
+   "n": 1,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d6",
+   "r": "Recipe_EncasedIndustrialBeam_C",
+   "n": 17,
+   "c": 0.95115,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d7",
+   "r": "Recipe_Stator_C",
+   "n": 8,
+   "c": 0.930849,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d8",
+   "r": "Recipe_Alternate_HeavyOilResidue_C",
+   "n": 40,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3d9",
+   "r": "Recipe_Alternate_HeavyFlexibleFrame_C",
+   "n": 6,
+   "c": 0.8447,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3da",
+   "r": "Recipe_SpaceElevatorPart_4_C",
+   "n": 2,
+   "c": 0.75,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3db",
+   "r": "Recipe_SpaceElevatorPart_5_C",
+   "n": 2,
+   "c": 0.75,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dc",
+   "r": "Recipe_Alternate_FusedWire_C",
+   "n": 11,
+   "c": 0.93875,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dd",
+   "r": "Recipe_Alternate_FlexibleFramework_C",
+   "n": 1,
+   "c": 0.256,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3de",
+   "r": "Recipe_Alternate_ElectroAluminumScrap_C",
+   "n": 16,
+   "c": 0.999635,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3df",
+   "r": "Recipe_Alternate_CopperRotor_C",
+   "n": 5,
+   "c": 0.810186,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dg",
+   "r": "Recipe_Alternate_CoatedIronPlate_C",
+   "n": 12,
+   "c": 0.93395,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dh",
+   "r": "Recipe_Alternate_BoltedFrame_C",
+   "n": 24,
+   "c": 0.974907,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3di",
+   "r": "Recipe_Alternate_AdheredIronPlate_C",
+   "n": 61,
+   "c": 0.992277,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dj",
+   "r": "Recipe_PlutoniumCell_C",
+   "n": 2,
+   "c": 0.9,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dk",
+   "r": "Recipe_PressureConversionCube_C",
+   "n": 4,
+   "c": 0.925,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dl",
+   "r": "Recipe_NitricAcid_C",
+   "n": 3,
+   "c": 0.980476,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dm",
+   "r": "Recipe_NonFissileUranium_C",
+   "n": 2,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dn",
+   "r": "Recipe_CopperDust_C",
+   "n": 15,
+   "c": 0.986667,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3do",
+   "r": "Recipe_Plutonium_C",
+   "n": 1,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dp",
+   "r": "Recipe_PlutoniumFuelRod_C",
+   "n": 2,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dq",
+   "r": "Recipe_SpaceElevatorPart_9_C",
+   "n": 8,
+   "c": 0.925,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dr",
+   "r": "Recipe_Alternate_TurboBlendFuel_C",
+   "n": 11,
+   "c": 0.924459,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ds",
+   "r": "Recipe_SulfuricAcid_C",
+   "n": 1,
+   "c": 0.24,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dt",
+   "r": "Recipe_SpaceElevatorPart_7_C",
+   "n": 1,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3du",
+   "r": "Recipe_Alternate_SuperStateComputer_C",
+   "n": 3,
+   "c": 0.905279,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dv",
+   "r": "Recipe_SpaceElevatorPart_6_C",
+   "n": 1,
+   "c": 0.768,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dw",
+   "r": "Recipe_Alternate_SloppyAlumina_C",
+   "n": 6,
+   "c": 0.989042,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dx",
+   "r": "Recipe_Alternate_RadioControlSystem_C",
+   "n": 5,
+   "c": 0.820556,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dy",
+   "r": "Recipe_FusedModularFrame_C",
+   "n": 8,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3dz",
+   "r": "Recipe_GasTank_C",
+   "n": 1,
+   "c": 0.133334,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e0",
+   "r": "Recipe_Alternate_DilutedFuel_C",
+   "n": 18,
+   "c": 0.998338,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e1",
+   "r": "Recipe_Alternate_CoolingDevice_C",
+   "n": 2,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e2",
+   "r": "Recipe_Alternate_ClassicBattery_C",
+   "n": 3,
+   "c": 0.724224,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e3",
+   "r": "Recipe_Alternate_AutomatedMiner_C",
+   "n": 1,
+   "c": 0.01,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e4",
+   "r": "Recipe_Alternate_SteelBeam_Aluminum_C",
+   "n": 19,
+   "c": 0.998365,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e5",
+   "r": "Recipe_Alternate_AluminumRod_C",
+   "n": 1,
+   "c": 0.294286,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e6",
+   "r": "Recipe_Alternate_AILimiter_Plastic_C",
+   "n": 8,
+   "c": 0.909344,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e7",
+   "r": "Recipe_Alternate_UraniumCell_1_C",
+   "n": 2,
+   "c": 0.669167,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e8",
+   "r": "Recipe_Alternate_TurboMotor_1_C",
+   "n": 1,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3e9",
+   "r": "Recipe_SpaceElevatorPart_8_C",
+   "n": 1,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ea",
+   "r": "Recipe_Alternate_Screw_2_C",
+   "n": 24,
+   "c": 0.969907,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3eb",
+   "r": "Recipe_Alternate_Quickwire_C",
+   "n": 19,
+   "c": 0.961555,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ec",
+   "r": "Recipe_Alternate_Plastic_1_C",
+   "n": 24,
+   "c": 0.977352,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ed",
+   "r": "Recipe_Alternate_NuclearFuelRod_1_C",
+   "n": 3,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ee",
+   "r": "Recipe_Alternate_Motor_1_C",
+   "n": 4,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ef",
+   "r": "Recipe_Alternate_IngotSteel_2_C",
+   "n": 31,
+   "c": 0.997844,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3eg",
+   "r": "Recipe_Alternate_IngotSteel_1_C",
+   "n": 2,
+   "c": 0.610013,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3eh",
+   "r": "Recipe_Alternate_HighSpeedConnector_C",
+   "n": 7,
+   "c": 0.964825,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ei",
+   "r": "Recipe_Alternate_HeatSink_1_C",
+   "n": 3,
+   "c": 0.733334,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ej",
+   "r": "Recipe_Alternate_Gunpowder_1_C",
+   "n": 1,
+   "c": 0.8,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ek",
+   "r": "Recipe_Alternate_ElectromagneticControlRod_1_C",
+   "n": 3,
+   "c": 0.706883,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3el",
+   "r": "Recipe_Alternate_CrystalOscillator_C",
+   "n": 31,
+   "c": 0.983535,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3em",
+   "r": "Recipe_Alternate_Computer_2_C",
+   "n": 8,
+   "c": 0.958276,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3en",
+   "r": "Recipe_Alternate_CircuitBoard_1_C",
+   "n": 12,
+   "c": 0.917561,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3eo",
+   "r": "Recipe_Alternate_Cable_2_C",
+   "n": 4,
+   "c": 0.909091,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ep",
+   "r": "Recipe_Ficsonium_C",
+   "n": 1,
+   "c": 0.2,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3eq",
+   "r": "Recipe_FicsoniumFuelRod_C",
+   "n": 1,
+   "c": 0.4,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3er",
+   "r": "Recipe_SingularityCell_C",
+   "n": 1,
+   "c": 0.7,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3es",
+   "r": "Recipe_SpaceElevatorPart_11_C",
+   "n": 1,
+   "c": 0.6,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3et",
+   "r": "Recipe_FilterHazmat_C",
+   "n": 1,
+   "c": 0.01,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3eu",
+   "r": "Recipe_AlienPowerFuel_C",
+   "n": 2,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ev",
+   "r": "Recipe_SpikedRebar_C",
+   "n": 1,
+   "c": 0.03,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ew",
+   "r": "Recipe_CartridgeSmart_C",
+   "n": 1,
+   "c": 0.3,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ex",
+   "r": "Recipe_Rebar_Stunshot_C",
+   "n": 1,
+   "c": 0.01,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ey",
+   "r": "Recipe_FilterGasMask_C",
+   "n": 1,
+   "c": 0.01,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ez",
+   "r": "Recipe_Alternate_PolyesterFabric_C",
+   "n": 1,
+   "c": 0.005,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f0",
+   "r": "Recipe_SyntheticPowerShard_C",
+   "n": 4,
+   "c": 0.8,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f1",
+   "r": "Recipe_NobeliskShockwave_C",
+   "n": 1,
+   "c": 0.4,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f2",
+   "r": "Recipe_Rebar_Spreadshot_C",
+   "n": 1,
+   "c": 0.01,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f3",
+   "r": "Recipe_CartridgeChaos_C",
+   "n": 1,
+   "c": 0.3,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f4",
+   "r": "Recipe_NobeliskNuke_C",
+   "n": 1,
+   "c": 0.4,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f5",
+   "r": "Recipe_Cartridge_C",
+   "n": 1,
+   "c": 0.8,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f6",
+   "r": "Recipe_Rebar_Explosive_C",
+   "n": 1,
+   "c": 0.4,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f7",
+   "r": "Recipe_NobeliskCluster_C",
+   "n": 1,
+   "c": 0.4,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f8",
+   "r": "Recipe_Nobelisk_C",
+   "n": 1,
+   "c": 0.9,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3f9",
+   "r": "Recipe_GunpowderMK2_C",
+   "n": 1,
+   "c": 0.9,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fa",
+   "r": "mine:Desc_MinerMk3_C:Desc_OreIron_C:pure",
+   "n": 1,
+   "c": 0.848431,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fb",
+   "r": "mine:Desc_MinerMk3_C:Desc_OreGold_C:pure",
+   "n": 1,
+   "c": 0.7,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fc",
+   "r": "mine:Desc_MinerMk3_C:Desc_OreCopper_C:pure",
+   "n": 2,
+   "c": 2.421875,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fd",
+   "r": "mine:Desc_MinerMk3_C:Desc_Stone_C:pure",
+   "n": 2,
+   "c": 1.419103,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fe",
+   "r": "mine:Desc_MinerMk3_C:Desc_Coal_C:pure",
+   "n": 1,
+   "c": 0.102294,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3ff",
+   "r": "mine:Desc_MinerMk3_C:Desc_RawQuartz_C:pure",
+   "n": 1,
+   "c": 2.072759,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fg",
+   "r": "mine:Desc_MinerMk3_C:Desc_Sulfur_C:pure",
+   "n": 1,
+   "c": 0.776015,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fh",
+   "r": "mine:Desc_MinerMk3_C:Desc_OreUranium_C:normal",
+   "n": 1,
+   "c": 0.13941,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fi",
+   "r": "mine:Desc_MinerMk3_C:Desc_OreBauxite_C:pure",
+   "n": 3,
+   "c": 1.834431,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fj",
+   "r": "mine:Desc_MinerMk3_C:Desc_SAM_C:pure",
+   "n": 2,
+   "c": 1.279223,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fk",
+   "r": "oil:pure",
+   "n": 4,
+   "c": 2.5,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fl",
+   "r": "water:extractor",
+   "n": 74,
+   "c": 0.999295,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fm",
+   "r": "frack:Desc_NitrogenGas_C:pure",
+   "n": 3,
+   "c": 2.043375,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fn",
+   "r": "gen:Desc_GeneratorNuclear_C:Desc_NuclearFuelRod_C",
+   "n": 6,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fo",
+   "r": "gen:Desc_GeneratorNuclear_C:Desc_PlutoniumFuelRod_C",
+   "n": 2,
+   "c": 1,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fp",
+   "r": "gen:Desc_GeneratorFuel_C:Desc_RocketFuel_C",
+   "n": 180,
+   "c": 0.995237,
+   "s": 0,
+   "note": "Plan"
+  },
+  {
+   "id": "rmv2879x3fq",
+   "r": "pressurize:Desc_NitrogenGas_C",
+   "n": 0.5,
+   "c": 2.5,
+   "s": 0,
+   "note": "Plan"
+  }
+ ]
+}

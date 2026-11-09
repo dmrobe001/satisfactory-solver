@@ -35,7 +35,8 @@ WELL_SATELLITE = ("Desc_FrackingExtractor_C", 60.0)    # m^3/min per normal sate
 WELL_RESOURCES = ["Desc_Water_C", "Desc_LiquidOil_C", "Desc_NitrogenGas_C"]
 GEOTHERMAL_MW = {"Impure": 100.0, "Normal": 200.0, "Pure": 400.0}  # time-averaged output
 AUGMENTER_MW = 500.0
-AUGMENTER_MATRIX_PER_MIN = 5.0     # Alien Power Matrix consumed by a fueled augmenter
+AUGMENTER_MATRIX_PER_MIN = 5.0
+PORTAL_SINGULARITY_PER_MIN = 2.0   # Singularity Cells consumed by a running Main Portal     # Alien Power Matrix consumed by a fueled augmenter
 # Waste produced per fuel rod burned in a Nuclear Power Plant.
 NUCLEAR_WASTE = {"Desc_NuclearFuelRod_C": ("Desc_NuclearWaste_C", 50.0),
                  "Desc_PlutoniumFuelRod_C": ("Desc_PlutoniumWaste_C", 10.0)}
@@ -174,7 +175,7 @@ def main():
         kind="augment", mc=1.0, boost=0.30, outs=[(PWR, AUGMENTER_MW)], p=-AUGMENTER_MW, pe=1.0,
         ins=[(item("Desc_AlienPowerFuel_C"), AUGMENTER_MATRIX_PER_MIN)])
     add(id="MainPortal", name="Main Portal", m="Portal", kind="manual", mc=1.0,
-        p=bpow("Desc_Portal_C"))
+        p=bpow("Desc_Portal_C"), ins=[(item("Desc_SingularityCell_C"), PORTAL_SINGULARITY_PER_MIN)])
 
     # ---- Hand-gathered items -----------------------------------------------
     # Things nothing can mine or craft (plants, creature remains, power slugs,
