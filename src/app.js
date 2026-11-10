@@ -140,7 +140,7 @@
     let clockCell;
     if (manual) clockCell = `<span class="fixed">fixed 100%</span>`;
     else if (fixedClock(rec)) clockCell = `<label class="fixed"><input type="checkbox" class="clk" id="clk-${r}"> on</label>`;
-    else clockCell = `<input class="cell-in clk" type="number" id="clk-${r}" min="0" max="${rec.mc * 100}" step="any" aria-label="Clock %">`;
+    else clockCell = `<input class="cell-in clk" type="number" id="clk-${r}" min="0" max="${rec.mc * 100}" step="0.0001" aria-label="Clock %">`;
     const floorCell = S.hasFloor(r)
       ? `<input class="cell-in flr" type="number" id="flr-${r}" step="any" aria-label="Adjustment per minute">`
       : `<span class="fixed">—</span>`;
@@ -183,7 +183,7 @@
     const r = +tr.dataset.r;
     if (t.classList.contains("clk")) {
       if (t.type === "checkbox") S.setClock(r, t.checked ? 1 : 0);
-      else { if (t.value === "" || isNaN(+t.value)) return; S.setClock(r, +t.value / 100); }
+      else { if (t.value === "" || isNaN(+t.value)) return; S.setClock(r, Math.round(+t.value * 1e4) / 1e6); } // percent, kept to 4 decimals
     } else if (t.classList.contains("flr")) {
       if (t.value !== "" && isNaN(+t.value)) return;
       S.setFloor(r, +t.value || 0);
@@ -332,7 +332,7 @@
       row.tr.classList.toggle("idle", !active);
       if (row.clk) {
         if (row.clk.type === "checkbox") row.clk.checked = c > 0;
-        else setVal(row.clk, c > 0 ? trim((c * 100).toFixed(3)) : "0");
+        else setVal(row.clk, c > 0 ? trim((c * 100).toFixed(4)) : "0");
       }
       if (row.flx && row.flx.checked !== !!S.x[r]) row.flx.checked = !!S.x[r];
       if (row.flr) setVal(row.flr, S.f[r] ? trim(S.f[r].toFixed(4)) : "0");
