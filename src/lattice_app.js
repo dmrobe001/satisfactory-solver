@@ -1,0 +1,320 @@
+/* UI for the lattice-clock page.  Expects GAME and SatLattice. */
+(function () {
+  "use strict";
+  const G = window.GAME;
+  const L = window.SatLattice;
+  const STORE = "satisfactory-lattice.v1";
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const fmt = L.fmtPct;
+  const B = G.buildings;
+  const mname = (rec) => (B[rec.m] ? B[rec.m].n : rec.m);
+  const mod = (a, m) => ((a % m) + m) % m;
+
+  /* ---- state ---- */
+  let settings = { ficsmas: false, overrides: {} };
+  let pins = new Map(); // recipe id -> BigInt units (0.0001 %), in the order they were set
+  try {
+    const o = JSON.parse(localStorage.getItem(STORE) || "null");
+    if (o) {
+      settings = Object.assign(settings, o.settings || {});
+      for (const [id, v] of o.pins || []) pins.set(id, BigInt(v));
+    }
+  } catch (e) { /* storage unavailable or bad: start fresh */ }
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify({ settings, pins: [...pins].map(([id, v]) => [id, v.toString()]) })); } catch (e) { /* ignore */ }
+  }
+
+  let lat = null, res = null;
+  const sigs = new Map();     // recipe id -> signature of its last shown result
+  let affected = new Set();   // ids changed by the last accepted edit
+
+  function rebuild() { lat = new L(G, { ficsmas: settings.ficsmas, overrides: settings.overrides }); }
+  function pinsIdx(p) {
+    const m = new Map();
+    for (const [id, v] of p) { const r = lat.rIdx[id]; if (r !== undefined) m.set(r, v); }
+    return m;
+  }
+
+  /* ---- describing a result row ---- */
+  function allowedText(x) {
+    if (x.step === 0n) return x.offset === 0n ? "off" : "only " + fmt(x.offset);
+    if (x.offset === 0n) return x.step === 1n ? "any" : "multiples of " + fmt(x.step);
+    return fmt(x.offset) + " + multiples of " + fmt(x.step);
+  }
+  function rangeText(x) {
+    if (!x.run) return "cannot run";
+    return fmt(x.lo) + " – " + (x.hi === null ? "∞" : fmt(x.hi));
+  }
+  function machinesText(y, fixed) {
+    if (fixed) { const n = y / L.UNIT; return n > 1n ? ` (${n} machines)` : ""; }
+    if (y <= L.MACHINE) return "";
+    const n = L.machinesFor(y);
+    return ` (${n} × ${fmt(y / n)})`;
+  }
+  const sigOf = (x) => x ? [x.step, x.offset, x.lo, x.hi, x.run, x.smallest].join("|") : "";
+  const shortOf = (x) => x ? (x.run ? allowedText(x) + ", " + rangeText(x) : "cannot run") : "—";
+
+  /* ---- rows, built once ---- */
+  const recs = G.recipes.filter(L.inScope);
+  const rowsEl = $("#lrows");
+  const rows = recs.map((rec) => {
+    const el = document.createElement("div");
+    el.className = "lrow";
+    el.dataset.id = rec.id;
+    el.innerHTML =
+      `<div><span class="rn">${esc(rec.name)}</span>${rec.alt ? '<span class="alt">alt</span>' : ""}${rec.xmas ? '<span class="alt">FICSMAS</span>' : ""}` +
+      `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}${rec.mc <= 1 ? " · fixed clock" : ""}</span></div>` +
+      `<div class="pincell"><input class="cell-in pin" type="text" inputmode="decimal" placeholder="free" aria-label="Effective clock % for ${esc(rec.name)}">` +
+      `<label><input type="checkbox" class="offbox"> off</label><span class="msg"></span></div>` +
+      `<div class="v c-allow" data-l="Possible"></div><div class="v c-range" data-l="Range"></div><div class="v c-small" data-l="Smallest valid"></div>`;
+    const search = (rec.name + " " + mname(rec) + " " + rec.ins.concat(rec.outs).map(([k]) => (G.items[k] || { n: k }).n).join(" ")).toLowerCase();
+    return { el, rec, search, pin: $(".pin", el), off: $(".offbox", el), msg: $(".msg", el),
+      allow: $(".c-allow", el), range: $(".c-range", el), small: $(".c-small", el), fixed: rec.mc <= 1 };
+  });
+  { const f = document.createDocumentFragment(); rows.forEach((x) => f.appendChild(x.el)); rowsEl.appendChild(f); }
+  const rowById = new Map(rows.map((x) => [x.id = x.rec.id, x]));
+
+  const itemsEl = $("#irows");
+  const itemKeys = Object.keys(G.items).filter((k) => k !== "Power").sort((a, b) => G.items[a].n.localeCompare(G.items[b].n));
+  const KIND = { raw: "Raw resource", gathered: "Gathered", free: "Build material / equipment", internal: "Internal" };
+  const RULE = { raw: "drawn in multiples of 15/min", gathered: "any amount used", free: "net ≥ 0", internal: "net = 0 exactly" };
+  const irows = itemKeys.map((k) => {
+    const el = document.createElement("div");
+    el.className = "lrow";
+    el.dataset.k = k;
+    el.innerHTML = `<div><span class="rn">${esc(G.items[k].n)}</span>${G.items[k].xmas ? '<span class="alt">FICSMAS</span>' : ""}</div>` +
+      `<div class="c-kind"></div><div class="c-rule"></div><div class="pincell"><label><input type="checkbox" class="surplus"> allow surplus</label></div>`;
+    return { k, el, kind: $(".c-kind", el), rule: $(".c-rule", el), box: $(".surplus", el) };
+  });
+  { const f = document.createDocumentFragment(); irows.forEach((x) => f.appendChild(x.el)); itemsEl.appendChild(f); }
+  const irowByK = new Map(irows.map((x) => [x.k, x]));
+
+  /* ---- evaluate and draw ---- */
+  function setText(el, t) { if (el._t !== t) { el._t = t; el.textContent = t; } }
+  function setHTML(el, h) { if (el._h !== h) { el._h = h; el.innerHTML = h; } }
+
+  /* Try a new set of pins (and lattice); on success make it current. */
+  function attempt(newPins, label) {
+    const t0 = performance.now();
+    const out = lat.evaluate(pinsIdx(newPins));
+    const ms = performance.now() - t0;
+    if (!out.ok) return { ok: false, out };
+    pins = newPins; res = out;
+    affected = new Set();
+    const changes = [];
+    for (const x of rows) {
+      const r = lat.rIdx[x.id];
+      const now = r === undefined ? null : res.rows[r];
+      const s = sigOf(now);
+      const before = sigs.get(x.id);
+      if (before !== undefined && before !== s) { affected.add(x.id); changes.push([x, x._last, now]); }
+      sigs.set(x.id, s); x._last = now;
+    }
+    setText($("#sv-ms"), Math.round(ms) + " ms");
+    showChange(label, changes);
+    save();
+    render();
+    return { ok: true };
+  }
+
+  function showChange(label, changes) {
+    $(".change").classList.remove("bad");
+    if (!label) return;
+    setText($("#chgWhat"), label + (changes.length ? ` — ${changes.length} recipe${changes.length === 1 ? "" : "s"} changed` : " — no other recipe changed"));
+    const list = changes.slice(0, 300).map(([x, a, b]) =>
+      `<span class="ci"><b>${esc(x.rec.name)}</b>: ${esc(shortOf(a))} <span class="arrow">→</span> ${esc(shortOf(b))}</span>`).join("");
+    setHTML($("#chgList"), list + (changes.length > 300 ? `<span class="ci">… and ${changes.length - 300} more</span>` : ""));
+  }
+  function showReject(text) {
+    $(".change").classList.add("bad");
+    setText($("#chgWhat"), text);
+    setHTML($("#chgList"), "");
+  }
+
+  function render() {
+    const q = $("#q").value.trim().toLowerCase();
+    const show = $("#show").value;
+    let shown = 0, off = 0, run = 0;
+    for (const x of rows) {
+      const r = lat.rIdx[x.id];
+      const inLat = r !== undefined;
+      const d = inLat ? res.rows[r] : null;
+      const pv = pins.get(x.id);
+      const isOff = pv === 0n;
+      if (inLat && isOff) off++;
+      if (d && d.run) run++;
+      let vis = inLat;
+      if (vis && q && !x.search.includes(q)) vis = false;
+      if (vis) {
+        if (show === "run") vis = d.run;
+        else if (show === "pinned") vis = pv !== undefined;
+        else if (show === "affected") vis = affected.has(x.id);
+        else if (show === "cant") vis = !d.run;
+        else if (show === "restricted") vis = d.run && (d.step !== 1n || d.offset !== 0n || d.lo > 0n || d.hi !== null);
+      }
+      if (x.el.hidden !== !vis) x.el.hidden = !vis;
+      if (!vis) continue;
+      shown++;
+      x.el.classList.toggle("cant", !d.run);
+      x.el.classList.toggle("pinned", pv !== undefined && pv > 0n);
+      x.el.classList.toggle("off", isOff);
+      x.el.classList.toggle("hit", affected.has(x.id));
+      if (document.activeElement !== x.pin) { const t = pv !== undefined && pv > 0n ? fmt(pv).replace("%", "") : ""; if (x.pin.value !== t) x.pin.value = t; }
+      if (x.off.checked !== isOff) x.off.checked = isOff;
+      x.pin.disabled = isOff;
+      setText(x.allow, allowedText(d));
+      setText(x.range, rangeText(d));
+      if (!d.run) setHTML(x.small, "—");
+      else if (pv !== undefined) setHTML(x.small, esc(fmt(pv) + machinesText(pv, x.fixed)) + " <small>pinned</small>");
+      else if (d.smallest === null) setHTML(x.small, "<small>none in range</small>");
+      else setHTML(x.small, `<button type="button" class="linkish use" data-v="${d.smallest}" title="Pin this value">${esc(fmt(d.smallest))}</button><small>${esc(machinesText(d.smallest, x.fixed))}</small>`);
+    }
+    setText($("#rowCount"), shown + " shown");
+    setText($("#sv-pins"), String([...pins].filter(([id, v]) => v > 0n && lat.rIdx[id] !== undefined).length));
+    setText($("#sv-off"), String(off));
+    setText($("#sv-run"), String(run));
+    setText($("#sv-dim"), String(res.dim));
+    renderItems();
+  }
+
+  function renderItems() {
+    const inLat = new Set(lat.items);
+    for (const x of irows) {
+      const vis = inLat.has(x.k);
+      if (x.el.hidden !== !vis) x.el.hidden = !vis;
+      if (!vis) continue;
+      const c = lat.cls[x.k];
+      setText(x.kind, KIND[c] + (settings.overrides[x.k] ? " (changed)" : ""));
+      setText(x.rule, RULE[c]);
+      const editable = c === "free" || c === "internal";
+      x.box.disabled = !editable;
+      x.box.checked = c === "free";
+    }
+  }
+
+  /* ---- pinning ---- */
+  function nearest(d, v, fixed) {
+    if (d.step === 0n) return [];
+    const ok = (y) => y > 0n && (fixed || L.machineOK(y)) && y >= d.lo && (d.hi === null || y <= d.hi);
+    const out = [];
+    let y = v - mod(v - d.offset, d.step);
+    for (let i = 0; i < 2000 && y > 0n && out.length < 1; i++, y -= d.step) if (ok(y)) out.push(y);
+    y = v - mod(v - d.offset, d.step) + d.step;
+    for (let i = 0; i < 2000 && out.length < 2; i++, y += d.step) if (ok(y)) out.push(y);
+    if (d.hi !== null && out.length === 0 && ok(d.hi)) out.push(d.hi);
+    return out.sort((a, b) => (a < b ? -1 : 1));
+  }
+
+  function pinRecipe(x, v) {
+    const r = lat.rIdx[x.id];
+    const d = res.rows[r];
+    setText(x.msg, "");
+    const name = x.rec.name;
+    if (v === null) {
+      if (!pins.has(x.id)) return;
+      const np = new Map(pins); np.delete(x.id);
+      attempt(np, `Unpinned ${name}`);
+      return;
+    }
+    // quick checks against what the page already shows, for a clear message
+    let why = "";
+    if (v > 0n && !x.fixed && !L.machineOK(v)) {
+      const n = L.machinesFor(v);
+      why = `${fmt(v)} needs ${n} machines, and ${fmt(v)} ÷ ${n} is not a whole 0.0001% step`;
+    } else if (v > 0n && x.fixed && v % L.UNIT !== 0n) why = `${name} has a fixed clock: whole machines only (multiples of 100%)`;
+    else if (v > 0n && (d.step === 0n ? v !== d.offset : mod(v - d.offset, d.step) !== 0n)) why = `${fmt(v)} is not one of the possible values (${allowedText(d)})`;
+    else if (v > 0n && (v < d.lo || (d.hi !== null && v > d.hi))) why = `${fmt(v)} is outside the range ${rangeText(d)}`;
+    if (!why) {
+      const np = new Map(pins); np.delete(x.id); np.set(x.id, v);
+      const res2 = attempt(np, v === 0n ? `Turned off ${name}` : `Pinned ${name} to ${fmt(v)}`);
+      if (res2.ok) return;
+      why = res2.out.reason === "lattice" ? `${fmt(v)} conflicts with the other pins` : `with ${fmt(v)} the balances cannot all be met (some item would go negative)`;
+      if (v === 0n) why = `turning ${name} off leaves the other pins impossible`;
+    }
+    const near = v > 0n ? nearest(d, v, x.fixed) : [];
+    setText(x.msg, why + (near.length ? ". Nearest: " + near.map(fmt).join(", ") : ""));
+    showReject(`Not applied: ${name} — ${why}.`);
+    render();
+  }
+
+  rowsEl.addEventListener("change", (e) => {
+    const el = e.target.closest(".lrow"); if (!el) return;
+    const x = rowById.get(el.dataset.id); if (!x) return;
+    if (e.target.classList.contains("pin")) {
+      const t = e.target.value.trim();
+      if (t === "") { pinRecipe(x, null); return; }
+      const v = L.parsePct(t);
+      if (v === null) { setText(x.msg, "Type a percentage with at most 4 decimals, e.g. 112.5"); return; }
+      if (v === 0n) { pinRecipe(x, 0n); return; }
+      pinRecipe(x, v);
+    } else if (e.target.classList.contains("offbox")) {
+      pinRecipe(x, e.target.checked ? 0n : null);
+    }
+  });
+  rowsEl.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.classList.contains("pin")) e.target.blur(); });
+  rowsEl.addEventListener("click", (e) => {
+    const b = e.target.closest("button.use"); if (!b) return;
+    const x = rowById.get(b.closest(".lrow").dataset.id);
+    pinRecipe(x, BigInt(b.dataset.v));
+  });
+  ["#q", "#show"].forEach((s) => $(s).addEventListener("input", render));
+
+  itemsEl.addEventListener("change", (e) => {
+    if (!e.target.classList.contains("surplus")) return;
+    const x = irowByK.get(e.target.closest(".lrow").dataset.k);
+    const prev = Object.assign({}, settings.overrides);
+    const want = e.target.checked ? "free" : "internal";
+    if (lat.defaultCls[x.k] === want) delete settings.overrides[x.k]; else settings.overrides[x.k] = want;
+    rebuild();
+    const r = attempt(pins, `${G.items[x.k].n}: ${want === "free" ? "surplus allowed" : "must balance exactly"}`);
+    if (!r.ok) { settings.overrides = prev; rebuild(); showReject(`Not applied: ${G.items[x.k].n} must stay ${want === "free" ? "exact" : "free"} — the current pins would become impossible.`); render(); }
+  });
+
+  /* ---- header actions ---- */
+  $("#ficsmas").checked = !!settings.ficsmas;
+  $("#ficsmas").addEventListener("change", (e) => {
+    settings.ficsmas = e.target.checked;
+    rebuild();
+    const r = attempt(pins, "FICSMAS " + (settings.ficsmas ? "on" : "off"));
+    if (!r.ok) { settings.ficsmas = !settings.ficsmas; e.target.checked = settings.ficsmas; rebuild(); showReject("Not applied: the current pins would become impossible."); render(); }
+  });
+  $("#btnClear").addEventListener("click", () => { attempt(new Map(), "Cleared all pins"); });
+  $("#btnAllOn").addEventListener("click", () => {
+    const np = new Map([...pins].filter(([, v]) => v !== 0n));
+    attempt(np, "Turned every recipe back on");
+  });
+  $("#fileSheet").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      let o;
+      try { o = JSON.parse(rd.result); } catch (err) { showReject("That file is not JSON."); return; }
+      const sh = o && o.sheet;
+      if (!sh || typeof sh !== "object") { showReject("That file is not a production-sheet export (no “sheet”)."); return; }
+      const c = sh.c || {}, n = sh.n || {};
+      const running = (rec) => (n[rec.id] || 0) > 0 && (rec.mc <= 1 || (c[rec.id] || 0) > 0);
+      const np = new Map();
+      for (const [id, v] of pins) { const rec = rowById.get(id); if (rec && running(rec.rec) && v > 0n) np.set(id, v); }
+      let offN = 0;
+      for (const x of rows) if (!running(x.rec)) { np.set(x.id, 0n); offN++; }
+      const r = attempt(np, `Kept the ${rows.length - offN} recipes running in ${f.name}; turned the other ${offN} off`);
+      if (!r.ok) showReject("Not applied: with only the sheet's recipes, the current pins are impossible. Clear pins first.");
+    };
+    rd.readAsText(f);
+  });
+
+  /* ---- tabs ---- */
+  $("#tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-tab]"); if (!b) return;
+    for (const t of $("#tabs").querySelectorAll("button")) t.setAttribute("aria-selected", String(t === b));
+    for (const p of document.querySelectorAll(".panel")) p.hidden = p.id !== "tab-" + b.dataset.tab;
+  });
+
+  /* ---- start ---- */
+  rebuild();
+  let first = attempt(pins, "");
+  if (!first.ok) { pins = new Map(); attempt(pins, ""); showReject("Saved pins were no longer possible and have been cleared."); }
+})();

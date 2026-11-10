@@ -1,0 +1,107 @@
+<title>Satisfactory Lattice Clocks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+/*__LCSS__*/
+</style>
+
+<header class="top">
+  <div>
+    <h1>Satisfactory Lattice Clocks</h1>
+    <div class="sub">Satisfactory 1.2. Which effective clocks each recipe can take when every balance comes out whole. Pin a clock and the rest update.</div>
+  </div>
+  <div class="io-top">
+    <label class="btn" for="fileSheet" title="Turn off every recipe that is not running in a file exported from the production sheet">Use sheet's recipes</label>
+    <input type="file" id="fileSheet" accept=".json,application/json" hidden>
+    <button class="btn" type="button" id="btnAllOn">Turn all recipes on</button>
+    <button class="btn danger" type="button" id="btnClear">Clear all pins</button>
+    <label class="xmas-toggle"><input type="checkbox" id="ficsmas"> FICSMAS</label>
+  </div>
+</header>
+
+<section class="summary" aria-label="Summary">
+  <div class="stat"><span class="lbl">Pinned clocks</span><span class="val" id="sv-pins">0</span></div>
+  <div class="stat"><span class="lbl">Recipes off</span><span class="val" id="sv-off">0</span></div>
+  <div class="stat"><span class="lbl">Can run</span><span class="val" id="sv-run">0</span></div>
+  <div class="stat"><span class="lbl">Free directions</span><span class="val" id="sv-dim">0</span></div>
+  <div class="stat"><span class="lbl">Update took</span><span class="val" id="sv-ms">0</span></div>
+</section>
+
+<section class="change" aria-live="polite">
+  <div class="change-head"><h2>Last change</h2><span class="count" id="chgWhat">Nothing yet. Type an effective clock on a recipe to pin it.</span></div>
+  <div class="change-list" id="chgList"></div>
+</section>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" type="button" data-tab="recipes" aria-selected="true">Recipes</button>
+  <button role="tab" type="button" data-tab="items" aria-selected="false">Items</button>
+  <button role="tab" type="button" data-tab="notes" aria-selected="false">How it works</button>
+</nav>
+
+<main>
+  <section class="panel" id="tab-recipes" role="tabpanel">
+    <div class="tools">
+      <label>Search <input type="search" id="q" placeholder="recipe, machine or item"></label>
+      <label>Show
+        <select id="show">
+          <option value="run">Can run</option>
+          <option value="all">All recipes</option>
+          <option value="pinned">Pinned</option>
+          <option value="affected">Changed by last edit</option>
+          <option value="restricted" title="Step above 0.0001%, or a bounded range">Restricted</option>
+          <option value="cant">Cannot run</option>
+        </select>
+      </label>
+      <span class="count" id="rowCount"></span>
+    </div>
+    <div class="lgrid" id="lrows">
+      <div class="lhead" aria-hidden="true"><span>Recipe</span><span>Effective clock</span><span>Possible values</span><span>Range</span><span>Smallest valid</span></div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-items" role="tabpanel" hidden>
+    <div class="tools"><span class="note">How each item must balance. Internal items must come out exactly even; tick “Allow surplus” to let an item pile up instead (for example Space Elevator parts or items you sink).</span></div>
+    <div class="lgrid items" id="irows">
+      <div class="lhead" aria-hidden="true"><span>Item</span><span>Kind</span><span>Rule</span><span>Allow surplus</span></div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-notes" role="tabpanel" hidden>
+    <div class="prose">
+      <h3>What is computed</h3>
+      <p>Each recipe has an <b>effective clock</b>: machines × clock, written as a percentage (375% is two machines at 187.5% or three at 125%). Clocks come in steps of 0.0001%. The number of machines is always the fewest that can do it, ⌈effective clock ÷ 250%⌉, and above 250% the effective clock must split evenly over them in 0.0001% steps (500.0001% = 3 × 166.6667% is fine; 500.0002% is not).</p>
+      <p>Items must balance per minute:</p>
+      <ul>
+        <li><b>Raw resources</b> (ores, water, oil, gases): drawn in whole multiples of 15 per minute. Miners and extractors are not part of the problem; only the amount drawn is.</li>
+        <li><b>Gathered</b> items (leaves, wood, mycelia, Somersloops…): any amount may be used.</li>
+        <li><b>Build materials and equipment</b> (anything a build-gun recipe uses, plus ammo, rebar, Nobelisks, filters, portable fuels and batteries): net production of zero or more.</li>
+        <li><b>Everything else</b>: net production exactly zero.</li>
+        <li>Power is ignored; generators take part only through the fuel they burn and the waste they make. The Alien Power Augmenter and Main Portal have fixed clocks, so they come in whole machines.</li>
+      </ul>
+      <h3>Possible values</h3>
+      <p>The whole-number conditions (exact balances, multiples of 15, whole augmentors) make the set of allowed effective-clock vectors a <i>lattice</i>. Its basis is found by integer column reduction (the same moves as a Hermite normal form) with exact big-integer arithmetic. Pinning a recipe keeps the lattice points with that value. For every other recipe the possible values are then exactly <i>offset + k × step</i>: “Possible values” shows that, and it is exact.</p>
+      <p>The sign conditions (nothing negative, raw resources only consumed, build materials only in surplus) cut the lattice down to a cone. “Range” is the smallest and largest effective clock that the cone allows, found by linear programming. Linear programming ignores whole numbers, so near the ends of a range a value can still turn out impossible; values well inside the range are almost always fine.</p>
+      <p>“Smallest valid” is the smallest value that fits the progression, the range and the machine rule. Click it to pin it. A pin is accepted when it fits the progression, the range and the machine rule; otherwise the reason is shown with the nearest values that fit.</p>
+      <h3>Reading the results</h3>
+      <ul>
+        <li>With every recipe in play almost any clock works: some other recipe can always use up an odd remainder. Turn recipes off (or start from the sheet's recipes) to see real constraints.</li>
+        <li>A step larger than 0.0001% comes from the multiples of 15 or from whole augmentors, passed through the chain of exact balances.</li>
+        <li>Recipes that cannot run make something that nothing allowed can use, or need something that nothing allowed can make.</li>
+      </ul>
+      <p class="note">Recipe data and the item list are the same as the production sheet’s (the game’s Docs.json via SatisfactoryTools, plus the wiki’s 1.1/1.2 data). Pins and settings are saved in this browser.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__LATTICE__*/
+</script>
+<script>
+/*__LAPP__*/
+</script>

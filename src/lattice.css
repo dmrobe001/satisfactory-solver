@@ -1,0 +1,50 @@
+/* Lattice clocks page: shares the production sheet's tokens and controls. */
+.change { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; }
+.change-head { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.change-head h2 { font-size: 1.1rem; }
+.change.bad { border-color: var(--red-edge); background: var(--red-bg); }
+.change-list { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 6px; max-height: 160px; overflow: auto; font-size: 0.85rem; }
+.change-list:empty { display: none; }
+.change-list .ci { white-space: nowrap; }
+.change-list .ci b { font-weight: 600; }
+.change-list .ci .arrow { color: var(--muted); }
+
+.lgrid { border: 1px solid var(--line); border-radius: 4px; }
+.lhead, .lrow {
+  display: grid; grid-template-columns: minmax(200px, 2.2fr) minmax(170px, 1.2fr) minmax(150px, 1.4fr) minmax(130px, 1fr) minmax(150px, 1.2fr);
+  gap: 4px 12px; align-items: center; padding: 5px 10px;
+}
+.lgrid.items .lhead, .lgrid.items .lrow { grid-template-columns: minmax(200px, 2fr) minmax(90px, 0.8fr) minmax(200px, 2fr) minmax(110px, 1fr); }
+.lhead { position: sticky; top: 0; z-index: 1; background: var(--surface-2); border-bottom: 1px solid var(--line);
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; color: var(--muted); }
+.lrow { border-bottom: 1px solid var(--line); content-visibility: auto; contain-intrinsic-size: auto 44px; }
+.lrow:last-child { border-bottom: 0; }
+.lrow .rn { font-weight: 500; }
+.lrow .rm { display: block; color: var(--muted); font-size: 0.78rem; }
+.lrow .alt { margin-left: 6px; }
+.lrow.cant { color: var(--muted); }
+.lrow.cant .rn { font-weight: 400; }
+.lrow.pinned { background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.lrow.off { opacity: 0.6; }
+.lrow.hit { box-shadow: inset 4px 0 0 var(--accent); }
+.lrow .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.85rem; }
+.lrow .v small { color: var(--muted); }
+.pincell { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.pincell input[type="text"] { width: 8.5em; font-family: var(--font-mono); }
+.pincell label { font-size: 0.8rem; color: var(--muted); display: inline-flex; gap: 3px; align-items: center; }
+.pincell .msg { flex-basis: 100%; font-size: 0.78rem; color: var(--red-edge); }
+.pincell .msg:empty { display: none; }
+.linkish { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font: inherit; text-decoration: underline dotted; text-underline-offset: 2px; }
+.linkish:hover { text-decoration-style: solid; }
+.io-top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+
+@media (max-width: 900px) {
+  .lhead { display: none; }
+  .lhead, .lrow, .lgrid.items .lrow { grid-template-columns: 1fr 1fr; }
+  .lrow > :first-child { grid-column: 1 / -1; }
+  .lrow .v::before { content: attr(data-l); display: block; font-family: var(--font-display); text-transform: uppercase;
+    letter-spacing: 0.06em; font-size: 0.68rem; color: var(--muted); }
+  .change-list .ci { white-space: normal; }
+}
+.tools select { max-width: 100%; }
+.lrow .rn { display: inline; }

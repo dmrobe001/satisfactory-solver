@@ -19,8 +19,10 @@ capability, so the button only appears on claude.ai.
 | `data/game.json` | Compact recipe/item/building data the page uses. |
 | `src/solver.js` | The update rules, no DOM. Runs in node and in the browser. |
 | `src/app.js`, `src/style.css`, `src/index.html` | The page. |
-| `tools/build.py` | Inlines everything into `dist/satisfactory-sheet.html`. |
+| `tools/build.py` | Inlines everything into `dist/satisfactory-sheet.html` and `dist/lattice-clocks.html`. |
 | `tools/test_solver.js` | Command-line checks of the solver. |
+| `src/lattice.js`, `src/lattice_app.js`, `src/lattice.css`, `src/lattice.html` | The second page, lattice clocks (engine, page script, styles, page). |
+| `tools/test_lattice.js` | Command-line checks of the lattice engine. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
 ## Rebuild
@@ -30,6 +32,7 @@ python3 tools/build_data.py --fetch   # only when the game data changes
 node tools/import_plan.js             # re-derive the default sheet
 python3 tools/build.py
 node tools/test_solver.js
+node tools/test_lattice.js
 ```
 
 ## Update rules
@@ -165,3 +168,45 @@ under any extras they already had.
   stop propagation. One fueled augmentor, one Main Portal, one pressurizer.
 * Balancing runs with fractional counts; at the end every count is rounded
   up, and any multi-producer item the rounding left short is raised again.
+
+## Lattice clocks (second page)
+
+`dist/lattice-clocks.html` answers a different question: which *effective
+clocks* (machines x clock, in steps of 0.0001 %) can each recipe take so that
+every balance comes out exactly, with machine counts as low as possible?
+
+Definitions:
+
+* Effective clock y of a recipe, in units of 0.0001 % (1 000 000 = one
+  machine at 100 %). Machines = ceil(y / 250 %); above 250 % y must divide
+  evenly over them in 0.0001 % steps.
+* Items: raw resources (anything a miner, extractor or well makes) are drawn
+  in whole multiples of 15/min; gathered items in any amount; build
+  materials (any build-gun cost) and equipment (ammo, rebar, Nobelisks,
+  filters, portable fuels, batteries) need net >= 0; every other item net = 0.
+  Power is ignored. Augmentor and Main Portal: whole machines only. Any
+  internal item can be switched to "surplus allowed" on the Items tab.
+* All recipes are in scope (FICSMAS behind its toggle); miners, extractors
+  and gathering are replaced by the raw/gathered rules.
+
+Method:
+
+* Exact part. The whole-number conditions define a lattice. `src/lattice.js`
+  finds a basis by integer column reduction (Hermite-style, BigInt), starting
+  from unit vectors and, constraint by constraint, combining vectors until one
+  carries the gcd, then dropping it. Pins (y_r = v) are applied the same way
+  to an affine lattice. Each recipe's possible values are then exactly
+  offset + step x Z.
+* Approximate part. The sign conditions define a cone; ranges come from
+  linear programs (a small dense simplex in the same file). The homogeneous
+  cone is extremely degenerate, so zero right-hand sides are perturbed by
+  about 1e-7 machine (fixed seed); values under 5e-7 machine are rounded to
+  zero. Linear programming ignores integrality, so a value inside a range can
+  still be impossible near its ends.
+* A pin is accepted when it is in the recipe's progression, inside its range
+  and passes the machine rule, and the full re-evaluation succeeds.
+  The page lists the recipes whose possible values, range or smallest value
+  changed.
+
+"Use sheet's recipes" reads a production-sheet export and turns every recipe
+that is not running there off.
