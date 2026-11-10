@@ -36,10 +36,21 @@ const toy = (extra = []) => ({
   truthy("toy: 350% plate accepted", good.ok);
   eq("toy: smelter forced to 350%", L.fmtPct(good.rows[S].lo) + "/" + L.fmtPct(good.rows[S].hi), "350%/350%");
   // machine rule: 250.0001%... is not a multiple of 50% anyway; check the rule itself
+  L.setMinPer(null); // strict: fewest machines only
   truthy("machine rule: 350% = 2 x 175%", L.machineOK(L.parsePct("350")));
   truthy("machine rule: 500.0001% = 3 x 166.6667%", L.machineOK(L.parsePct("500.0001")));
   truthy("machine rule: 500.0002% fails (3 machines, not a whole step each)", !L.machineOK(L.parsePct("500.0002")));
   truthy("machine rule: up to 250% anything goes", L.machineOK(L.parsePct("249.9999")));
+  L.setMinPer(L.parsePct("100"));
+  eq("min 100%: 500.0002% has no split (3, 4, 5 machines do not divide 5 000 002)", L.split(L.parsePct("500.0002")), "null");
+  eq("min 100%: 1000% = 4 x 250%", L.split(L.parsePct("1000")), 4);
+  eq("min 100%: 400.0002% = 2 x 200.0001%", L.split(L.parsePct("400.0002")), 2);
+  eq("min 100%: 1000.0001% has no split (10 000 001 = 11 x 909 091; at most 10 machines)", L.split(L.parsePct("1000.0001")), "null");
+  L.setMinPer(L.parsePct("50"));
+  eq("min 50%: 1000.0001% = 11 x 90.9091%", L.split(L.parsePct("1000.0001")), 11);
+  L.setMinPer(null);
+  eq("fewest only: 1000.0001% has no split", L.split(L.parsePct("1000.0001")), "null");
+  L.setMinPer(L.parsePct("100"));
 }
 
 {

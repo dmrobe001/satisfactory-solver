@@ -12,7 +12,7 @@
   const mod = (a, m) => ((a % m) + m) % m;
 
   /* ---- state ---- */
-  let settings = { ficsmas: false, overrides: {} };
+  let settings = { ficsmas: false, overrides: {}, minPer: "100" };
   let pins = new Map(); // recipe id -> BigInt units (0.0001 %), in the order they were set
   try {
     const o = JSON.parse(localStorage.getItem(STORE) || "null");
@@ -41,6 +41,8 @@
    * or has no valid value left in its range. */
   function impossible(id, d) {
     if (!d || !base.has(id) || pins.get(id) === 0n) return false;
+    const pv = pins.get(id);
+    if (pv !== undefined && !(rowById.get(id) || {}).fixed && !L.machineOK(pv)) return true; // pin no longer splits over machines
     return !d.run || (d.smallest === null && !pins.has(id));
   }
   function pinsIdx(p) {
@@ -59,13 +61,15 @@
     if (!x.run) return "cannot run";
     return fmt(x.lo) + " – " + (x.hi === null ? "∞" : fmt(x.hi));
   }
-  function machinesText(y, fixed) {
-    if (fixed) { const n = y / L.UNIT; return n > 1n ? ` (${n} machines)` : ""; }
-    if (y <= L.MACHINE) return "";
-    const n = L.machinesFor(y);
-    return ` (${n} × ${fmt(y / n)})`;
+  /* " = n × per" for the fewest machines that work (always=true: also for one machine). */
+  function machinesText(y, fixed, always) {
+    if (fixed) { const n = y / L.UNIT; return n > 1n || always ? ` = ${n} machine${n === 1n ? "" : "s"} at 100%` : ""; }
+    const n = L.split(y);
+    if (n === null) return " — no machine split allowed";
+    if (n === 1n) return always ? " = 1 machine" : "";
+    return ` = ${n} × ${fmt(y / n)}`;
   }
-  const sigOf = (x) => x ? [x.step, x.offset, x.lo, x.hi, x.run, x.smallest].join("|") : "";
+  const sigOf = (x) => x ? [x.step, x.offset, x.lo, x.hi, x.run, x.smallest, x.lo > 0n ? L.split(x.lo) : ""].join("|") : "";
   const shortOf = (x) => x ? (x.run ? allowedText(x) + ", " + rangeText(x) : "cannot run") : "—";
 
   /* ---- rows, built once ---- */
@@ -191,7 +195,7 @@
       setText(x.allow, allowedText(d));
       setText(x.range, rangeText(d));
       if (!d.run) setHTML(x.small, "—");
-      else if (pv !== undefined) setHTML(x.small, esc(fmt(pv) + machinesText(pv, x.fixed)) + " <small>pinned</small>");
+      else if (pv !== undefined) setHTML(x.small, esc(fmt(pv)) + "<small>" + esc(machinesText(pv, x.fixed, true)) + " · pinned</small>");
       else if (d.smallest === null) setHTML(x.small, "<small>none in range</small>");
       else setHTML(x.small, `<button type="button" class="linkish use" data-v="${d.smallest}" title="Pin this value">${esc(fmt(d.smallest))}</button><small>${esc(machinesText(d.smallest, x.fixed))}</small>`);
     }
@@ -233,7 +237,14 @@
 
   function pinRecipe(x, v) {
     const r = lat.rIdx[x.id];
-    const d = res.rows[r];
+    let d = res.rows[r];
+    // a recipe that is already pinned shows only its pin: judge the new value
+    // against what it could take with that pin removed
+    if (pins.has(x.id) && v !== null) {
+      const rest = new Map(pins); rest.delete(x.id);
+      const e0 = lat.evaluate(pinsIdx(rest));
+      if (e0.ok) d = e0.rows[r];
+    }
     setText(x.msg, "");
     const name = x.rec.name;
     if (v === null) {
@@ -245,8 +256,9 @@
     // quick checks against what the page already shows, for a clear message
     let why = "";
     if (v > 0n && !x.fixed && !L.machineOK(v)) {
-      const n = L.machinesFor(v);
-      why = `${fmt(v)} needs ${n} machines, and ${fmt(v)} ÷ ${n} is not a whole 0.0001% step`;
+      const n0 = L.machinesFor(v), mp = L.getMinPer();
+      why = `${fmt(v)} cannot be split evenly (whole 0.0001% steps) over ${n0}` +
+        (mp === null || v / mp <= n0 ? " machines" : ` to ${v / mp} machines (each at least ${fmt(mp)})`);
     } else if (v > 0n && x.fixed && v % L.UNIT !== 0n) why = `${name} has a fixed clock: whole machines only (multiples of 100%)`;
     else if (v > 0n && (d.step === 0n ? v !== d.offset : mod(v - d.offset, d.step) !== 0n)) why = `${fmt(v)} is not one of the possible values (${allowedText(d)})`;
     else if (v > 0n && (v < d.lo || (d.hi !== null && v > d.hi))) why = `${fmt(v)} is outside the range ${rangeText(d)}`;
@@ -294,6 +306,24 @@
     rebuild();
     const r = attempt(pins, `${G.items[x.k].n}: ${want === "free" ? "surplus allowed" : "must balance exactly"}`);
     if (!r.ok) { settings.overrides = prev; rebuild(); showReject(`Not applied: ${G.items[x.k].n} must stay ${want === "free" ? "exact" : "free"} — the current pins would become impossible.`); render(); }
+  });
+
+  /* ---- machine split setting ---- */
+  function applyMinPer() {
+    const t = String(settings.minPer || "").trim();
+    L.setMinPer(t === "" ? null : (L.parsePct(t) || 1000000n));
+  }
+  applyMinPer();
+  $("#minPer").value = settings.minPer || "";
+  $("#minPer").addEventListener("change", (e) => {
+    const t = e.target.value.trim();
+    if (t !== "" && L.parsePct(t) === null) { e.target.value = settings.minPer || ""; return; }
+    settings.minPer = t;
+    applyMinPer();
+    const mp = L.getMinPer();
+    if (t !== "") e.target.value = fmt(mp).replace("%", "");
+    settings.minPer = e.target.value;
+    attempt(pins, mp === null ? "Machine split: fewest machines only" : `Machine split: 2+ machines each at least ${fmt(mp)}`);
   });
 
   /* ---- header actions ---- */

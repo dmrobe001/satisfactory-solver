@@ -19,6 +19,7 @@
     <button class="btn" type="button" id="btnAllOn">Turn all recipes on</button>
     <button class="btn danger" type="button" id="btnClear">Clear all pins</button>
     <label class="xmas-toggle"><input type="checkbox" id="ficsmas"> FICSMAS</label>
+    <label class="minper" title="With two or more machines, each must run at least this clock. Leave empty to allow only the fewest machines (ceil of total ÷ 250%).">Min clock per machine (2+) <input class="cell-in" type="text" inputmode="decimal" id="minPer" placeholder="fewest only" aria-label="Minimum clock per machine when two or more"> %</label>
   </div>
 </header>
 
@@ -73,7 +74,7 @@
   <section class="panel" id="tab-notes" role="tabpanel" hidden>
     <div class="prose">
       <h3>What is computed</h3>
-      <p>Each recipe has an <b>effective clock</b>: machines × clock, written as a percentage (375% is two machines at 187.5% or three at 125%). Clocks come in steps of 0.0001%. The number of machines is always the fewest that can do it, ⌈effective clock ÷ 250%⌉, and above 250% the effective clock must split evenly over them in 0.0001% steps (500.0001% = 3 × 166.6667% is fine; 500.0002% is not).</p>
+      <p>Each recipe has an <b>effective clock</b>: machines × clock, written as a percentage (375% is two machines at 187.5% or three at 125%). Clocks come in steps of 0.0001%. One machine may run at any clock up to 250%. Above 250% the effective clock must split evenly over n machines, each a whole number of 0.0001% steps and at most 250%, and each at least the <b>minimum clock per machine</b> set at the top (default 100%). So with the default, 1,000% may be 4 × 250% or 5 × 200%… up to 10 × 100%, and the page shows the fewest machines that work. Leave the minimum empty to allow only the fewest possible machines, ⌈total ÷ 250%⌉. Above 125% the minimum leaves gaps (just over 250% could not be split at all).</p>
       <p>Items must balance per minute:</p>
       <ul>
         <li><b>Raw resources</b> (ores, water, oil, gases): drawn in whole multiples of 15 per minute. Miners and extractors are not part of the problem; only the amount drawn is.</li>

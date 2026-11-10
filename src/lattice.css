@@ -53,3 +53,5 @@
 .change-list .ci-head { flex-basis: 100%; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
 .change-list .ci-head.imp { color: var(--red-edge); }
 .change-list .ci.imp { background: var(--red-bg); border-left: 3px solid var(--red-edge); padding: 0 6px; border-radius: 3px; }
+.minper { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.85rem; }
+.minper input { width: 6.5em; font-family: var(--font-mono); }

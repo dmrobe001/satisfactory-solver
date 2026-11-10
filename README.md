@@ -178,8 +178,11 @@ every balance comes out exactly, with machine counts as low as possible?
 Definitions:
 
 * Effective clock y of a recipe, in units of 0.0001 % (1 000 000 = one
-  machine at 100 %). Machines = ceil(y / 250 %); above 250 % y must divide
-  evenly over them in 0.0001 % steps.
+  machine at 100 %). One machine may run at any clock up to 250 %. Above
+  that, y must divide evenly over n machines in 0.0001 % steps, with each
+  machine between a minimum (a setting, default 100 %) and 250 %; the page
+  reports the fewest n that works. An empty minimum means only
+  n = ceil(y / 250 %) is allowed. A minimum above 125 % leaves gaps.
 * Items: raw resources (anything a miner, extractor or well makes) are drawn
   in whole multiples of 15/min; gathered items in any amount; build
   materials (any build-gun cost) and equipment (ammo, rebar, Nobelisks,

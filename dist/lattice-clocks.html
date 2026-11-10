@@ -306,6 +306,8 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 .change-list .ci-head { flex-basis: 100%; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
 .change-list .ci-head.imp { color: var(--red-edge); }
 .change-list .ci.imp { background: var(--red-bg); border-left: 3px solid var(--red-edge); padding: 0 6px; border-radius: 3px; }
+.minper { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.85rem; }
+.minper input { width: 6.5em; font-family: var(--font-mono); }
 
 </style>
 
@@ -320,6 +322,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     <button class="btn" type="button" id="btnAllOn">Turn all recipes on</button>
     <button class="btn danger" type="button" id="btnClear">Clear all pins</button>
     <label class="xmas-toggle"><input type="checkbox" id="ficsmas"> FICSMAS</label>
+    <label class="minper" title="With two or more machines, each must run at least this clock. Leave empty to allow only the fewest machines (ceil of total ÷ 250%).">Min clock per machine (2+) <input class="cell-in" type="text" inputmode="decimal" id="minPer" placeholder="fewest only" aria-label="Minimum clock per machine when two or more"> %</label>
   </div>
 </header>
 
@@ -374,7 +377,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
   <section class="panel" id="tab-notes" role="tabpanel" hidden>
     <div class="prose">
       <h3>What is computed</h3>
-      <p>Each recipe has an <b>effective clock</b>: machines × clock, written as a percentage (375% is two machines at 187.5% or three at 125%). Clocks come in steps of 0.0001%. The number of machines is always the fewest that can do it, ⌈effective clock ÷ 250%⌉, and above 250% the effective clock must split evenly over them in 0.0001% steps (500.0001% = 3 × 166.6667% is fine; 500.0002% is not).</p>
+      <p>Each recipe has an <b>effective clock</b>: machines × clock, written as a percentage (375% is two machines at 187.5% or three at 125%). Clocks come in steps of 0.0001%. One machine may run at any clock up to 250%. Above 250% the effective clock must split evenly over n machines, each a whole number of 0.0001% steps and at most 250%, and each at least the <b>minimum clock per machine</b> set at the top (default 100%). So with the default, 1,000% may be 4 × 250% or 5 × 200%… up to 10 × 100%, and the page shows the fewest machines that work. Leave the minimum empty to allow only the fewest possible machines, ⌈total ÷ 250%⌉. Above 125% the minimum leaves gaps (just over 250% could not be split at all).</p>
       <p>Items must balance per minute:</p>
       <ul>
         <li><b>Raw resources</b> (ores, water, oil, gases): drawn in whole multiples of 15 per minute. Miners and extractors are not part of the problem; only the amount drawn is.</li>
@@ -630,9 +633,24 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
 
   Lattice.prototype.pinCheck = function (st, r, v) { return pinState(st, r, v); };
 
-  /* Machine rule: above 250 %, y must divide evenly over ceil(y / 250 %) machines. */
+  /* Machine rule.  One machine may run at any clock up to 250 %.  With two or
+   * more, every machine runs at the same clock, a whole number of 0.0001 %
+   * steps, and at least minPer (a setting; null = only the fewest machines,
+   * ceil(y / 250 %), are allowed).  split(y) returns the fewest machines that
+   * work, or null. */
+  let minPer = 1000000n; // 100 %
+  Lattice.setMinPer = (v) => { minPer = v === null ? null : (v < 10000n ? 10000n : v > MACHINE ? MACHINE : v); };
+  Lattice.getMinPer = () => minPer;
   Lattice.machinesFor = (y) => (y <= 0n ? 0n : (y + MACHINE - 1n) / MACHINE);
-  Lattice.machineOK = (y) => { const n = Lattice.machinesFor(y); return n <= 1n || y % n === 0n; };
+  Lattice.split = function (y) {
+    if (y <= 0n) return 0n;
+    if (y <= MACHINE) return 1n;
+    const n0 = Lattice.machinesFor(y);
+    const n1 = minPer === null ? n0 : y / minPer;
+    for (let n = n0, i = 0; n <= n1 && i < 2000000; n++, i++) if (y % n === 0n) return n;
+    return null;
+  };
+  Lattice.machineOK = (y) => Lattice.split(y) !== null;
 
   /* Smallest y >= from (and > 0) in offset + step*Z that passes the machine rule. */
   Lattice.smallest = function (offset, step, from, limit) {
@@ -925,7 +943,7 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
   const mod = (a, m) => ((a % m) + m) % m;
 
   /* ---- state ---- */
-  let settings = { ficsmas: false, overrides: {} };
+  let settings = { ficsmas: false, overrides: {}, minPer: "100" };
   let pins = new Map(); // recipe id -> BigInt units (0.0001 %), in the order they were set
   try {
     const o = JSON.parse(localStorage.getItem(STORE) || "null");
@@ -954,6 +972,8 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
    * or has no valid value left in its range. */
   function impossible(id, d) {
     if (!d || !base.has(id) || pins.get(id) === 0n) return false;
+    const pv = pins.get(id);
+    if (pv !== undefined && !(rowById.get(id) || {}).fixed && !L.machineOK(pv)) return true; // pin no longer splits over machines
     return !d.run || (d.smallest === null && !pins.has(id));
   }
   function pinsIdx(p) {
@@ -972,13 +992,15 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     if (!x.run) return "cannot run";
     return fmt(x.lo) + " – " + (x.hi === null ? "∞" : fmt(x.hi));
   }
-  function machinesText(y, fixed) {
-    if (fixed) { const n = y / L.UNIT; return n > 1n ? ` (${n} machines)` : ""; }
-    if (y <= L.MACHINE) return "";
-    const n = L.machinesFor(y);
-    return ` (${n} × ${fmt(y / n)})`;
+  /* " = n × per" for the fewest machines that work (always=true: also for one machine). */
+  function machinesText(y, fixed, always) {
+    if (fixed) { const n = y / L.UNIT; return n > 1n || always ? ` = ${n} machine${n === 1n ? "" : "s"} at 100%` : ""; }
+    const n = L.split(y);
+    if (n === null) return " — no machine split allowed";
+    if (n === 1n) return always ? " = 1 machine" : "";
+    return ` = ${n} × ${fmt(y / n)}`;
   }
-  const sigOf = (x) => x ? [x.step, x.offset, x.lo, x.hi, x.run, x.smallest].join("|") : "";
+  const sigOf = (x) => x ? [x.step, x.offset, x.lo, x.hi, x.run, x.smallest, x.lo > 0n ? L.split(x.lo) : ""].join("|") : "";
   const shortOf = (x) => x ? (x.run ? allowedText(x) + ", " + rangeText(x) : "cannot run") : "—";
 
   /* ---- rows, built once ---- */
@@ -1104,7 +1126,7 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
       setText(x.allow, allowedText(d));
       setText(x.range, rangeText(d));
       if (!d.run) setHTML(x.small, "—");
-      else if (pv !== undefined) setHTML(x.small, esc(fmt(pv) + machinesText(pv, x.fixed)) + " <small>pinned</small>");
+      else if (pv !== undefined) setHTML(x.small, esc(fmt(pv)) + "<small>" + esc(machinesText(pv, x.fixed, true)) + " · pinned</small>");
       else if (d.smallest === null) setHTML(x.small, "<small>none in range</small>");
       else setHTML(x.small, `<button type="button" class="linkish use" data-v="${d.smallest}" title="Pin this value">${esc(fmt(d.smallest))}</button><small>${esc(machinesText(d.smallest, x.fixed))}</small>`);
     }
@@ -1146,7 +1168,14 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
 
   function pinRecipe(x, v) {
     const r = lat.rIdx[x.id];
-    const d = res.rows[r];
+    let d = res.rows[r];
+    // a recipe that is already pinned shows only its pin: judge the new value
+    // against what it could take with that pin removed
+    if (pins.has(x.id) && v !== null) {
+      const rest = new Map(pins); rest.delete(x.id);
+      const e0 = lat.evaluate(pinsIdx(rest));
+      if (e0.ok) d = e0.rows[r];
+    }
     setText(x.msg, "");
     const name = x.rec.name;
     if (v === null) {
@@ -1158,8 +1187,9 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     // quick checks against what the page already shows, for a clear message
     let why = "";
     if (v > 0n && !x.fixed && !L.machineOK(v)) {
-      const n = L.machinesFor(v);
-      why = `${fmt(v)} needs ${n} machines, and ${fmt(v)} ÷ ${n} is not a whole 0.0001% step`;
+      const n0 = L.machinesFor(v), mp = L.getMinPer();
+      why = `${fmt(v)} cannot be split evenly (whole 0.0001% steps) over ${n0}` +
+        (mp === null || v / mp <= n0 ? " machines" : ` to ${v / mp} machines (each at least ${fmt(mp)})`);
     } else if (v > 0n && x.fixed && v % L.UNIT !== 0n) why = `${name} has a fixed clock: whole machines only (multiples of 100%)`;
     else if (v > 0n && (d.step === 0n ? v !== d.offset : mod(v - d.offset, d.step) !== 0n)) why = `${fmt(v)} is not one of the possible values (${allowedText(d)})`;
     else if (v > 0n && (v < d.lo || (d.hi !== null && v > d.hi))) why = `${fmt(v)} is outside the range ${rangeText(d)}`;
@@ -1207,6 +1237,24 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     rebuild();
     const r = attempt(pins, `${G.items[x.k].n}: ${want === "free" ? "surplus allowed" : "must balance exactly"}`);
     if (!r.ok) { settings.overrides = prev; rebuild(); showReject(`Not applied: ${G.items[x.k].n} must stay ${want === "free" ? "exact" : "free"} — the current pins would become impossible.`); render(); }
+  });
+
+  /* ---- machine split setting ---- */
+  function applyMinPer() {
+    const t = String(settings.minPer || "").trim();
+    L.setMinPer(t === "" ? null : (L.parsePct(t) || 1000000n));
+  }
+  applyMinPer();
+  $("#minPer").value = settings.minPer || "";
+  $("#minPer").addEventListener("change", (e) => {
+    const t = e.target.value.trim();
+    if (t !== "" && L.parsePct(t) === null) { e.target.value = settings.minPer || ""; return; }
+    settings.minPer = t;
+    applyMinPer();
+    const mp = L.getMinPer();
+    if (t !== "") e.target.value = fmt(mp).replace("%", "");
+    settings.minPer = e.target.value;
+    attempt(pins, mp === null ? "Machine split: fewest machines only" : `Machine split: 2+ machines each at least ${fmt(mp)}`);
   });
 
   /* ---- header actions ---- */

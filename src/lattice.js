@@ -225,9 +225,24 @@
 
   Lattice.prototype.pinCheck = function (st, r, v) { return pinState(st, r, v); };
 
-  /* Machine rule: above 250 %, y must divide evenly over ceil(y / 250 %) machines. */
+  /* Machine rule.  One machine may run at any clock up to 250 %.  With two or
+   * more, every machine runs at the same clock, a whole number of 0.0001 %
+   * steps, and at least minPer (a setting; null = only the fewest machines,
+   * ceil(y / 250 %), are allowed).  split(y) returns the fewest machines that
+   * work, or null. */
+  let minPer = 1000000n; // 100 %
+  Lattice.setMinPer = (v) => { minPer = v === null ? null : (v < 10000n ? 10000n : v > MACHINE ? MACHINE : v); };
+  Lattice.getMinPer = () => minPer;
   Lattice.machinesFor = (y) => (y <= 0n ? 0n : (y + MACHINE - 1n) / MACHINE);
-  Lattice.machineOK = (y) => { const n = Lattice.machinesFor(y); return n <= 1n || y % n === 0n; };
+  Lattice.split = function (y) {
+    if (y <= 0n) return 0n;
+    if (y <= MACHINE) return 1n;
+    const n0 = Lattice.machinesFor(y);
+    const n1 = minPer === null ? n0 : y / minPer;
+    for (let n = n0, i = 0; n <= n1 && i < 2000000; n++, i++) if (y % n === 0n) return n;
+    return null;
+  };
+  Lattice.machineOK = (y) => Lattice.split(y) !== null;
 
   /* Smallest y >= from (and > 0) in offset + step*Z that passes the machine rule. */
   Lattice.smallest = function (offset, step, from, limit) {
