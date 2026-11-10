@@ -14,6 +14,9 @@
     <div class="sub">Satisfactory 1.2. Which effective clocks each recipe can take when every balance comes out whole. Pin a clock and the rest update.</div>
   </div>
   <div class="io-top">
+    <button class="btn" type="button" id="btnExport" hidden>Export state</button>
+    <label class="btn" for="fileState" title="Load pins and settings from a file exported here">Import state</label>
+    <input type="file" id="fileState" accept=".json,application/json" hidden>
     <label class="btn" for="fileSheet" title="Turn off every recipe that is not running in a file exported from the production sheet">Use sheet's recipes</label>
     <input type="file" id="fileSheet" accept=".json,application/json" hidden>
     <button class="btn" type="button" id="btnAllOn">Turn all recipes on</button>
@@ -79,7 +82,7 @@
       <ul>
         <li><b>Raw resources</b> (ores, water, oil, gases): drawn in whole multiples of 15 per minute. Miners and extractors are not part of the problem; only the amount drawn is.</li>
         <li><b>Gathered</b> items (leaves, wood, mycelia, Somersloops…): any amount may be used.</li>
-        <li><b>Build materials and equipment</b> (anything a build-gun recipe uses, plus ammo, rebar, Nobelisks, filters, portable fuels and batteries): net production of zero or more.</li>
+        <li><b>Build materials and equipment</b> (anything a build-gun recipe uses, plus ammo, rebar, Nobelisks, filters, portable fuels and batteries; with FICSMAS on, also snowballs, fireworks and the FICSMAS Wonder Star, which goes on the FICSMAS tree): net production of zero or more.</li>
         <li><b>Everything else</b>: net production exactly zero.</li>
         <li>Power is ignored; generators take part only through the fuel they burn and the waste they make. The Alien Power Augmenter and Main Portal have fixed clocks, so they come in whole machines.</li>
       </ul>

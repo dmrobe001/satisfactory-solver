@@ -30,7 +30,9 @@
     "SpikedRebar", "Rebar_Stunshot", "Rebar_Spreadshot", "Rebar_Explosive",
     "NobeliskExplosive", "NobeliskGas", "NobeliskShockwave", "NobeliskCluster", "NobeliskNuke",
     "Filter", "HazmatFilter", "Biofuel", "Fuel", "TurboFuel", "PackagedBiofuel", "PackagedRocketFuel",
-    "PackagedIonizedFuel", "Battery"];
+    "PackagedIonizedFuel", "Battery",
+    // FICSMAS hand equipment (thrown)
+    "SnowballProjectile", "Fireworks_Projectile_01", "Fireworks_Projectile_02", "Fireworks_Projectile_03"];
   const IN_SCOPE = { machine: 1, burn: 1, augment: 1, manual: 1 };
   const EXTRACT = { miner: 1, extractor: 1, well: 1 };
 
@@ -68,7 +70,8 @@
     const cls = {};
     for (const r of game.recipes) if (EXTRACT[r.kind]) for (const [k] of r.outs) cls[k] = "raw";
     for (const r of game.recipes) if (r.kind === "gather") for (const [k] of r.outs) if (!cls[k]) cls[k] = "gathered";
-    const freeSet = new Set(EXPENDABLE);
+    // the FICSMAS Wonder Star is delivered to the FICSMAS tree, like a build cost
+    const freeSet = new Set(EXPENDABLE.concat(["XmasStar"]));
     for (const b of Object.values(game.buildings)) if (xmasOn || !b.xmas) for (const [k] of b.cost) freeSet.add(k);
     const used = new Set();
     R.forEach((r) => r.ins.concat(r.outs).forEach(([k]) => used.add(k)));
@@ -500,7 +503,7 @@
 
   /* Parse a percentage with up to 4 decimals into units of 0.0001 % (BigInt), or null. */
   Lattice.parsePct = function (s) {
-    const m = /^\s*(\d+)(?:\.(\d{0,4}))?\s*%?\s*$/.exec(String(s));
+    const m = /^\s*(\d+)(?:\.(\d{0,4}))?\s*%?\s*$/.exec(String(s).replace(/,/g, ""));
     if (!m) return null;
     return BigInt(m[1]) * 10000n + BigInt(((m[2] || "") + "0000").slice(0, 4));
   };

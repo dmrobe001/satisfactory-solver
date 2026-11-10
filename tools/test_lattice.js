@@ -106,5 +106,13 @@ const toy = (extra = []) => ({
   truthy("real: marking Smart Plating free lets it run", lat2.evaluate(new Map()).rows[lat2.rIdx.SpaceElevatorPart_1].run);
 }
 
+eq("parsePct accepts thousands commas", L.parsePct("1,000.5"), 10005000n);
+{
+  const game = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/game.json")));
+  const lat = new L(game, { ficsmas: true });
+  const e = lat.evaluate(new Map());
+  const cant = lat.R.filter((r, i) => r.xmas && !e.rows[i].run).map((r) => r.id);
+  eq("FICSMAS on: every FICSMAS recipe can run (snowballs, fireworks are equipment)", cant.join(" "), "");
+}
 console.log(fails ? fails + " FAILED" : "all passed");
 process.exit(fails ? 1 : 0);

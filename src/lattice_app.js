@@ -189,7 +189,7 @@
       x.el.classList.toggle("pinned", pv !== undefined && pv > 0n);
       x.el.classList.toggle("off", isOff);
       x.el.classList.toggle("hit", affected.has(x.id));
-      if (document.activeElement !== x.pin) { const t = pv !== undefined && pv > 0n ? fmt(pv).replace("%", "") : ""; if (x.pin.value !== t) x.pin.value = t; }
+      if (document.activeElement !== x.pin) { const t = pv !== undefined && pv > 0n ? fmt(pv).replace(/[%,]/g, "") : ""; if (x.pin.value !== t) x.pin.value = t; }
       if (x.off.checked !== isOff) x.off.checked = isOff;
       x.pin.disabled = isOff;
       setText(x.allow, allowedText(d));
@@ -325,6 +325,56 @@
     settings.minPer = e.target.value;
     attempt(pins, mp === null ? "Machine split: fewest machines only" : `Machine split: 2+ machines each at least ${fmt(mp)}`);
   });
+
+  /* ---- export / import of the page's own state (a .json file) ---- */
+  const STATE_APP = "satisfactory-lattice-clocks";
+  let downloads = null;
+  if (window.claude && window.claude.use) {
+    window.claude.use("downloads").then((d) => { downloads = d; $("#btnExport").hidden = !d; }).catch(() => {});
+  }
+  $("#btnExport").addEventListener("click", async () => {
+    if (!downloads) return;
+    const day = new Date().toISOString().slice(0, 10);
+    const data = JSON.stringify({ app: STATE_APP, v: 1, settings, pins: [...pins].map(([id, v]) => [id, fmt(v).replace("%", "").replace(/,/g, "")]) }, null, 1);
+    try {
+      await downloads.save({ filename: `lattice-clocks-${day}.json`, data });
+      showNote("Exported the pins and settings.");
+    } catch (e) {
+      const code = e && e.code;
+      showReject(code === "declined" ? "Export cancelled." : code === "rate_limited" ? "A save prompt is already open." : "Export isn't available here.");
+      if (code !== "declined" && code !== "rate_limited") $("#btnExport").hidden = true;
+    }
+  });
+  $("#fileState").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    f.text().then((txt) => {
+      let o;
+      try { o = JSON.parse(txt); } catch (err) { showReject(`${f.name} is not a JSON file.`); return; }
+      if (!o || o.app !== STATE_APP || !Array.isArray(o.pins)) {
+        showReject(o && o.sheet ? `${f.name} is a production-sheet export: use “Use sheet's recipes” for that.` : `${f.name} is not a state exported from this page.`);
+        return;
+      }
+      const np = new Map();
+      for (const [id, v] of o.pins) { const y = L.parsePct(String(v)); if (y !== null && rowById.has(id)) np.set(id, y); }
+      const prev = settings;
+      settings = Object.assign({ ficsmas: false, overrides: {}, minPer: "100" }, o.settings || {});
+      settings.overrides = Object.assign({}, settings.overrides);
+      $("#ficsmas").checked = !!settings.ficsmas;
+      $("#minPer").value = settings.minPer || "";
+      applyMinPer();
+      rebuild();
+      sigs.clear(); // a fresh start: no change list against the old state
+      const r = attempt(np, `Imported ${f.name}: ${np.size} pin${np.size === 1 ? "" : "s"}`);
+      if (!r.ok) {
+        settings = prev; $("#ficsmas").checked = !!settings.ficsmas; $("#minPer").value = settings.minPer || "";
+        applyMinPer(); rebuild(); attempt(pins, "");
+        showReject(`Not applied: the pins in ${f.name} are impossible with this data.`);
+      }
+    }, () => showReject(`Could not read ${f.name}.`));
+  });
+  function showNote(text) { $(".change").classList.remove("bad"); setText($("#chgWhat"), text); setHTML($("#chgList"), ""); }
 
   /* ---- header actions ---- */
   $("#ficsmas").checked = !!settings.ficsmas;

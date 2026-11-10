@@ -186,7 +186,8 @@ Definitions:
 * Items: raw resources (anything a miner, extractor or well makes) are drawn
   in whole multiples of 15/min; gathered items in any amount; build
   materials (any build-gun cost) and equipment (ammo, rebar, Nobelisks,
-  filters, portable fuels, batteries) need net >= 0; every other item net = 0.
+  filters, portable fuels, batteries; with FICSMAS, snowballs, fireworks and
+  the Wonder Star) need net >= 0; every other item net = 0.
   Power is ignored. Augmentor and Main Portal: whole machines only. Any
   internal item can be switched to "surplus allowed" on the Items tab.
 * All recipes are in scope (FICSMAS behind its toggle); miners, extractors

@@ -317,6 +317,9 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     <div class="sub">Satisfactory 1.2. Which effective clocks each recipe can take when every balance comes out whole. Pin a clock and the rest update.</div>
   </div>
   <div class="io-top">
+    <button class="btn" type="button" id="btnExport" hidden>Export state</button>
+    <label class="btn" for="fileState" title="Load pins and settings from a file exported here">Import state</label>
+    <input type="file" id="fileState" accept=".json,application/json" hidden>
     <label class="btn" for="fileSheet" title="Turn off every recipe that is not running in a file exported from the production sheet">Use sheet's recipes</label>
     <input type="file" id="fileSheet" accept=".json,application/json" hidden>
     <button class="btn" type="button" id="btnAllOn">Turn all recipes on</button>
@@ -382,7 +385,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
       <ul>
         <li><b>Raw resources</b> (ores, water, oil, gases): drawn in whole multiples of 15 per minute. Miners and extractors are not part of the problem; only the amount drawn is.</li>
         <li><b>Gathered</b> items (leaves, wood, mycelia, Somersloops…): any amount may be used.</li>
-        <li><b>Build materials and equipment</b> (anything a build-gun recipe uses, plus ammo, rebar, Nobelisks, filters, portable fuels and batteries): net production of zero or more.</li>
+        <li><b>Build materials and equipment</b> (anything a build-gun recipe uses, plus ammo, rebar, Nobelisks, filters, portable fuels and batteries; with FICSMAS on, also snowballs, fireworks and the FICSMAS Wonder Star, which goes on the FICSMAS tree): net production of zero or more.</li>
         <li><b>Everything else</b>: net production exactly zero.</li>
         <li>Power is ignored; generators take part only through the fuel they burn and the waste they make. The Alien Power Augmenter and Main Portal have fixed clocks, so they come in whole machines.</li>
       </ul>
@@ -438,7 +441,9 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     "SpikedRebar", "Rebar_Stunshot", "Rebar_Spreadshot", "Rebar_Explosive",
     "NobeliskExplosive", "NobeliskGas", "NobeliskShockwave", "NobeliskCluster", "NobeliskNuke",
     "Filter", "HazmatFilter", "Biofuel", "Fuel", "TurboFuel", "PackagedBiofuel", "PackagedRocketFuel",
-    "PackagedIonizedFuel", "Battery"];
+    "PackagedIonizedFuel", "Battery",
+    // FICSMAS hand equipment (thrown)
+    "SnowballProjectile", "Fireworks_Projectile_01", "Fireworks_Projectile_02", "Fireworks_Projectile_03"];
   const IN_SCOPE = { machine: 1, burn: 1, augment: 1, manual: 1 };
   const EXTRACT = { miner: 1, extractor: 1, well: 1 };
 
@@ -476,7 +481,8 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     const cls = {};
     for (const r of game.recipes) if (EXTRACT[r.kind]) for (const [k] of r.outs) cls[k] = "raw";
     for (const r of game.recipes) if (r.kind === "gather") for (const [k] of r.outs) if (!cls[k]) cls[k] = "gathered";
-    const freeSet = new Set(EXPENDABLE);
+    // the FICSMAS Wonder Star is delivered to the FICSMAS tree, like a build cost
+    const freeSet = new Set(EXPENDABLE.concat(["XmasStar"]));
     for (const b of Object.values(game.buildings)) if (xmasOn || !b.xmas) for (const [k] of b.cost) freeSet.add(k);
     const used = new Set();
     R.forEach((r) => r.ins.concat(r.outs).forEach(([k]) => used.add(k)));
@@ -908,7 +914,7 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
 
   /* Parse a percentage with up to 4 decimals into units of 0.0001 % (BigInt), or null. */
   Lattice.parsePct = function (s) {
-    const m = /^\s*(\d+)(?:\.(\d{0,4}))?\s*%?\s*$/.exec(String(s));
+    const m = /^\s*(\d+)(?:\.(\d{0,4}))?\s*%?\s*$/.exec(String(s).replace(/,/g, ""));
     if (!m) return null;
     return BigInt(m[1]) * 10000n + BigInt(((m[2] || "") + "0000").slice(0, 4));
   };
@@ -1120,7 +1126,7 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
       x.el.classList.toggle("pinned", pv !== undefined && pv > 0n);
       x.el.classList.toggle("off", isOff);
       x.el.classList.toggle("hit", affected.has(x.id));
-      if (document.activeElement !== x.pin) { const t = pv !== undefined && pv > 0n ? fmt(pv).replace("%", "") : ""; if (x.pin.value !== t) x.pin.value = t; }
+      if (document.activeElement !== x.pin) { const t = pv !== undefined && pv > 0n ? fmt(pv).replace(/[%,]/g, "") : ""; if (x.pin.value !== t) x.pin.value = t; }
       if (x.off.checked !== isOff) x.off.checked = isOff;
       x.pin.disabled = isOff;
       setText(x.allow, allowedText(d));
@@ -1256,6 +1262,56 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     settings.minPer = e.target.value;
     attempt(pins, mp === null ? "Machine split: fewest machines only" : `Machine split: 2+ machines each at least ${fmt(mp)}`);
   });
+
+  /* ---- export / import of the page's own state (a .json file) ---- */
+  const STATE_APP = "satisfactory-lattice-clocks";
+  let downloads = null;
+  if (window.claude && window.claude.use) {
+    window.claude.use("downloads").then((d) => { downloads = d; $("#btnExport").hidden = !d; }).catch(() => {});
+  }
+  $("#btnExport").addEventListener("click", async () => {
+    if (!downloads) return;
+    const day = new Date().toISOString().slice(0, 10);
+    const data = JSON.stringify({ app: STATE_APP, v: 1, settings, pins: [...pins].map(([id, v]) => [id, fmt(v).replace("%", "").replace(/,/g, "")]) }, null, 1);
+    try {
+      await downloads.save({ filename: `lattice-clocks-${day}.json`, data });
+      showNote("Exported the pins and settings.");
+    } catch (e) {
+      const code = e && e.code;
+      showReject(code === "declined" ? "Export cancelled." : code === "rate_limited" ? "A save prompt is already open." : "Export isn't available here.");
+      if (code !== "declined" && code !== "rate_limited") $("#btnExport").hidden = true;
+    }
+  });
+  $("#fileState").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    f.text().then((txt) => {
+      let o;
+      try { o = JSON.parse(txt); } catch (err) { showReject(`${f.name} is not a JSON file.`); return; }
+      if (!o || o.app !== STATE_APP || !Array.isArray(o.pins)) {
+        showReject(o && o.sheet ? `${f.name} is a production-sheet export: use “Use sheet's recipes” for that.` : `${f.name} is not a state exported from this page.`);
+        return;
+      }
+      const np = new Map();
+      for (const [id, v] of o.pins) { const y = L.parsePct(String(v)); if (y !== null && rowById.has(id)) np.set(id, y); }
+      const prev = settings;
+      settings = Object.assign({ ficsmas: false, overrides: {}, minPer: "100" }, o.settings || {});
+      settings.overrides = Object.assign({}, settings.overrides);
+      $("#ficsmas").checked = !!settings.ficsmas;
+      $("#minPer").value = settings.minPer || "";
+      applyMinPer();
+      rebuild();
+      sigs.clear(); // a fresh start: no change list against the old state
+      const r = attempt(np, `Imported ${f.name}: ${np.size} pin${np.size === 1 ? "" : "s"}`);
+      if (!r.ok) {
+        settings = prev; $("#ficsmas").checked = !!settings.ficsmas; $("#minPer").value = settings.minPer || "";
+        applyMinPer(); rebuild(); attempt(pins, "");
+        showReject(`Not applied: the pins in ${f.name} are impossible with this data.`);
+      }
+    }, () => showReject(`Could not read ${f.name}.`));
+  });
+  function showNote(text) { $(".change").classList.remove("bad"); setText($("#chgWhat"), text); setHTML($("#chgList"), ""); }
 
   /* ---- header actions ---- */
   $("#ficsmas").checked = !!settings.ficsmas;

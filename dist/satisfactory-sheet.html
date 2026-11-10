@@ -1079,7 +1079,7 @@ window.DEFAULT_PLAN = {
     ["fluidLanes", "Per fluid lane", "One per distinct fluid input or output of a recipe, times its machine count."],
     ["solidTypes", "Per solid item type", "Solid items that any running recipe makes or uses."],
     ["fluidTypes", "Per fluid type", "Fluids that any running recipe makes or uses."],
-    ["depotItems", "Per depot item", "Each item in the bill of materials, plus each expendable (ammo, rebar, Nobelisks, filters, portable fuels, batteries) the sheet makes."],
+    ["depotItems", "Per depot item", "Each item in the bill of materials, plus each expendable (ammo, rebar, Nobelisks, filters, portable fuels, batteries, FICSMAS snowballs and fireworks) the sheet makes."],
     ["pipe1", "Per computed Pipeline Mk.1", "Computed Mk.1 pipeline segments."],
     ["pipe2", "Per computed Pipeline Mk.2", "Computed Mk.2 pipeline segments."],
   ];
@@ -1110,7 +1110,9 @@ window.DEFAULT_PLAN = {
     "SpikedRebar", "Rebar_Stunshot", "Rebar_Spreadshot", "Rebar_Explosive",
     "NobeliskExplosive", "NobeliskGas", "NobeliskShockwave", "NobeliskCluster", "NobeliskNuke",
     "Filter", "HazmatFilter", "Biofuel", "Fuel", "TurboFuel", "PackagedBiofuel", "PackagedRocketFuel",
-    "PackagedIonizedFuel", "Battery"].filter((k) => k in G.items);
+    "PackagedIonizedFuel", "Battery",
+    // FICSMAS hand equipment (thrown)
+    "SnowballProjectile", "Fireworks_Projectile_01", "Fireworks_Projectile_02", "Fireworks_Projectile_03"].filter((k) => k in G.items);
   const CAL = 2; // building calibration version; older saves get the new rules and default extras
   const cloneRules = () => JSON.parse(JSON.stringify(DEFAULT_RULES));
   const DEFAULTS = () => ({
