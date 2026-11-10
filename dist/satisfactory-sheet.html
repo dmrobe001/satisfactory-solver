@@ -387,8 +387,8 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     <div class="rules" id="ruleSet"></div>
     <div class="prose">
       <h3>How the sheet updates</h3>
-      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough whole machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, none of them is touched; the shortfall shows in yellow on the consumers and red on the producers. You can type any recipe’s machine count; its suppliers follow.</p>
-      <p>Power is treated as one more input. A single running generator recipe follows the power demand automatically. With several generator recipes running, a power shortfall marks all of them red.</p>
+      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough whole machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, the one among them with its Flexible box ticked is re-sized instead; if none or several are flexible, none of them is touched, and the shortfall shows in yellow on the consumers and red on the producers. Ticking Flexible re-sizes that recipe straight away. You can type any recipe’s machine count; its suppliers follow.</p>
+      <p>Power is treated as one more input. A single running generator recipe follows the power demand automatically. With several generator recipes running, the one flexible generator follows it; otherwise a power shortfall marks all of them red.</p>
       <p>The floor is the net production you want of an item: what is left after every running consumer. The recipe’s machines cover the consumers plus the floor, rounded up to whole machines at the current clock. Surplus is the item’s total net production across the whole sheet: everything every running recipe makes of it, by-products included, minus everything consumed. If several running recipes share an output, the largest of their floors applies. A by-product also drives sizing when its recipe is the only running producer of it.</p>
       <h3>Modelling choices</h3>
       <ul>
@@ -716,9 +716,11 @@ window.DEFAULT_PLAN = {
  *  - An item is in deficit when net(k) < target(k).
  *  - Sizing a recipe: the smallest whole n that makes net(primary) reach its
  *    target, with the other producers held fixed.  A by-product also drives sizing
- *    when this recipe is that by-product's only active producer.
+ *    when this recipe is that by-product's designated producer.
+ *  - Designated producer of item k: its only active producer; or, when several
+ *    are active, the only active one marked flexible (x[r]).  None otherwise.
  *  - Propagation: when a recipe's consumption changes, each of its inputs is
- *    checked; if that input has exactly one active producer, that producer is
+ *    checked; if that input has a designated producer, that producer is
  *    re-sized, and so on recursively (a worklist until nothing changes).
  *  - "Manual" recipes (augmentors, Main Portal, well pressurizer) are never
  *    sized automatically; their machine count is typed in.
@@ -766,6 +768,7 @@ window.DEFAULT_PLAN = {
     this.c = new Float64Array(NR);
     this.f = new Float64Array(NR);
     this.n = new Float64Array(NR);
+    this.x = new Uint8Array(NR); // "flexible": absorbs imbalances when several producers run
     this.R.forEach((r, i) => { if (this.manual[i]) this.c[i] = 1; });
     this.off = new Uint8Array(NR); // recipes switched out (e.g. FICSMAS) keep c/f/n but count for nothing
     if (this.offGroups) for (const g of this.offGroups) this.R.forEach((r, i) => { if (r[g]) this.off[i] = 1; });
@@ -810,6 +813,15 @@ window.DEFAULT_PLAN = {
     return this.producersOf[k].filter((r) => this.isActive(r));
   };
 
+  /* The one recipe re-sized for item k, or -1 (see header). */
+  Solver.prototype.driver = function (k) {
+    const act = this.activeProducers(k);
+    if (act.length === 1) return act[0];
+    let d = -1;
+    for (const r of act) if (this.x[r] && !this.manual[r]) { if (d >= 0) return -1; d = r; }
+    return d;
+  };
+
   Solver.prototype.mult = function (k) {
     return k === this.P ? 1 + this.B : 1;
   };
@@ -841,8 +853,7 @@ window.DEFAULT_PLAN = {
     let best = 0;
     this.outs[r].forEach(([k, rate], j) => {
       if (j > 0) {
-        const act = this.activeProducers(k);
-        if (!(act.length === 1 && act[0] === r)) return;
+        if (this.driver(k) !== r) return;
         if (this.consumersOf[k].length === 0) return;
       }
       let selfIn = 0;
@@ -867,10 +878,10 @@ window.DEFAULT_PLAN = {
       const keys = this.ins[r].map(([k]) => k);
       if (this.R[r].p > 0) keys.push(this.P);
       for (const k of keys) {
-        const act = this.activeProducers(k);
-        if (act.length === 1 && act[0] !== r && !queued[act[0]]) {
-          queued[act[0]] = 1;
-          queue.push(act[0]);
+        const d = this.driver(k);
+        if (d >= 0 && d !== r && !queued[d]) {
+          queued[d] = 1;
+          queue.push(d);
         }
       }
     };
@@ -921,6 +932,15 @@ window.DEFAULT_PLAN = {
     this.propagate(r);
   };
 
+  /* Mark a recipe flexible.  Turning it on re-sizes it at once, so it takes up
+   * whatever imbalance its outputs have now, then propagates to its suppliers. */
+  Solver.prototype.setFlex = function (r, on) {
+    this.x[r] = on ? 1 : 0;
+    if (!on || this.manual[r] || !this.isActive(r)) return;
+    this.setN(r, this.size(r));
+    this.propagate(r);
+  };
+
   /* Switch a group of recipes (those with rec[flag] set, e.g. "xmas") on or
    * off.  Off recipes keep their clock, floor and count but contribute
    * nothing; their suppliers are re-sized either way. */
@@ -947,6 +967,7 @@ window.DEFAULT_PLAN = {
       const r = this.rIdx[id];
       if (r !== undefined && this.hasFloor(r)) this.f[r] = v;
     }
+    for (const id of s.x || []) { const r = this.rIdx[id]; if (r !== undefined && !this.manual[r]) this.x[r] = 1; }
     for (const [id, v] of Object.entries(s.n || {})) {
       const r = this.rIdx[id]; if (r !== undefined) this.n[r] = this.integer ? whole(v) : v;
     }
@@ -954,11 +975,12 @@ window.DEFAULT_PLAN = {
   };
 
   Solver.prototype.dump = function () {
-    const s = { c: {}, f: {}, n: {} };
+    const s = { c: {}, f: {}, n: {}, x: [] };
     this.R.forEach((rec, r) => {
       if (this.c[r] && !this.manual[r]) s.c[rec.id] = this.c[r];
       if (this.f[r]) s.f[rec.id] = this.f[r];
       if (this.n[r]) s.n[rec.id] = this.n[r];
+      if (this.x[r]) s.x.push(rec.id);
     });
     return s;
   };
@@ -1147,6 +1169,7 @@ window.DEFAULT_PLAN = {
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
           (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
+          (manual ? "" : field("Flexible", `<label class="fixed" title="When several running recipes make the same item, the one flexible recipe among them is re-sized to balance it"><input type="checkbox" class="flx" id="flx-${r}" aria-label="Flexible"> adjust</label>`)) +
           (rec.outs.length ? field("Surplus /min", `<span class="need c-sur" title="Total net production of ${esc(IT[rec.outs[0][0]].n)} across the sheet: made by every running recipe, by-products included, minus all consumption"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
@@ -1162,7 +1185,7 @@ window.DEFAULT_PLAN = {
     return {
       tr, rec, search,
       inFlow: $(".b-in .flow", tr), outFlow: $(".b-out .flow", tr),
-      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr),
+      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr), flx: $(".flx", tr),
       need: $(".c-need", tr), sur: $(".c-sur", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
       flags: { in: false, mid: false, out: false },
     };
@@ -1180,6 +1203,8 @@ window.DEFAULT_PLAN = {
     } else if (t.classList.contains("flr")) {
       if (t.value !== "" && isNaN(+t.value)) return;
       S.setFloor(r, +t.value || 0);
+    } else if (t.classList.contains("flx")) {
+      S.setFlex(r, t.checked);
     } else if (t.classList.contains("cnt")) {
       if (t.value === "" || isNaN(+t.value)) return;
       S.setCount(r, +t.value);
@@ -1318,6 +1343,7 @@ window.DEFAULT_PLAN = {
         if (row.clk.type === "checkbox") row.clk.checked = c > 0;
         else setVal(row.clk, c > 0 ? trim((c * 100).toFixed(3)) : "0");
       }
+      if (row.flx && row.flx.checked !== !!S.x[r]) row.flx.checked = !!S.x[r];
       if (row.flr) setVal(row.flr, S.f[r] ? trim(S.f[r].toFixed(4)) : "0");
       // flags
       let fin = false, fout = false, fmid = false;

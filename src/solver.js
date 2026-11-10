@@ -18,9 +18,11 @@
  *  - An item is in deficit when net(k) < target(k).
  *  - Sizing a recipe: the smallest whole n that makes net(primary) reach its
  *    target, with the other producers held fixed.  A by-product also drives sizing
- *    when this recipe is that by-product's only active producer.
+ *    when this recipe is that by-product's designated producer.
+ *  - Designated producer of item k: its only active producer; or, when several
+ *    are active, the only active one marked flexible (x[r]).  None otherwise.
  *  - Propagation: when a recipe's consumption changes, each of its inputs is
- *    checked; if that input has exactly one active producer, that producer is
+ *    checked; if that input has a designated producer, that producer is
  *    re-sized, and so on recursively (a worklist until nothing changes).
  *  - "Manual" recipes (augmentors, Main Portal, well pressurizer) are never
  *    sized automatically; their machine count is typed in.
@@ -68,6 +70,7 @@
     this.c = new Float64Array(NR);
     this.f = new Float64Array(NR);
     this.n = new Float64Array(NR);
+    this.x = new Uint8Array(NR); // "flexible": absorbs imbalances when several producers run
     this.R.forEach((r, i) => { if (this.manual[i]) this.c[i] = 1; });
     this.off = new Uint8Array(NR); // recipes switched out (e.g. FICSMAS) keep c/f/n but count for nothing
     if (this.offGroups) for (const g of this.offGroups) this.R.forEach((r, i) => { if (r[g]) this.off[i] = 1; });
@@ -112,6 +115,15 @@
     return this.producersOf[k].filter((r) => this.isActive(r));
   };
 
+  /* The one recipe re-sized for item k, or -1 (see header). */
+  Solver.prototype.driver = function (k) {
+    const act = this.activeProducers(k);
+    if (act.length === 1) return act[0];
+    let d = -1;
+    for (const r of act) if (this.x[r] && !this.manual[r]) { if (d >= 0) return -1; d = r; }
+    return d;
+  };
+
   Solver.prototype.mult = function (k) {
     return k === this.P ? 1 + this.B : 1;
   };
@@ -143,8 +155,7 @@
     let best = 0;
     this.outs[r].forEach(([k, rate], j) => {
       if (j > 0) {
-        const act = this.activeProducers(k);
-        if (!(act.length === 1 && act[0] === r)) return;
+        if (this.driver(k) !== r) return;
         if (this.consumersOf[k].length === 0) return;
       }
       let selfIn = 0;
@@ -169,10 +180,10 @@
       const keys = this.ins[r].map(([k]) => k);
       if (this.R[r].p > 0) keys.push(this.P);
       for (const k of keys) {
-        const act = this.activeProducers(k);
-        if (act.length === 1 && act[0] !== r && !queued[act[0]]) {
-          queued[act[0]] = 1;
-          queue.push(act[0]);
+        const d = this.driver(k);
+        if (d >= 0 && d !== r && !queued[d]) {
+          queued[d] = 1;
+          queue.push(d);
         }
       }
     };
@@ -223,6 +234,15 @@
     this.propagate(r);
   };
 
+  /* Mark a recipe flexible.  Turning it on re-sizes it at once, so it takes up
+   * whatever imbalance its outputs have now, then propagates to its suppliers. */
+  Solver.prototype.setFlex = function (r, on) {
+    this.x[r] = on ? 1 : 0;
+    if (!on || this.manual[r] || !this.isActive(r)) return;
+    this.setN(r, this.size(r));
+    this.propagate(r);
+  };
+
   /* Switch a group of recipes (those with rec[flag] set, e.g. "xmas") on or
    * off.  Off recipes keep their clock, floor and count but contribute
    * nothing; their suppliers are re-sized either way. */
@@ -249,6 +269,7 @@
       const r = this.rIdx[id];
       if (r !== undefined && this.hasFloor(r)) this.f[r] = v;
     }
+    for (const id of s.x || []) { const r = this.rIdx[id]; if (r !== undefined && !this.manual[r]) this.x[r] = 1; }
     for (const [id, v] of Object.entries(s.n || {})) {
       const r = this.rIdx[id]; if (r !== undefined) this.n[r] = this.integer ? whole(v) : v;
     }
@@ -256,11 +277,12 @@
   };
 
   Solver.prototype.dump = function () {
-    const s = { c: {}, f: {}, n: {} };
+    const s = { c: {}, f: {}, n: {}, x: [] };
     this.R.forEach((rec, r) => {
       if (this.c[r] && !this.manual[r]) s.c[rec.id] = this.c[r];
       if (this.f[r]) s.f[rec.id] = this.f[r];
       if (this.n[r]) s.n[rec.id] = this.n[r];
+      if (this.x[r]) s.x.push(rec.id);
     });
     return s;
   };

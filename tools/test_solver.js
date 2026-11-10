@@ -45,6 +45,21 @@ s.setFloor(id("IronPlate"), 120);
 check("two ingot producers: ingots not updated", s.n[id("IngotIron")], before);
 truthy("ingot deficit flagged", s.inDeficit(item("IronIngot")));
 
+// Marking one of the two ingot recipes flexible makes it the one that follows.
+s.setCount(id("Alternate_IngotIron"), 2);
+const altBefore = s.n[id("Alternate_IngotIron")];
+s.setFlex(id("IngotIron"), true);
+truthy("flexible ingot recipe covers the deficit", !s.inDeficit(item("IronIngot")));
+s.setFloor(id("IronPlate"), 240);
+truthy("flexible producer follows a new floor", !s.inDeficit(item("IronIngot")));
+check("non-flexible producer untouched", s.n[id("Alternate_IngotIron")], altBefore);
+s.setFlex(id("Alternate_IngotIron"), true);
+const two = s.n[id("IngotIron")];
+s.setFloor(id("IronPlate"), 300);
+check("two flexible producers: neither moves", s.n[id("IngotIron")], two);
+truthy("flex survives dump/load", (() => { const d = s.dump(); const t = new Solver(game); t.load(d); return t.x[id("IngotIron")] && t.x[id("Alternate_IngotIron")]; })());
+s.setFlex(id("IngotIron"), false); s.setFlex(id("Alternate_IngotIron"), false);
+
 // Generators take no floor.
 s.setFloor(id("Burn_Coal_GeneratorCoal"), 1000);
 check("generator floor ignored", s.f[id("Burn_Coal_GeneratorCoal")], 0);

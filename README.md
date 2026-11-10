@@ -43,13 +43,16 @@ node tools/test_solver.js
   running recipe produces it, that producer is re-sized the same way, and the
   check repeats from there (a worklist that stops when nothing changes, or
   after 20 000 steps in a runaway feedback loop).
-* If two or more running recipes produce an input, none is touched. Deficits
-  show as yellow on the consumers' inputs and red on the producers' outputs.
-  A power deficit marks every running generator red.
+* If two or more running recipes produce an input, the one with its
+  Flexible box ticked is re-sized instead. With no flexible producer, or
+  several, none is touched. Deficits show as yellow on the consumers' inputs
+  and red on the producers' outputs. A power deficit marks every running
+  generator red. Ticking Flexible re-sizes that recipe at once.
 * A floor is a lower bound on the item's net production. Generators have no
-  floor; they follow power demand. when several running
+  floor; they follow power demand. When several running
   recipes share an output, the largest floor applies. A by-product also drives
-  sizing when its recipe is the only running producer of it.
+  sizing when its recipe is the item's designated producer (the only running
+  producer, or the only flexible one among several).
 * Surplus (on every recipe with outputs) is the item's total net production
   across the sheet: everything every running recipe makes of it, by-products
   included, minus all consumption.

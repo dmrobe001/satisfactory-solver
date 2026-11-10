@@ -153,6 +153,7 @@
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
           (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
+          (manual ? "" : field("Flexible", `<label class="fixed" title="When several running recipes make the same item, the one flexible recipe among them is re-sized to balance it"><input type="checkbox" class="flx" id="flx-${r}" aria-label="Flexible"> adjust</label>`)) +
           (rec.outs.length ? field("Surplus /min", `<span class="need c-sur" title="Total net production of ${esc(IT[rec.outs[0][0]].n)} across the sheet: made by every running recipe, by-products included, minus all consumption"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
@@ -168,7 +169,7 @@
     return {
       tr, rec, search,
       inFlow: $(".b-in .flow", tr), outFlow: $(".b-out .flow", tr),
-      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr),
+      clk: $(".clk", tr), flr: $(".flr", tr), cnt: $(".cnt", tr), flx: $(".flx", tr),
       need: $(".c-need", tr), sur: $(".c-sur", tr), p100: $(".c-p100", tr), pclk: $(".c-pclk", tr), ptot: $(".c-ptot", tr),
       flags: { in: false, mid: false, out: false },
     };
@@ -186,6 +187,8 @@
     } else if (t.classList.contains("flr")) {
       if (t.value !== "" && isNaN(+t.value)) return;
       S.setFloor(r, +t.value || 0);
+    } else if (t.classList.contains("flx")) {
+      S.setFlex(r, t.checked);
     } else if (t.classList.contains("cnt")) {
       if (t.value === "" || isNaN(+t.value)) return;
       S.setCount(r, +t.value);
@@ -324,6 +327,7 @@
         if (row.clk.type === "checkbox") row.clk.checked = c > 0;
         else setVal(row.clk, c > 0 ? trim((c * 100).toFixed(3)) : "0");
       }
+      if (row.flx && row.flx.checked !== !!S.x[r]) row.flx.checked = !!S.x[r];
       if (row.flr) setVal(row.flr, S.f[r] ? trim(S.f[r].toFixed(4)) : "0");
       // flags
       let fin = false, fout = false, fmid = false;
