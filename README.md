@@ -101,6 +101,38 @@ Numbers entered by hand, worth checking if something looks off:
   * Added by hand: Stairs Left/Right (5 Concrete, 4 Iron Plate) and the 2 m
     and 4 m Coated Concrete foundations, which the data lacks.
 
+## Computed buildings
+
+Besides the machines themselves, the Buildings tab bills support buildings as
+rate × basis, rounded up per building. Every rate is editable under Settings.
+The defaults:
+
+| Basis | Buildings per unit of basis |
+|---|---|
+| running machine (extractors and generators included, hand gathering not) | 2 each of FICSIT, Steel (Metal), Asphalt and Coated (Polished) 1 m foundations; 2 each of FICSIT, Steel and Concrete 4 m walls; 1 each of FICSIT, Metal, Tar and Window flat roofs; 1 ladder; 1 hypertube; 2 power line; 0.5 Power Pole Mk.1; 0.05 power tower |
+| computed conveyor belt (all marks) | 1/25 conveyor pole |
+| solid input lane (recipe × machines) | 1 splitter |
+| solid output lane | 1 merger |
+| fluid lane (input or output) | 1 pipeline T-junction |
+| solid item type made or used | 1 industrial storage container, 1 smart splitter |
+| fluid type made or used | 1 industrial fluid buffer |
+| depot item | 1 dimensional depot uploader |
+| computed pipeline, per mark | 1/100 pump of the same mark |
+
+A depot item is any item in the bill of materials, plus any expendable the
+sheet makes (ammo, rebar, Nobelisks, gas filters, portable fuels, batteries).
+Because uploaders add their own materials to the bill, the count is iterated
+twice.
+
+Default extras (editable on the Buildings tab): 100 ceiling lights, 100
+wall-mounted flood lights, 3 Blueprint Designer Mk.3, 100 label signs (4 m),
+100 square signs (2 m), 20 block signals, 20 AWESOME Sinks, 1 AWESOME Shop,
+200 catwalk intersections, 10 drones, 10 drone ports, 10 electric locomotives,
+50 freight cars, 30 freight platforms, 10 large billboards, 20 radar towers,
+3 personnel elevators, 15 elevator floor stops, 20 satellite portals.
+Sheets saved before this calibration get the new rates, and the default extras
+under any extras they already had.
+
 ## Default sheet
 
 `tools/import_plan.js` builds the default from the old plan:

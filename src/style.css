@@ -236,3 +236,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 
 .io-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .io-top label.btn { display: inline-block; }
+.rules { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 4px 28px; margin-bottom: 16px; }
+.rules h3 { margin: 12px 0 6px; font-size: 14px; }
+.rules h3 .count { font-weight: 400; margin-left: 6px; }
+.rules .note { margin: 4px 0 0; }
