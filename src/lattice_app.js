@@ -29,7 +29,20 @@
   const sigs = new Map();     // recipe id -> signature of its last shown result
   let affected = new Set();   // ids changed by the last accepted edit
 
-  function rebuild() { lat = new L(G, { ficsmas: settings.ficsmas, overrides: settings.overrides }); }
+  /* base: what each recipe can do with no pins at all (same FICSMAS and item rules). */
+  let base = null;
+  function rebuild() {
+    lat = new L(G, { ficsmas: settings.ficsmas, overrides: settings.overrides });
+    const b = lat.evaluate(new Map());
+    base = new Set();
+    if (b.ok) lat.R.forEach((rec, r) => { const d = b.rows[r]; if (d.run && d.smallest !== null) base.add(rec.id); });
+  }
+  /* Impossible: possible with no pins, not turned off by hand, but now it cannot run
+   * or has no valid value left in its range. */
+  function impossible(id, d) {
+    if (!d || !base.has(id) || pins.get(id) === 0n) return false;
+    return !d.run || (d.smallest === null && !pins.has(id));
+  }
   function pinsIdx(p) {
     const m = new Map();
     for (const [id, v] of p) { const r = lat.rIdx[id]; if (r !== undefined) m.set(r, v); }
@@ -102,29 +115,39 @@
     if (!out.ok) return { ok: false, out };
     pins = newPins; res = out;
     affected = new Set();
-    const changes = [];
+    const changes = [], broken = [];
     for (const x of rows) {
       const r = lat.rIdx[x.id];
       const now = r === undefined ? null : res.rows[r];
       const s = sigOf(now);
       const before = sigs.get(x.id);
-      if (before !== undefined && before !== s) { affected.add(x.id); changes.push([x, x._last, now]); }
-      sigs.set(x.id, s); x._last = now;
+      const imp = impossible(x.id, now);
+      if (before !== undefined && before !== s) {
+        affected.add(x.id);
+        if (imp && !x._imp) broken.push([x, x._last, now]); else changes.push([x, x._last, now]);
+      }
+      sigs.set(x.id, s); x._last = now; x._imp = imp;
     }
     setText($("#sv-ms"), Math.round(ms) + " ms");
-    showChange(label, changes);
+    showChange(label, changes, broken);
     save();
     render();
     return { ok: true };
   }
 
-  function showChange(label, changes) {
+  function showChange(label, changes, broken) {
     $(".change").classList.remove("bad");
     if (!label) return;
-    setText($("#chgWhat"), label + (changes.length ? ` — ${changes.length} recipe${changes.length === 1 ? "" : "s"} changed` : " — no other recipe changed"));
-    const list = changes.slice(0, 300).map(([x, a, b]) =>
+    const n = changes.length + broken.length;
+    setText($("#chgWhat"), label + (n ? ` — ${n} recipe${n === 1 ? "" : "s"} changed` : " — no other recipe changed") +
+      (broken.length ? `, ${broken.length} now impossible` : ""));
+    const item = ([x, a, b], cls) =>
+      `<span class="ci${cls}"><b>${esc(x.rec.name)}</b>: ${esc(shortOf(a))} <span class="arrow">→</span> ${esc(b && b.run ? shortOf(b) + ", no valid value" : "cannot run")}</span>`;
+    const head = broken.length ? `<div class="ci-head imp">Now impossible (${broken.length})</div>` + broken.map((c) => item(c, " imp")).join("") +
+      (changes.length ? `<div class="ci-head">Other changes</div>` : "") : "";
+    const rest = changes.slice(0, 300).map(([x, a, b]) =>
       `<span class="ci"><b>${esc(x.rec.name)}</b>: ${esc(shortOf(a))} <span class="arrow">→</span> ${esc(shortOf(b))}</span>`).join("");
-    setHTML($("#chgList"), list + (changes.length > 300 ? `<span class="ci">… and ${changes.length - 300} more</span>` : ""));
+    setHTML($("#chgList"), head + rest + (changes.length > 300 ? `<span class="ci">… and ${changes.length - 300} more</span>` : ""));
   }
   function showReject(text) {
     $(".change").classList.add("bad");
@@ -147,16 +170,18 @@
       let vis = inLat;
       if (vis && q && !x.search.includes(q)) vis = false;
       if (vis) {
-        if (show === "run") vis = d.run;
+        if (show === "run") vis = d.run || pv !== undefined || impossible(x.id, d);
         else if (show === "pinned") vis = pv !== undefined;
         else if (show === "affected") vis = affected.has(x.id);
         else if (show === "cant") vis = !d.run;
+        else if (show === "imp") vis = impossible(x.id, d);
         else if (show === "restricted") vis = d.run && (d.step !== 1n || d.offset !== 0n || d.lo > 0n || d.hi !== null);
       }
       if (x.el.hidden !== !vis) x.el.hidden = !vis;
       if (!vis) continue;
       shown++;
       x.el.classList.toggle("cant", !d.run);
+      x.el.classList.toggle("imp", impossible(x.id, d));
       x.el.classList.toggle("pinned", pv !== undefined && pv > 0n);
       x.el.classList.toggle("off", isOff);
       x.el.classList.toggle("hit", affected.has(x.id));

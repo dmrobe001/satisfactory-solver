@@ -48,3 +48,8 @@
 }
 .tools select { max-width: 100%; }
 .lrow .rn { display: inline; }
+.lrow.imp { background: var(--red-bg); box-shadow: inset 4px 0 0 var(--red-edge); color: var(--ink); }
+.lrow.imp .rn { font-weight: 500; }
+.change-list .ci-head { flex-basis: 100%; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.change-list .ci-head.imp { color: var(--red-edge); }
+.change-list .ci.imp { background: var(--red-bg); border-left: 3px solid var(--red-edge); padding: 0 6px; border-radius: 3px; }

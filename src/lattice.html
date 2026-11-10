@@ -47,11 +47,12 @@
       <label>Search <input type="search" id="q" placeholder="recipe, machine or item"></label>
       <label>Show
         <select id="show">
-          <option value="run">Can run</option>
+          <option value="run">Can run, pinned, or impossible</option>
           <option value="all">All recipes</option>
           <option value="pinned">Pinned</option>
           <option value="affected">Changed by last edit</option>
           <option value="restricted" title="Step above 0.0001%, or a bounded range">Restricted</option>
+          <option value="imp">Impossible (red)</option>
           <option value="cant">Cannot run</option>
         </select>
       </label>
@@ -84,6 +85,7 @@
       <h3>Possible values</h3>
       <p>The whole-number conditions (exact balances, multiples of 15, whole augmentors) make the set of allowed effective-clock vectors a <i>lattice</i>. Its basis is found by integer column reduction (the same moves as a Hermite normal form) with exact big-integer arithmetic. Pinning a recipe keeps the lattice points with that value. For every other recipe the possible values are then exactly <i>offset + k × step</i>: “Possible values” shows that, and it is exact.</p>
       <p>The sign conditions (nothing negative, raw resources only consumed, build materials only in surplus) cut the lattice down to a cone. “Range” is the smallest and largest effective clock that the cone allows, found by linear programming (each bound is solved twice with different tiny perturbations and extrapolated to none, then rounded onto the recipe’s possible values). Linear programming ignores whole numbers, so near the ends of a range a value can still turn out impossible; values well inside the range are almost always fine.</p>
+      <p><b>Red</b> rows are recipes your pins have made impossible: they could run with no pins, but now cannot run at all, or have no value left that fits the progression, the range and the machine rule. Recipes you turned off yourself are not red. The change log lists newly impossible recipes first.</p>
       <p>“Smallest valid” is the smallest value that fits the progression, the range and the machine rule. Click it to pin it. A pin is accepted when it fits the progression, the range and the machine rule; otherwise the reason is shown with the nearest values that fit.</p>
       <h3>Reading the results</h3>
       <ul>

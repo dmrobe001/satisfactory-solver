@@ -301,6 +301,11 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 }
 .tools select { max-width: 100%; }
 .lrow .rn { display: inline; }
+.lrow.imp { background: var(--red-bg); box-shadow: inset 4px 0 0 var(--red-edge); color: var(--ink); }
+.lrow.imp .rn { font-weight: 500; }
+.change-list .ci-head { flex-basis: 100%; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.change-list .ci-head.imp { color: var(--red-edge); }
+.change-list .ci.imp { background: var(--red-bg); border-left: 3px solid var(--red-edge); padding: 0 6px; border-radius: 3px; }
 
 </style>
 
@@ -343,11 +348,12 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
       <label>Search <input type="search" id="q" placeholder="recipe, machine or item"></label>
       <label>Show
         <select id="show">
-          <option value="run">Can run</option>
+          <option value="run">Can run, pinned, or impossible</option>
           <option value="all">All recipes</option>
           <option value="pinned">Pinned</option>
           <option value="affected">Changed by last edit</option>
           <option value="restricted" title="Step above 0.0001%, or a bounded range">Restricted</option>
+          <option value="imp">Impossible (red)</option>
           <option value="cant">Cannot run</option>
         </select>
       </label>
@@ -380,6 +386,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
       <h3>Possible values</h3>
       <p>The whole-number conditions (exact balances, multiples of 15, whole augmentors) make the set of allowed effective-clock vectors a <i>lattice</i>. Its basis is found by integer column reduction (the same moves as a Hermite normal form) with exact big-integer arithmetic. Pinning a recipe keeps the lattice points with that value. For every other recipe the possible values are then exactly <i>offset + k × step</i>: “Possible values” shows that, and it is exact.</p>
       <p>The sign conditions (nothing negative, raw resources only consumed, build materials only in surplus) cut the lattice down to a cone. “Range” is the smallest and largest effective clock that the cone allows, found by linear programming (each bound is solved twice with different tiny perturbations and extrapolated to none, then rounded onto the recipe’s possible values). Linear programming ignores whole numbers, so near the ends of a range a value can still turn out impossible; values well inside the range are almost always fine.</p>
+      <p><b>Red</b> rows are recipes your pins have made impossible: they could run with no pins, but now cannot run at all, or have no value left that fits the progression, the range and the machine rule. Recipes you turned off yourself are not red. The change log lists newly impossible recipes first.</p>
       <p>“Smallest valid” is the smallest value that fits the progression, the range and the machine rule. Click it to pin it. A pin is accepted when it fits the progression, the range and the machine rule; otherwise the reason is shown with the nearest values that fit.</p>
       <h3>Reading the results</h3>
       <ul>
@@ -935,7 +942,20 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
   const sigs = new Map();     // recipe id -> signature of its last shown result
   let affected = new Set();   // ids changed by the last accepted edit
 
-  function rebuild() { lat = new L(G, { ficsmas: settings.ficsmas, overrides: settings.overrides }); }
+  /* base: what each recipe can do with no pins at all (same FICSMAS and item rules). */
+  let base = null;
+  function rebuild() {
+    lat = new L(G, { ficsmas: settings.ficsmas, overrides: settings.overrides });
+    const b = lat.evaluate(new Map());
+    base = new Set();
+    if (b.ok) lat.R.forEach((rec, r) => { const d = b.rows[r]; if (d.run && d.smallest !== null) base.add(rec.id); });
+  }
+  /* Impossible: possible with no pins, not turned off by hand, but now it cannot run
+   * or has no valid value left in its range. */
+  function impossible(id, d) {
+    if (!d || !base.has(id) || pins.get(id) === 0n) return false;
+    return !d.run || (d.smallest === null && !pins.has(id));
+  }
   function pinsIdx(p) {
     const m = new Map();
     for (const [id, v] of p) { const r = lat.rIdx[id]; if (r !== undefined) m.set(r, v); }
@@ -1008,29 +1028,39 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
     if (!out.ok) return { ok: false, out };
     pins = newPins; res = out;
     affected = new Set();
-    const changes = [];
+    const changes = [], broken = [];
     for (const x of rows) {
       const r = lat.rIdx[x.id];
       const now = r === undefined ? null : res.rows[r];
       const s = sigOf(now);
       const before = sigs.get(x.id);
-      if (before !== undefined && before !== s) { affected.add(x.id); changes.push([x, x._last, now]); }
-      sigs.set(x.id, s); x._last = now;
+      const imp = impossible(x.id, now);
+      if (before !== undefined && before !== s) {
+        affected.add(x.id);
+        if (imp && !x._imp) broken.push([x, x._last, now]); else changes.push([x, x._last, now]);
+      }
+      sigs.set(x.id, s); x._last = now; x._imp = imp;
     }
     setText($("#sv-ms"), Math.round(ms) + " ms");
-    showChange(label, changes);
+    showChange(label, changes, broken);
     save();
     render();
     return { ok: true };
   }
 
-  function showChange(label, changes) {
+  function showChange(label, changes, broken) {
     $(".change").classList.remove("bad");
     if (!label) return;
-    setText($("#chgWhat"), label + (changes.length ? ` — ${changes.length} recipe${changes.length === 1 ? "" : "s"} changed` : " — no other recipe changed"));
-    const list = changes.slice(0, 300).map(([x, a, b]) =>
+    const n = changes.length + broken.length;
+    setText($("#chgWhat"), label + (n ? ` — ${n} recipe${n === 1 ? "" : "s"} changed` : " — no other recipe changed") +
+      (broken.length ? `, ${broken.length} now impossible` : ""));
+    const item = ([x, a, b], cls) =>
+      `<span class="ci${cls}"><b>${esc(x.rec.name)}</b>: ${esc(shortOf(a))} <span class="arrow">→</span> ${esc(b && b.run ? shortOf(b) + ", no valid value" : "cannot run")}</span>`;
+    const head = broken.length ? `<div class="ci-head imp">Now impossible (${broken.length})</div>` + broken.map((c) => item(c, " imp")).join("") +
+      (changes.length ? `<div class="ci-head">Other changes</div>` : "") : "";
+    const rest = changes.slice(0, 300).map(([x, a, b]) =>
       `<span class="ci"><b>${esc(x.rec.name)}</b>: ${esc(shortOf(a))} <span class="arrow">→</span> ${esc(shortOf(b))}</span>`).join("");
-    setHTML($("#chgList"), list + (changes.length > 300 ? `<span class="ci">… and ${changes.length - 300} more</span>` : ""));
+    setHTML($("#chgList"), head + rest + (changes.length > 300 ? `<span class="ci">… and ${changes.length - 300} more</span>` : ""));
   }
   function showReject(text) {
     $(".change").classList.add("bad");
@@ -1053,16 +1083,18 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
       let vis = inLat;
       if (vis && q && !x.search.includes(q)) vis = false;
       if (vis) {
-        if (show === "run") vis = d.run;
+        if (show === "run") vis = d.run || pv !== undefined || impossible(x.id, d);
         else if (show === "pinned") vis = pv !== undefined;
         else if (show === "affected") vis = affected.has(x.id);
         else if (show === "cant") vis = !d.run;
+        else if (show === "imp") vis = impossible(x.id, d);
         else if (show === "restricted") vis = d.run && (d.step !== 1n || d.offset !== 0n || d.lo > 0n || d.hi !== null);
       }
       if (x.el.hidden !== !vis) x.el.hidden = !vis;
       if (!vis) continue;
       shown++;
       x.el.classList.toggle("cant", !d.run);
+      x.el.classList.toggle("imp", impossible(x.id, d));
       x.el.classList.toggle("pinned", pv !== undefined && pv > 0n);
       x.el.classList.toggle("off", isOff);
       x.el.classList.toggle("hit", affected.has(x.id));
