@@ -351,7 +351,8 @@
   Lattice.simplex = simplex;
 
   /* Cone rows over a compact set of recipe variables (cols: recipe index per column), plus pins. */
-  Lattice.prototype._coneRows = function (cols, width, pinsF) {
+  Lattice.prototype._coneRows = function (cols, width, pinsF, scale) {
+    scale = scale || 1;
     if (!this._rowsF) {
       this._rowsF = this.items.map((k, i) => {
         const c = this.cls[k];
@@ -367,7 +368,7 @@
     // random amount (about 1e-7 machine, 0.00001 %); equalities become a narrow
     // two-sided band.  Fixed seed, so results are reproducible.
     let seed = 12345;
-    const eps = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return 1e-7 * (1 + seed / 0x7fffffff); };
+    const eps = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return scale * 1e-7 * (1 + seed / 0x7fffffff); };
     for (const { a, s } of this._rowsF) {
       const d = new Array(width).fill(0); let any = false;
       for (const [r, v] of a) { const j = pos.get(r); if (j !== undefined) { d[j] = v; any = true; } }
@@ -411,6 +412,17 @@
     for (let r = 0; r < NR; r++) if (!(skip && skip[r]) && !(pinsF.has(r) && pinsF.get(r) === 0)) cols.push(r);
     const n = cols.length;
     const rows = this._coneRows(cols, n, pinsF);
+    const rows2 = this._coneRows(cols, n, pinsF, 2);
+    /* The perturbation shifts an optimum linearly in its size, so solve at
+     * sizes 1 and 2 and extrapolate to 0 (Richardson): b0 = 2 b(1) - b(2).
+     * If the two disagree by more than a clock step the optimal vertex
+     * changed between them; keep b(1). */
+    const bound = (c, j) => {
+      const a = simplex(n, rows, c), b = simplex(n, rows2, c); this.lastLPs += 2;
+      if (a.status !== "optimal") return a.status === "unbounded" ? Infinity : 0;
+      if (b.status !== "optimal" || Math.abs(a.x[j] - b.x[j]) > 1e-6) return a.x[j];
+      return 2 * a.x[j] - b.x[j];
+    };
     this.lastLPs = 1;
     const minSum = simplex(n, rows, new Array(n).fill(-1));
     if (minSum.status !== "optimal") return { feasible: false, lo, hi, grows: new Set() };
@@ -421,14 +433,12 @@
       if (pinsF.has(r)) { lo[r] = hi[r] = pinsF.get(r); return; }
       if (minSum.x[j] > 1e-9) {
         const c = new Array(n).fill(0); c[j] = -1;
-        const s = simplex(n, rows, c); this.lastLPs++;
-        lo[r] = s.status === "optimal" ? s.x[j] : 0;
+        lo[r] = bound(c, j);
       }
       if (grows.has(r)) hi[r] = Infinity;
       else {
         const c = new Array(n).fill(0); c[j] = 1;
-        const s = simplex(n, rows, c); this.lastLPs++;
-        hi[r] = s.status === "optimal" ? s.x[j] : s.status === "unbounded" ? Infinity : 0;
+        hi[r] = bound(c, j);
       }
     });
     // anything under half a clock step (1e-6 machine) is perturbation noise
@@ -447,8 +457,13 @@
     const rg = this.ranges(pinsF, skip);
     if (!rg.feasible) return { ok: false, reason: "cone" };
     const rows = pr.map((p, r) => {
-      let lo = BigInt(Math.max(0, Math.ceil(rg.lo[r] * 1e6 - 0.3)));
-      let hi = rg.hi[r] === Infinity ? null : BigInt(Math.max(0, Math.floor(rg.hi[r] * 1e6 + 0.3)));
+      // round to whole units, then pull each end onto the recipe's progression
+      let lo = BigInt(Math.max(0, Math.ceil(rg.lo[r] * 1e6 - 0.5)));
+      let hi = rg.hi[r] === Infinity ? null : BigInt(Math.max(0, Math.floor(rg.hi[r] * 1e6 + 0.5)));
+      if (p.step > 0n) {
+        lo = lo + mod(p.offset - lo, p.step);
+        if (hi !== null) hi = hi - mod(hi - p.offset, p.step);
+      }
       if (pins.has(r)) lo = hi = pins.get(r);
       if (p.step === 0n) lo = hi = p.offset;
       const run = hi === null || hi > 0n;

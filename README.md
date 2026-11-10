@@ -200,7 +200,9 @@ Method:
 * Approximate part. The sign conditions define a cone; ranges come from
   linear programs (a small dense simplex in the same file). The homogeneous
   cone is extremely degenerate, so zero right-hand sides are perturbed by
-  about 1e-7 machine (fixed seed); values under 5e-7 machine are rounded to
+  about 1e-7 machine (fixed seed). The shift is linear in the perturbation, so
+  each bound is solved at sizes 1 and 2 and extrapolated to 0 (b = 2 b1 - b2),
+  then rounded onto the recipe's progression; values under 5e-7 machine are
   zero. Linear programming ignores integrality, so a value inside a range can
   still be impossible near its ends.
 * A pin is accepted when it is in the recipe's progression, inside its range
