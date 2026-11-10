@@ -3,7 +3,7 @@
 A one-page tool for planning factories in Satisfactory 1.0. It lists every
 recipe in the game, plus synthetic "recipes" for miners, extractors,
 generators, the Alien Power Augmentor and the Main Portal. You set clock
-speeds and net-production floors; machine counts, power, lanes, buildings and
+speeds and production adjustments; machine counts, power, lanes, buildings and
 the bill of materials follow.
 
 The finished page is `dist/satisfactory-sheet.html` (a single self-contained
@@ -35,9 +35,10 @@ node tools/test_solver.js
 ## Update rules
 
 * A recipe runs when its clock is above 0%.
-* Machine counts are whole numbers. Editing a recipe's clock or floor
-  re-sizes it to the fewest machines that cover the consumption of its first
-  output by the running recipes, plus the floor. Any recipe's count can also
+* Machine counts are whole numbers. Editing a recipe's clock or adjustment
+  re-sizes it to the fewest machines that cover its first output's target:
+  the consumption by the running recipes, plus the build need, plus the
+  adjustment. Any recipe's count can also
   be typed in; its suppliers follow.
 * Then each input of that recipe (power included) is checked. If exactly one
   running recipe produces it, that producer is re-sized the same way, and the
@@ -48,16 +49,23 @@ node tools/test_solver.js
   several, none is touched. Deficits show as yellow on the consumers' inputs
   and red on the producers' outputs. A power deficit marks every running
   generator red. Ticking Flexible re-sizes that recipe at once.
-* A floor is a lower bound on the item's net production. Generators have no
-  floor; they follow power demand. When several running
-  recipes share an output, the largest floor applies. A by-product also drives
+* The adjustment is extra net production wanted beyond consumers and build
+  need; it may be negative (accept a shortfall supplied elsewhere). Generators
+  have none; they follow power demand. When several running recipes share an
+  output, the largest adjustment applies.
+* Build need (bill of materials ÷ build time) depends on the buildings, which
+  depend on machine counts. After every edit the sheet hands the build need to
+  the solver, which re-sizes each changed item's designated producer, and
+  repeats (up to 20 rounds) until the build need stops changing. A by-product also drives
   sizing when its recipe is the item's designated producer (the only running
   producer, or the only flexible one among several).
-* Surplus (on every recipe with outputs) is the item's total net production
-  across the sheet: everything every running recipe makes of it, by-products
-  included, minus all consumption.
-* Orange: the item's floor is below the rate needed to build every building
-  on the sheet within the build time.
+* Surplus machines (on every running recipe with outputs) = machine count
+  minus the fractional count needed to meet the first output's target, with
+  the other producers held fixed: (net − target) / net output per machine.
+  Negative means the item is short.
+* Orange: a build material is short of its target (shown with red/yellow;
+  the item's status reads "build need short" when only the build need is
+  uncovered).
 
 ## Data and assumptions
 
@@ -146,7 +154,7 @@ under any extras they already had.
   producer of a consumed item is re-sized by propagation, top layer down.
 * Only the counts and clocks in the export's `recs` are used; `needs`, `plan`
   and `ban` are ignored. End products (items nothing in the sheet consumes)
-  get a floor equal to what the export's count and clock make, so they keep
+  get an adjustment equal to what the export's count and clock make, so they keep
   their machines; everything consumed is sized to its consumers.
 * Items with several running producers can't propagate, so the script
   scales those producers, keeping their ratio, until supply meets demand

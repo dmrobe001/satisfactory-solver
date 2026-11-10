@@ -134,9 +134,12 @@ td.n, th.n { text-align: right; white-space: nowrap; }
   letter-spacing: 0.06em; font-size: 0.78rem; color: var(--muted);
 }
 .sheet-head span { padding: 5px 10px; }
-.h-in, .b-in { order: 1; flex: 1 1 240px; }
-.h-mid, .b-mid { order: 2; flex: 1.3 1 330px; }
-.h-out, .b-out { order: 3; flex: 1.5 1 300px; }
+.h-in, .b-in { order: 1; flex: 1 1 220px; max-width: 280px; }
+.h-mid, .b-mid { order: 2; flex: 3 1 360px; }
+.h-out, .b-out { order: 3; flex: 1 1 260px; max-width: 320px; }
+.rline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.rline .rn { display: inline; }
+.flx-l { font-size: 0.8rem; color: var(--muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
 .row {
   border-bottom: 1px solid var(--line); background: var(--surface);
   /* Skip style and layout for rows that are off screen; the browser keeps
@@ -184,6 +187,7 @@ td.n, th.n { text-align: right; white-space: nowrap; }
   .b-mid { order: 0; flex-basis: 100%; border: 0; border-bottom: 1px dashed var(--line); }
   .b-in > .fl, .outs > .fl { display: block; }
   .b-in { border-right: 1px dashed var(--line); }
+  .b-in, .b-out, .h-in, .h-out { max-width: none; }
   #sheet.hide-out.hide-power .b-in, #sheet.hide-in .b-mid { border-right: 0; }
 }
 @media (max-width: 620px) {
@@ -252,7 +256,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 <header class="top">
   <div>
     <h1>Satisfactory Production Sheet</h1>
-    <div class="sub">Every recipe in Satisfactory 1.2. Set clocks and floors; machine counts follow.</div>
+    <div class="sub">Every recipe in Satisfactory 1.2. Set clocks and adjustments; machine counts follow.</div>
   </div>
   <div class="io-top">
     <button class="btn" type="button" id="btnExport" hidden>Export sheet</button>
@@ -262,7 +266,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
   </div>
   <div class="legend" aria-label="Colour key">
     <span class="ly">input in deficit</span>
-    <span class="lo">floor below build-material need</span>
+    <span class="lo">build need not met</span>
     <span class="lr">output in deficit</span>
   </div>
 </header>
@@ -330,9 +334,9 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
   </section>
 
   <section class="panel" id="tab-balance" role="tabpanel" hidden>
-    <div class="tools"><span class="note">Every item that is produced, consumed or has a floor. Click an item to find its recipes.</span></div>
+    <div class="tools"><span class="note">Every item that is produced, consumed or has a target. Click an item to find its recipes.</span></div>
     <div class="scroll"><table id="balance"><thead><tr>
-      <th>Item</th><th class="n">Produced</th><th class="n">Consumed</th><th class="n">Net</th><th class="n">Floor</th><th class="n">Build need</th><th>Status</th>
+      <th>Item</th><th class="n">Produced</th><th class="n">Consumed</th><th class="n">Net</th><th class="n">Adjustment</th><th class="n">Build need</th><th>Status</th>
     </tr></thead><tbody></tbody></table></div>
   </section>
 
@@ -352,7 +356,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
   <section class="panel" id="tab-materials" role="tabpanel" hidden>
     <div class="tools"><span class="note" id="bomNote"></span></div>
     <div class="scroll"><table id="materials"><thead><tr>
-      <th>Material</th><th class="n">Total needed</th><th class="n">Rate /min</th><th class="n">Net production</th><th class="n">Floor</th><th>Status</th>
+      <th>Material</th><th class="n">Total needed</th><th class="n">Rate /min</th><th class="n">Net production</th><th class="n">Adjustment</th><th>Status</th>
     </tr></thead><tbody></tbody></table></div>
   </section>
 
@@ -387,12 +391,12 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     <div class="rules" id="ruleSet"></div>
     <div class="prose">
       <h3>How the sheet updates</h3>
-      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or floor re-sizes it: it gets just enough whole machines to cover what the running recipes consume of its first output, plus that output’s floor. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, the one among them with its Flexible box ticked is re-sized instead; if none or several are flexible, none of them is touched, and the shortfall shows in yellow on the consumers and red on the producers. Ticking Flexible re-sizes that recipe straight away. You can type any recipe’s machine count; its suppliers follow.</p>
+      <p>A recipe runs when its clock is above zero. Changing a recipe’s clock or adjustment re-sizes it: it gets just enough whole machines to cover what the running recipes consume of its first output, plus that output’s build need, plus its adjustment. Then each of its inputs is checked. If exactly one running recipe makes that input, that producer is re-sized the same way, and so on up the chain. If two or more running recipes make an input, the one among them with its Flexible box ticked is re-sized instead; if none or several are flexible, none of them is touched, and the shortfall shows in yellow on the consumers and red on the producers. Ticking Flexible re-sizes that recipe straight away. You can type any recipe’s machine count; its suppliers follow.</p>
       <p>Power is treated as one more input. A single running generator recipe follows the power demand automatically. With several generator recipes running, the one flexible generator follows it; otherwise a power shortfall marks all of them red.</p>
-      <p>The floor is the net production you want of an item: what is left after every running consumer. The recipe’s machines cover the consumers plus the floor, rounded up to whole machines at the current clock. Surplus is the item’s total net production across the whole sheet: everything every running recipe makes of it, by-products included, minus everything consumed. If several running recipes share an output, the largest of their floors applies. A by-product also drives sizing when its recipe is the only running producer of it.</p>
+      <p>An item’s target production is everything the running recipes consume of it, plus its build need (from the bill of materials and the build time), plus the adjustment. The adjustment may be negative, for example to accept a shortfall you supply from elsewhere. The item’s producer gets enough machines to meet the target, rounded up to whole machines at the current clock. Build need depends on the buildings, which depend on the machine counts, so the sheet repeats this until the two agree. Surplus machines is how many machines a recipe runs beyond the fractional number its first output’s target needs, with the other producers as they are; a negative value means the item is short. If several running recipes share an output, the largest of their adjustments applies. A by-product also drives sizing when its recipe is the item’s designated producer.</p>
       <h3>Modelling choices</h3>
       <ul>
-        <li>Machine counts are whole numbers, rounded up, so most recipes run a small surplus. Lower the clock to trim it. Generators take no floor; they follow power demand.</li>
+        <li>Machine counts are whole numbers, rounded up, so most recipes run a small surplus. Lower the clock to trim it. Generators take no adjustment; they follow power demand.</li>
         <li>Consumer power scales as clock<sup>1.32</sup>; generator output and fuel use scale linearly. Converter, Particle Accelerator and Quantum Encoder use the average of their power cycle.</li>
         <li>Alien Power Augmentors add 500 MW each and multiply total grid production by 1 + 10% (or 30% when fed 5 Alien Power Matrix/min) per augmentor. Augmentors, the Main Portal (250 MW, 2 Singularity Cells/min) and the Resource Well Pressurizer (150 MW) take a typed machine count.</li>
         <li>Resource well extractors, geothermal generators and hand-gathered items have a fixed clock: on or off.</li>
@@ -703,7 +707,8 @@ window.DEFAULT_PLAN = {
  *
  * State per recipe r:
  *   c[r]  clock as a fraction (0 = recipe disabled, 1 = 100%)
- *   f[r]  net production floor for the recipe's primary (first) output, per min
+ *   f[r]  adjustment: extra net production wanted of the primary (first) output,
+ *         per min; may be negative (accept a shortfall, e.g. an import)
  *   n[r]  number of machines (always a whole number)
  *
  * Flows are kept incrementally: prod[k] and cons[k] are the total
@@ -712,7 +717,9 @@ window.DEFAULT_PLAN = {
  * the produced power by (1 + B), with B the sum of their boosts.
  *
  * Policies (see README for the reasoning):
- *  - target(k) = max floor over active recipes whose primary output is k.
+ *  - target(k) = need[k] + adjust(k): the build-material rate set from outside
+ *    (setNeed) plus the largest adjustment among active recipes whose primary
+ *    output is k (0 when none is active).
  *  - An item is in deficit when net(k) < target(k).
  *  - Sizing a recipe: the smallest whole n that makes net(primary) reach its
  *    target, with the other producers held fixed.  A by-product also drives sizing
@@ -775,6 +782,7 @@ window.DEFAULT_PLAN = {
     this.prod = new Float64Array(NI);
     this.cons = new Float64Array(NI);
     this.B = 0;
+    this.need = new Float64Array(NI);
     this.converged = true;
   };
 
@@ -830,10 +838,25 @@ window.DEFAULT_PLAN = {
     return this.prod[k] * this.mult(k) - this.cons[k];
   };
 
-  Solver.prototype.target = function (k) {
-    let t = 0;
+  Solver.prototype.adjust = function (k) {
+    let t = -Infinity;
     for (const r of this.primaryOf[k]) if (this.isActive(r) && this.f[r] > t) t = this.f[r];
-    return t;
+    return t === -Infinity ? 0 : t;
+  };
+
+  Solver.prototype.target = function (k) {
+    return this.need[k] + this.adjust(k);
+  };
+
+  /* Machines of r above what its primary output's target needs, holding the
+   * other producers fixed (fractional; NaN when r is not running). */
+  Solver.prototype.surplusMachines = function (r) {
+    if (!this.isActive(r) || !this.outs[r].length) return NaN;
+    const [k, rate] = this.outs[r][0], c = this.c[r];
+    let selfIn = 0;
+    for (const [k2, v] of this.ins[r]) if (k2 === k) selfIn += v * c;
+    const per = this.mult(k) * rate * c - selfIn;
+    return per > 0 ? (this.net(k) - this.target(k)) / per : NaN;
   };
 
   Solver.prototype.tol = function (k) {
@@ -854,7 +877,7 @@ window.DEFAULT_PLAN = {
     this.outs[r].forEach(([k, rate], j) => {
       if (j > 0) {
         if (this.driver(k) !== r) return;
-        if (this.consumersOf[k].length === 0) return;
+        if (this.consumersOf[k].length === 0 && !(this.need[k] > 0)) return;
       }
       let selfIn = 0;
       for (const [k2, v] of this.ins[r]) if (k2 === k) selfIn += v * c;
@@ -921,7 +944,7 @@ window.DEFAULT_PLAN = {
 
   Solver.prototype.setFloor = function (r, f) {
     if (!this.hasFloor(r)) return;
-    this.f[r] = Math.max(0, +f || 0);
+    this.f[r] = +f || 0;
     if (!this.manual[r]) this.setN(r, this.size(r));
     this.propagate(r);
   };
@@ -930,6 +953,24 @@ window.DEFAULT_PLAN = {
     n = Math.max(0, +n || 0);
     this.setN(r, this.integer ? whole(n) : n);
     this.propagate(r);
+  };
+
+  /* Set the build-material rate per item (from the bill of materials).  The
+   * designated producer of each item whose rate changed is re-sized and
+   * propagated.  Returns how many items changed. */
+  Solver.prototype.setNeed = function (need) {
+    const changed = [];
+    for (let k = 0; k < this.need.length; k++) {
+      const v = need[k] > 1e-12 ? need[k] : 0;
+      if (Math.abs(v - this.need[k]) > 1e-9 * (1 + v)) { this.need[k] = v; changed.push(k); }
+    }
+    for (const k of changed) {
+      const d = this.driver(k);
+      if (d < 0 || this.manual[d]) continue;
+      const nn = this.size(d);
+      if (nn !== this.n[d]) { this.setN(d, nn); this.propagate(d); }
+    }
+    return changed.length;
   };
 
   /* Mark a recipe flexible.  Turning it on re-sizes it at once, so it takes up
@@ -1158,19 +1199,19 @@ window.DEFAULT_PLAN = {
     else if (fixedClock(rec)) clockCell = `<label class="fixed"><input type="checkbox" class="clk" id="clk-${r}"> on</label>`;
     else clockCell = `<input class="cell-in clk" type="number" id="clk-${r}" min="0" max="${rec.mc * 100}" step="any" aria-label="Clock %">`;
     const floorCell = S.hasFloor(r)
-      ? `<input class="cell-in flr" type="number" id="flr-${r}" min="0" step="any" aria-label="Floor per minute">`
+      ? `<input class="cell-in flr" type="number" id="flr-${r}" step="any" aria-label="Adjustment per minute">`
       : `<span class="fixed">—</span>`;
     const field = (label, inner, cls = "") => `<div class="fld ${cls}"><span class="fl">${label}</span>${inner}</div>`;
     tr.innerHTML =
       `<div class="band b-mid">` +
-        `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}${rec.xmas ? '<span class="alt">FICSMAS</span>' : ""}</span>` +
+        `<div class="rhead"><div class="rline"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}${rec.xmas ? '<span class="alt">FICSMAS</span>' : ""}</span>` +
+          (manual ? "" : `<label class="flx-l" title="When several running recipes make the same item, the one flexible recipe among them is re-sized to balance it"><input type="checkbox" class="flx" id="flx-${r}"> flexible</label>`) + `</div>` +
         `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}</span></div>` +
         `<div class="fields">` +
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
-          (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
-          (manual ? "" : field("Flexible", `<label class="fixed" title="When several running recipes make the same item, the one flexible recipe among them is re-sized to balance it"><input type="checkbox" class="flx" id="flx-${r}" aria-label="Flexible"> adjust</label>`)) +
-          (rec.outs.length ? field("Surplus /min", `<span class="need c-sur" title="Total net production of ${esc(IT[rec.outs[0][0]].n)} across the sheet: made by every running recipe, by-products included, minus all consumption"></span>`) : "") +
+          (S.hasFloor(r) ? field("Adjustment /min", floorCell) : "") +
+          (rec.outs.length ? field("Surplus machines", `<span class="need c-sur" title="Machines of this recipe beyond what ${esc(IT[rec.outs[0][0]].n)} needs: consumers plus build need plus adjustment, with the other producers as they are"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
@@ -1330,8 +1371,15 @@ window.DEFAULT_PLAN = {
     input.value = v;
   }
 
-  function refresh() {
+  /* Build need depends on machine counts (through the buildings) and machine
+   * counts on build need, so settle the two before drawing. */
+  window.__sheet = { S, get derived() { return derived; }, get settings() { return settings; } }; // for debugging from the console
+  function settle() {
     derive();
+    for (let i = 0; i < 20; i++) { if (!S.setNeed(derived.need)) break; derive(); }
+  }
+  function refresh() {
+    settle();
     const pw = S.power();
     rows.forEach((row, r) => {
       const rec = row.rec;
@@ -1356,13 +1404,14 @@ window.DEFAULT_PLAN = {
         const nd = derived.need[k];
         if (nd > 1e-9) {
           needH += `<div>${fmt(nd)}${unit(k)}${S.outs[r].length > 1 ? ` <span class="fixed">${esc(iname(k))}</span>` : ""}</div>`;
-          if (derived.target[k] < nd - 1e-9) fmid = true;
+          if (derived.deficit[k]) fmid = true;
         }
       }
       setHTML(row.need, needH);
       if (row.sur) {
         const k0 = S.outs[r][0][0];
-        setText(row.sur, fmt(S.net(k0)) + unit(k0));
+        const sm = S.surplusMachines(r);
+        setText(row.sur, isNaN(sm) ? "—" : (sm > 0 ? "+" : "") + fmt(sm));
       }
       row.tr.classList.toggle("w-in", fin);
       row.tr.classList.toggle("w-out", fout);
@@ -1486,8 +1535,8 @@ window.DEFAULT_PLAN = {
   // so switching tabs or typing never rebuilds them.
   function hide(el, h) { if (el.hidden !== h) el.hidden = h; }
   function pill(k) {
+    if (derived.deficit[k] && derived.need[k] > 1e-9 && S.net(k) >= S.adjust(k) - S.tol(k)) return ["warn", "build need short"];
     if (derived.deficit[k]) return ["bad", "deficit"];
-    if (derived.need[k] > 1e-9 && derived.target[k] < derived.need[k] - 1e-9) return ["warn", "floor below need"];
     if (S.net(k) > S.tol(k) + derived.target[k]) return ["", "surplus"];
     return ["ok", "balanced"];
   }
@@ -1523,7 +1572,7 @@ window.DEFAULT_PLAN = {
     const order = [];
     for (const k of itemOrder) {
       const x = balT.rows[k];
-      const show = S.prod[k] > 1e-9 || S.cons[k] > 1e-9 || derived.target[k] > 0;
+      const show = S.prod[k] > 1e-9 || S.cons[k] > 1e-9 || Math.abs(derived.target[k]) > 1e-9;
       hide(x.tr, !show);
       if (!show) continue;
       n++;
@@ -1532,7 +1581,7 @@ window.DEFAULT_PLAN = {
       setText(td[1], fmt(S.prod[k] * S.mult(k)) + unit(k));
       setText(td[2], fmt(S.cons[k]) + unit(k));
       setText(td[3], fmt(S.net(k)) + unit(k));
-      setText(td[4], derived.target[k] ? fmt(derived.target[k]) : "");
+      setText(td[4], S.adjust(k) ? fmt(S.adjust(k)) : "");
       setText(td[5], derived.need[k] > 1e-9 ? fmt(derived.need[k]) : "");
       setPill(x.pill, k);
     }
@@ -1599,7 +1648,7 @@ window.DEFAULT_PLAN = {
       setText(x.td[1], fmt(derived.bom[k]));
       setText(x.td[2], fmt(derived.need[k]));
       setText(x.td[3], fmt(S.net(k)));
-      setText(x.td[4], derived.target[k] ? fmt(derived.target[k]) : "");
+      setText(x.td[4], S.adjust(k) ? fmt(S.adjust(k)) : "");
       setPill(x.pill, k);
     }
     hide(matT.empty, n > 0);

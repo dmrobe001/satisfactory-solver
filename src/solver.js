@@ -5,7 +5,8 @@
  *
  * State per recipe r:
  *   c[r]  clock as a fraction (0 = recipe disabled, 1 = 100%)
- *   f[r]  net production floor for the recipe's primary (first) output, per min
+ *   f[r]  adjustment: extra net production wanted of the primary (first) output,
+ *         per min; may be negative (accept a shortfall, e.g. an import)
  *   n[r]  number of machines (always a whole number)
  *
  * Flows are kept incrementally: prod[k] and cons[k] are the total
@@ -14,7 +15,9 @@
  * the produced power by (1 + B), with B the sum of their boosts.
  *
  * Policies (see README for the reasoning):
- *  - target(k) = max floor over active recipes whose primary output is k.
+ *  - target(k) = need[k] + adjust(k): the build-material rate set from outside
+ *    (setNeed) plus the largest adjustment among active recipes whose primary
+ *    output is k (0 when none is active).
  *  - An item is in deficit when net(k) < target(k).
  *  - Sizing a recipe: the smallest whole n that makes net(primary) reach its
  *    target, with the other producers held fixed.  A by-product also drives sizing
@@ -77,6 +80,7 @@
     this.prod = new Float64Array(NI);
     this.cons = new Float64Array(NI);
     this.B = 0;
+    this.need = new Float64Array(NI);
     this.converged = true;
   };
 
@@ -132,10 +136,25 @@
     return this.prod[k] * this.mult(k) - this.cons[k];
   };
 
-  Solver.prototype.target = function (k) {
-    let t = 0;
+  Solver.prototype.adjust = function (k) {
+    let t = -Infinity;
     for (const r of this.primaryOf[k]) if (this.isActive(r) && this.f[r] > t) t = this.f[r];
-    return t;
+    return t === -Infinity ? 0 : t;
+  };
+
+  Solver.prototype.target = function (k) {
+    return this.need[k] + this.adjust(k);
+  };
+
+  /* Machines of r above what its primary output's target needs, holding the
+   * other producers fixed (fractional; NaN when r is not running). */
+  Solver.prototype.surplusMachines = function (r) {
+    if (!this.isActive(r) || !this.outs[r].length) return NaN;
+    const [k, rate] = this.outs[r][0], c = this.c[r];
+    let selfIn = 0;
+    for (const [k2, v] of this.ins[r]) if (k2 === k) selfIn += v * c;
+    const per = this.mult(k) * rate * c - selfIn;
+    return per > 0 ? (this.net(k) - this.target(k)) / per : NaN;
   };
 
   Solver.prototype.tol = function (k) {
@@ -156,7 +175,7 @@
     this.outs[r].forEach(([k, rate], j) => {
       if (j > 0) {
         if (this.driver(k) !== r) return;
-        if (this.consumersOf[k].length === 0) return;
+        if (this.consumersOf[k].length === 0 && !(this.need[k] > 0)) return;
       }
       let selfIn = 0;
       for (const [k2, v] of this.ins[r]) if (k2 === k) selfIn += v * c;
@@ -223,7 +242,7 @@
 
   Solver.prototype.setFloor = function (r, f) {
     if (!this.hasFloor(r)) return;
-    this.f[r] = Math.max(0, +f || 0);
+    this.f[r] = +f || 0;
     if (!this.manual[r]) this.setN(r, this.size(r));
     this.propagate(r);
   };
@@ -232,6 +251,24 @@
     n = Math.max(0, +n || 0);
     this.setN(r, this.integer ? whole(n) : n);
     this.propagate(r);
+  };
+
+  /* Set the build-material rate per item (from the bill of materials).  The
+   * designated producer of each item whose rate changed is re-sized and
+   * propagated.  Returns how many items changed. */
+  Solver.prototype.setNeed = function (need) {
+    const changed = [];
+    for (let k = 0; k < this.need.length; k++) {
+      const v = need[k] > 1e-12 ? need[k] : 0;
+      if (Math.abs(v - this.need[k]) > 1e-9 * (1 + v)) { this.need[k] = v; changed.push(k); }
+    }
+    for (const k of changed) {
+      const d = this.driver(k);
+      if (d < 0 || this.manual[d]) continue;
+      const nn = this.size(d);
+      if (nn !== this.n[d]) { this.setN(d, nn); this.propagate(d); }
+    }
+    return changed.length;
   };
 
   /* Mark a recipe flexible.  Turning it on re-sizes it at once, so it takes up

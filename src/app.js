@@ -142,19 +142,19 @@
     else if (fixedClock(rec)) clockCell = `<label class="fixed"><input type="checkbox" class="clk" id="clk-${r}"> on</label>`;
     else clockCell = `<input class="cell-in clk" type="number" id="clk-${r}" min="0" max="${rec.mc * 100}" step="any" aria-label="Clock %">`;
     const floorCell = S.hasFloor(r)
-      ? `<input class="cell-in flr" type="number" id="flr-${r}" min="0" step="any" aria-label="Floor per minute">`
+      ? `<input class="cell-in flr" type="number" id="flr-${r}" step="any" aria-label="Adjustment per minute">`
       : `<span class="fixed">—</span>`;
     const field = (label, inner, cls = "") => `<div class="fld ${cls}"><span class="fl">${label}</span>${inner}</div>`;
     tr.innerHTML =
       `<div class="band b-mid">` +
-        `<div class="rhead"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}${rec.xmas ? '<span class="alt">FICSMAS</span>' : ""}</span>` +
+        `<div class="rhead"><div class="rline"><span class="rn">${esc(rec.name)}${rec.alt ? '<span class="alt">alt</span>' : ""}${rec.xmas ? '<span class="alt">FICSMAS</span>' : ""}</span>` +
+          (manual ? "" : `<label class="flx-l" title="When several running recipes make the same item, the one flexible recipe among them is re-sized to balance it"><input type="checkbox" class="flx" id="flx-${r}"> flexible</label>`) + `</div>` +
         `<span class="rm">${esc(mname(rec))} · layer ${rec.layer}</span></div>` +
         `<div class="fields">` +
           field("Clock %", clockCell) +
           field("Machines", `<input class="cell-in cnt" type="number" id="cnt-${r}" min="0" step="1" aria-label="Machines">`) +
-          (S.hasFloor(r) ? field("Floor /min", floorCell) : "") +
-          (manual ? "" : field("Flexible", `<label class="fixed" title="When several running recipes make the same item, the one flexible recipe among them is re-sized to balance it"><input type="checkbox" class="flx" id="flx-${r}" aria-label="Flexible"> adjust</label>`)) +
-          (rec.outs.length ? field("Surplus /min", `<span class="need c-sur" title="Total net production of ${esc(IT[rec.outs[0][0]].n)} across the sheet: made by every running recipe, by-products included, minus all consumption"></span>`) : "") +
+          (S.hasFloor(r) ? field("Adjustment /min", floorCell) : "") +
+          (rec.outs.length ? field("Surplus machines", `<span class="need c-sur" title="Machines of this recipe beyond what ${esc(IT[rec.outs[0][0]].n)} needs: consumers plus build need plus adjustment, with the other producers as they are"></span>`) : "") +
           field("Build need", `<span class="need c-need"></span>`) +
         `</div>` +
       `</div>` +
@@ -314,8 +314,15 @@
     input.value = v;
   }
 
-  function refresh() {
+  /* Build need depends on machine counts (through the buildings) and machine
+   * counts on build need, so settle the two before drawing. */
+  window.__sheet = { S, get derived() { return derived; }, get settings() { return settings; } }; // for debugging from the console
+  function settle() {
     derive();
+    for (let i = 0; i < 20; i++) { if (!S.setNeed(derived.need)) break; derive(); }
+  }
+  function refresh() {
+    settle();
     const pw = S.power();
     rows.forEach((row, r) => {
       const rec = row.rec;
@@ -340,13 +347,14 @@
         const nd = derived.need[k];
         if (nd > 1e-9) {
           needH += `<div>${fmt(nd)}${unit(k)}${S.outs[r].length > 1 ? ` <span class="fixed">${esc(iname(k))}</span>` : ""}</div>`;
-          if (derived.target[k] < nd - 1e-9) fmid = true;
+          if (derived.deficit[k]) fmid = true;
         }
       }
       setHTML(row.need, needH);
       if (row.sur) {
         const k0 = S.outs[r][0][0];
-        setText(row.sur, fmt(S.net(k0)) + unit(k0));
+        const sm = S.surplusMachines(r);
+        setText(row.sur, isNaN(sm) ? "—" : (sm > 0 ? "+" : "") + fmt(sm));
       }
       row.tr.classList.toggle("w-in", fin);
       row.tr.classList.toggle("w-out", fout);
@@ -470,8 +478,8 @@
   // so switching tabs or typing never rebuilds them.
   function hide(el, h) { if (el.hidden !== h) el.hidden = h; }
   function pill(k) {
+    if (derived.deficit[k] && derived.need[k] > 1e-9 && S.net(k) >= S.adjust(k) - S.tol(k)) return ["warn", "build need short"];
     if (derived.deficit[k]) return ["bad", "deficit"];
-    if (derived.need[k] > 1e-9 && derived.target[k] < derived.need[k] - 1e-9) return ["warn", "floor below need"];
     if (S.net(k) > S.tol(k) + derived.target[k]) return ["", "surplus"];
     return ["ok", "balanced"];
   }
@@ -507,7 +515,7 @@
     const order = [];
     for (const k of itemOrder) {
       const x = balT.rows[k];
-      const show = S.prod[k] > 1e-9 || S.cons[k] > 1e-9 || derived.target[k] > 0;
+      const show = S.prod[k] > 1e-9 || S.cons[k] > 1e-9 || Math.abs(derived.target[k]) > 1e-9;
       hide(x.tr, !show);
       if (!show) continue;
       n++;
@@ -516,7 +524,7 @@
       setText(td[1], fmt(S.prod[k] * S.mult(k)) + unit(k));
       setText(td[2], fmt(S.cons[k]) + unit(k));
       setText(td[3], fmt(S.net(k)) + unit(k));
-      setText(td[4], derived.target[k] ? fmt(derived.target[k]) : "");
+      setText(td[4], S.adjust(k) ? fmt(S.adjust(k)) : "");
       setText(td[5], derived.need[k] > 1e-9 ? fmt(derived.need[k]) : "");
       setPill(x.pill, k);
     }
@@ -583,7 +591,7 @@
       setText(x.td[1], fmt(derived.bom[k]));
       setText(x.td[2], fmt(derived.need[k]));
       setText(x.td[3], fmt(S.net(k)));
-      setText(x.td[4], derived.target[k] ? fmt(derived.target[k]) : "");
+      setText(x.td[4], S.adjust(k) ? fmt(S.adjust(k)) : "");
       setPill(x.pill, k);
     }
     hide(matT.empty, n > 0);

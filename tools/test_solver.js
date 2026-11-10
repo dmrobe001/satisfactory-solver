@@ -60,6 +60,23 @@ check("two flexible producers: neither moves", s.n[id("IngotIron")], two);
 truthy("flex survives dump/load", (() => { const d = s.dump(); const t = new Solver(game); t.load(d); return t.x[id("IngotIron")] && t.x[id("Alternate_IngotIron")]; })());
 s.setFlex(id("IngotIron"), false); s.setFlex(id("Alternate_IngotIron"), false);
 
+// Build need and a negative adjustment both enter the target.
+{
+  const t = new Solver(game);
+  t.setClock(t.rIdx.IronPlate, 1); t.setClock(t.rIdx.IngotIron, 1);
+  t.setFloor(t.rIdx.IronPlate, 30);                      // 30/min -> 2 constructors (20 each)
+  check("adjustment 30 -> 2 plate machines", t.n[t.rIdx.IronPlate], 2);
+  const need = new Float64Array(t.itemKeys.length); need[t.itemIdx.IronPlate] = 25;
+  t.setNeed(need);                                         // 55/min -> 3
+  check("build need 25 added -> 3 plate machines", t.n[t.rIdx.IronPlate], 3);
+  check("ingots follow: 3 x 30 / 30 = 3", t.n[t.rIdx.IngotIron], 3);
+  check("surplus machines = 3 - 55/20", t.surplusMachines(t.rIdx.IronPlate), 3 - 55 / 20);
+  t.setFloor(t.rIdx.IronPlate, -15);                       // 10/min -> 1
+  check("negative adjustment -15 -> 1 machine", t.n[t.rIdx.IronPlate], 1);
+  check("negative adjustment kept", t.f[t.rIdx.IronPlate], -15);
+  truthy("not a deficit when net meets need + adjustment", !t.inDeficit(t.itemIdx.IronPlate));
+}
+
 // Generators take no floor.
 s.setFloor(id("Burn_Coal_GeneratorCoal"), 1000);
 check("generator floor ignored", s.f[id("Burn_Coal_GeneratorCoal")], 0);
