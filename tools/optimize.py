@@ -967,7 +967,7 @@ def main():
     lim = max(times, key=times.get)
     log("integer plan: T = %.1f min (%.2f h), limited by %s; power %.0f MW made, %.0f MW drawn"
         % (T, T / 60, ITEMS[lim]["n"], pg, pu))
-    log("exact checks: %s" % ("all non-BOM items balance exactly, Phase 5 in exact proportion" if not bad else bad))
+    log("exact checks: %s" % (("all non-BOM items balance exactly, " + ("Phase 5 at least its share" if LOOSE_P5 else "Phase 5 in exact proportion")) if not bad else bad))
     # production-sheet export
     sheet = {"c": {}, "f": {}, "n": {}}
     for j in n:
