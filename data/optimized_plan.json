@@ -3,123 +3,121 @@
  "v": 1,
  "sheet": {
   "c": {
-   "Alternate_RocketFuel_Nitro": 0.99342,
-   "PackagedRocketFuel": 0.335035,
-   "DarkEnergy": 0.903513,
-   "QuantumEnergy": 0.970677,
-   "DarkMatter": 0.998324,
-   "SuperpositionOscillator": 0.932146,
-   "TemporalProcessor": 0.954742,
-   "SpaceElevatorPart_12": 0.7344,
-   "IonizedFuel": 0.73422,
-   "PackagedIonizedFuel": 0.36711,
-   "Alternate_Diamond_Turbo": 0.972665,
-   "SAMFluctuator": 0.975321,
-   "FicsiteMesh": 0.990194,
-   "TimeCrystal": 0.991462,
-   "IngotSAM": 0.99468,
-   "SpaceElevatorPart_10": 0.918,
-   "FicsiteIngot_AL": 0.990194,
-   "PackagedTurboFuel": 0.996295,
-   "PetroleumCoke": 0.994026,
-   "ResidualRubber": 0.993155,
-   "Alternate_DarkMatter_Trap": 0.900176,
-   "Alternate_WetConcrete": 0.977186,
-   "Alternate_TurboHeavyFuel": 0.996295,
-   "Alternate_SteelRod": 0.995175,
-   "SteelBeam": 0.998928,
-   "SteelPipe": 0.992076,
-   "PackagedWater": 0.058944,
-   "Alternate_SteamedCopperSheet": 0.992747,
-   "Alternate_RecycledRubber": 0.999663,
-   "Alternate_PureQuartzCrystal": 0.945456,
-   "PureAluminumIngot": 0.99674,
-   "AluminumSheet": 0.994408,
-   "IngotAluminum": 0.996766,
-   "Alternate_PlasticSmartPlating": 0.940032,
-   "Alternate_HighSpeedWiring": 0.816,
-   "Alternate_HeavyOilResidue": 0.995587,
-   "SpaceElevatorPart_4": 0.940032,
-   "SpaceElevatorPart_5": 0.918,
-   "Alternate_FusedWire": 0.996945,
-   "Alternate_FlexibleFramework": 0.4896,
-   "Alternate_ElectroAluminumScrap": 0.999192,
-   "Alternate_DilutedPackagedFuel": 0.058944,
-   "Alternate_CopperRotor": 0.976342,
-   "Alternate_CopperAlloyIngot": 0.987999,
-   "Alternate_CokeSteelIngot": 0.99108,
-   "Alternate_CoatedIronPlate": 0.993672,
-   "Alternate_CoatedIronCanister": 0.999979,
-   "Alternate_TurboPressureMotor": 0.928704,
-   "PressureConversionCube": 0.976968,
-   "NitricAcid": 0.976616,
-   "CopperDust": 0.974592,
-   "SpaceElevatorPart_9": 0.974592,
-   "UraniumCell": 0.84096,
-   "RadioControlUnit": 0.979239,
-   "SulfuricAcid": 0.988382,
-   "SpaceElevatorPart_7": 0.816,
-   "Alternate_SuperStateComputer": 0.961409,
-   "ElectromagneticControlRod": 0.979614,
-   "SpaceElevatorPart_6": 0.7344,
-   "Alternate_SloppyAlumina": 0.991134,
-   "GasTank": 0.978361,
-   "PackagedNitrogen": 0.895536,
-   "Alternate_HeatFusedFrame": 0.97465,
-   "Alternate_ElectricMotor": 0.978112,
-   "Alternate_DilutedFuel": 0.996792,
-   "Alternate_CoolingDevice": 0.959431,
-   "Alternate_ClassicBattery": 0.994345,
-   "Alternate_AutomatedMiner": 0.949689,
-   "Alternate_AlcladCasing": 0.988888,
-   "Alternate_SteelPipe_Molded": 0.990306,
-   "Alternate_AILimiter_Plastic": 0.997982,
-   "Alternate_Silica_Distilled": 0.976788,
-   "Alternate_Quartz_Purified": 0.999504,
-   "Alternate_IronIngot_Leached": 0.99735,
-   "Alternate_Wire_2": 0.978395,
-   "IngotCaterium": 0.995221,
-   "SpaceElevatorPart_8": 0.940032,
-   "Alternate_Stator": 0.982143,
-   "Alternate_Silica": 0.998597,
-   "Alternate_Screw_2": 0.987972,
-   "Alternate_EncasedIndustrialBeam": 0.975729,
-   "Alternate_ReinforcedIronPlate_2": 0.973171,
-   "Alternate_Quickwire": 0.996356,
-   "Alternate_Plastic_1": 0.997359,
-   "Alternate_ModularFrame": 0.975735,
-   "Alternate_IngotSteel_1": 0.996,
-   "Alternate_HighSpeedConnector": 0.985745,
-   "Alternate_ModularFrameHeavy": 0.972561,
-   "Alternate_HeatSink_1": 0.959431,
-   "Alternate_Gunpowder_1": 0.933266,
-   "Alternate_CrystalOscillator": 0.991637,
-   "Alternate_Computer_2": 0.988218,
-   "Alternate_CircuitBoard_2": 0.98817,
-   "SingularityCell": 0.940032,
-   "SpaceElevatorPart_11": 0.940032,
-   "FilterHazmat": 0.78336,
-   "SpikedRebar": 0.88128,
-   "CartridgeSmart": 0.58752,
-   "Rebar_Stunshot": 0.44064,
-   "FilterGasMask": 0.68096,
-   "Alternate_PolyesterFabric": 0.68096,
-   "SyntheticPowerShard": 0.36711,
-   "NobeliskShockwave": 0.29376,
-   "Rebar_Spreadshot": 0.88128,
-   "CartridgeChaos_Packaged": 0.117504,
-   "NobeliskNuke": 0.9198,
-   "Cartridge": 0.982949,
-   "Rebar_Explosive": 0.880268,
-   "NobeliskCluster": 0.838866,
-   "Nobelisk": 0.999885,
-   "GunpowderMK2": 0.99996,
-   "Cable": 0.968238,
-   "Burn_RocketFuel_GeneratorFuel": 0.99864,
+   "Alternate_RocketFuel_Nitro": 0.993204,
+   "PackagedRocketFuel": 0.25009,
+   "QuantumEnergy": 0.89334,
+   "DarkMatter": 0.865956,
+   "SuperpositionOscillator": 0.869068,
+   "TemporalProcessor": 0.797716,
+   "SpaceElevatorPart_12": 0.7191,
+   "IonizedFuel": 0.71928,
+   "PackagedIonizedFuel": 0.35964,
+   "Alternate_Diamond_Turbo": 0.965647,
+   "SAMFluctuator": 0.947378,
+   "FicsiteMesh": 0.966132,
+   "TimeCrystal": 0.997265,
+   "IngotSAM": 0.969714,
+   "SpaceElevatorPart_10": 0.898875,
+   "FicsiteIngot_AL": 0.966132,
+   "Bauxite_Caterium": 0.981426,
+   "PackagedTurboFuel": 0.99432,
+   "PetroleumCoke": 0.902727,
+   "Rubber": 0.998571,
+   "ResidualRubber": 0.925647,
+   "Alternate_DarkMatter_Trap": 0.956662,
+   "Alternate_WetConcrete": 0.971124,
+   "Alternate_TurboHeavyFuel": 0.973605,
+   "Alternate_SteelRod": 0.95648,
+   "SteelBeam": 0.968124,
+   "SteelPipe": 0.99955,
+   "PackagedWater": 0.023888,
+   "Alternate_SteamedCopperSheet": 0.967716,
+   "Alternate_RecycledRubber": 0.951995,
+   "Alternate_PureQuartzCrystal": 0.944568,
+   "PureAluminumIngot": 0.96579,
+   "AluminumSheet": 0.947024,
+   "Alternate_PlasticSmartPlating": 0.920448,
+   "Alternate_HighSpeedWiring": 0.9588,
+   "Alternate_HeavyOilResidue": 0.925445,
+   "SpaceElevatorPart_4": 0.920448,
+   "SpaceElevatorPart_5": 0.898875,
+   "Alternate_FusedWire": 0.95656,
+   "Alternate_FlexibleFramework": 0.9588,
+   "Alternate_ElectroAluminumScrap": 0.957906,
+   "Alternate_DilutedPackagedFuel": 0.023888,
+   "Alternate_CopperRotor": 0.964755,
+   "Alternate_CopperAlloyIngot": 0.971326,
+   "Alternate_CokeSteelIngot": 0.8442,
+   "Alternate_CoatedIronPlate": 0.966248,
+   "Alternate_CoatedIronCanister": 0.975098,
+   "Alternate_CoatedCable": 0.9583,
+   "Alternate_TurboPressureMotor": 0.912468,
+   "PressureConversionCube": 0.964836,
+   "NitricAcid": 0.962321,
+   "CopperDust": 0.954288,
+   "SpaceElevatorPart_9": 0.954288,
+   "UraniumCell": 0.994864,
+   "ComputerSuper": 0.954649,
+   "RadioControlUnit": 0.957863,
+   "SulfuricAcid": 0.990183,
+   "SpaceElevatorPart_7": 0.9588,
+   "SpaceElevatorPart_6": 0.9588,
+   "Alternate_SloppyAlumina": 0.964467,
+   "GasTank": 0.852094,
+   "PackagedNitrogen": 0.912468,
+   "Alternate_HeatFusedFrame": 0.94418,
+   "Alternate_DilutedFuel": 0.972411,
+   "Alternate_CoolingDevice": 0.971277,
+   "Alternate_ClassicBattery": 0.477299,
+   "Alternate_AutomatedMiner": 1.0,
+   "Alternate_AlcladCasing": 0.955819,
+   "Alternate_SteelPipe_Molded": 0.969723,
+   "Alternate_AILimiter_Plastic": 0.963956,
+   "Alternate_Silica_Distilled": 0.990183,
+   "Alternate_Quartz_Purified": 0.990183,
+   "Alternate_IronIngot_Leached": 0.989904,
+   "IngotCaterium": 0.974888,
+   "SpaceElevatorPart_8": 0.920448,
+   "Alternate_Stator": 0.96387,
+   "Alternate_Screw_2": 0.964416,
+   "Alternate_EncasedIndustrialBeam": 0.975385,
+   "Alternate_ReinforcedIronPlate_1": 0.964001,
+   "Alternate_RadioControlUnit_1": 0.876604,
+   "Alternate_Quickwire": 0.976152,
+   "Alternate_Plastic_1": 0.962995,
+   "Alternate_Motor_1": 0.967344,
+   "Alternate_ModularFrame": 0.967206,
+   "Alternate_IngotSteel_1": 0.99795,
+   "Alternate_HighSpeedConnector": 0.99711,
+   "Alternate_ModularFrameHeavy": 0.962833,
+   "Alternate_HeatSink_1": 0.99771,
+   "Alternate_Gunpowder_1": 0.910866,
+   "Alternate_ElectromagneticControlRod_1": 0.35955,
+   "Alternate_CrystalOscillator": 0.96511,
+   "Alternate_Computer_2": 0.961808,
+   "Alternate_CircuitBoard_1": 0.965616,
+   "SingularityCell": 0.920448,
+   "SpaceElevatorPart_11": 0.920448,
+   "FilterHazmat": 0.76384,
+   "SpikedRebar": 0.863963,
+   "CartridgeSmart": 0.572819,
+   "Rebar_Stunshot": 0.430117,
+   "FilterGasMask": 0.593262,
+   "Alternate_PolyesterFabric": 0.593262,
+   "SyntheticPowerShard": 0.35964,
+   "NobeliskShockwave": 0.286488,
+   "Rebar_Spreadshot": 0.859403,
+   "CartridgeChaos_Packaged": 0.114591,
+   "NobeliskNuke": 0.994864,
+   "Cartridge": 0.972711,
+   "Rebar_Explosive": 0.955488,
+   "NobeliskCluster": 0.954283,
+   "Nobelisk": 0.958721,
+   "GunpowderMK2": 0.988833,
+   "Burn_RocketFuel_GeneratorFuel": 0.999588,
    "Geothermal_Pure": 1,
    "Miner3_Pure_OreIron": 2.5,
    "Miner3_Pure_OreGold": 2.5,
-   "Miner3_Normal_OreGold": 2.5,
    "Miner3_Pure_OreCopper": 2.5,
    "Miner3_Normal_OreCopper": 2.5,
    "Miner3_Pure_Stone": 2.5,
@@ -149,123 +147,123 @@
    "WaterExtractor": 1
   },
   "f": {
-   "SpikedRebar": 4.401339999999999,
-   "Rebar_Stunshot": 4.401339999999999,
-   "Rebar_Spreadshot": 4.401339999999999,
-   "Rebar_Explosive": 44.01339999999999,
-   "Cartridge": 14.671133333333332,
-   "CartridgeSmart": 29.342266666666664,
-   "CartridgeChaos_Packaged": 29.342266666666664,
-   "Nobelisk": 4.401339999999999,
-   "NobeliskCluster": 14.671133333333332,
-   "NobeliskShockwave": 1.467113333333333,
-   "NobeliskNuke": 7.335566666666666,
-   "FilterGasMask": 5.868453333333332,
-   "FilterHazmat": 2.934226666666666,
-   "Alternate_DilutedPackagedFuel": 1.467113333333333,
-   "PackagedTurboFuel": 14.671133333333332,
-   "PackagedRocketFuel": 14.671133333333332,
-   "PackagedIonizedFuel": 14.671133333333332,
-   "Alternate_ClassicBattery": 14.671133333333332,
-   "SpaceElevatorPart_9": 14.671133333333332,
-   "SpaceElevatorPart_10": 14.671133333333332,
-   "SpaceElevatorPart_11": 3.7558101333333327,
-   "SpaceElevatorPart_12": 2.934226666666666
+   "SpikedRebar": 4.202710132961613,
+   "Rebar_Stunshot": 4.202710132961613,
+   "Rebar_Spreadshot": 4.202710132961613,
+   "Rebar_Explosive": 42.02710132961613,
+   "Cartridge": 14.00903377653871,
+   "CartridgeSmart": 28.01806755307742,
+   "CartridgeChaos_Packaged": 28.01806755307742,
+   "Nobelisk": 4.202710132961613,
+   "NobeliskCluster": 14.00903377653871,
+   "NobeliskShockwave": 1.400903377653871,
+   "NobeliskNuke": 7.004516888269355,
+   "FilterGasMask": 5.603613510615484,
+   "FilterHazmat": 2.801806755307742,
+   "Alternate_DilutedPackagedFuel": 1.400903377653871,
+   "PackagedTurboFuel": 14.00903377653871,
+   "PackagedRocketFuel": 14.00903377653871,
+   "PackagedIonizedFuel": 14.00903377653871,
+   "Alternate_ClassicBattery": 14.00903377653871,
+   "SpaceElevatorPart_9": 14.00903377653871,
+   "SpaceElevatorPart_10": 14.00903377653871,
+   "SpaceElevatorPart_11": 3.58631264679391,
+   "SpaceElevatorPart_12": 2.801806755307742
   },
   "n": {
-   "Alternate_RocketFuel_Nitro": 44,
+   "Alternate_RocketFuel_Nitro": 43,
    "PackagedRocketFuel": 1,
-   "DarkEnergy": 8,
    "QuantumEnergy": 7,
-   "DarkMatter": 13,
+   "DarkMatter": 3,
    "SuperpositionOscillator": 9,
    "TemporalProcessor": 3,
    "SpaceElevatorPart_12": 1,
    "IonizedFuel": 1,
    "PackagedIonizedFuel": 1,
-   "Alternate_Diamond_Turbo": 24,
-   "SAMFluctuator": 26,
-   "FicsiteMesh": 33,
-   "TimeCrystal": 85,
-   "IngotSAM": 85,
+   "Alternate_Diamond_Turbo": 22,
+   "SAMFluctuator": 29,
+   "FicsiteMesh": 30,
+   "TimeCrystal": 100,
+   "IngotSAM": 83,
    "SpaceElevatorPart_10": 8,
-   "FicsiteIngot_AL": 11,
-   "PackagedTurboFuel": 48,
-   "PetroleumCoke": 197,
-   "ResidualRubber": 210,
-   "Alternate_DarkMatter_Trap": 1,
-   "Alternate_WetConcrete": 460,
+   "FicsiteIngot_AL": 10,
+   "Bauxite_Caterium": 19,
+   "PackagedTurboFuel": 47,
+   "PetroleumCoke": 97,
+   "Rubber": 243,
+   "ResidualRubber": 88,
+   "Alternate_DarkMatter_Trap": 6,
+   "Alternate_WetConcrete": 532,
    "Alternate_TurboHeavyFuel": 32,
-   "Alternate_SteelRod": 24,
-   "SteelBeam": 271,
-   "SteelPipe": 804,
+   "Alternate_SteelRod": 21,
+   "SteelBeam": 266,
+   "SteelPipe": 9,
    "PackagedWater": 1,
-   "Alternate_SteamedCopperSheet": 284,
-   "Alternate_RecycledRubber": 117,
-   "Alternate_PureQuartzCrystal": 28,
-   "PureAluminumIngot": 81,
-   "AluminumSheet": 60,
-   "IngotAluminum": 220,
+   "Alternate_SteamedCopperSheet": 316,
+   "Alternate_RecycledRubber": 79,
+   "Alternate_PureQuartzCrystal": 75,
+   "PureAluminumIngot": 486,
+   "AluminumSheet": 31,
    "Alternate_PlasticSmartPlating": 4,
-   "Alternate_HighSpeedWiring": 6,
-   "Alternate_HeavyOilResidue": 420,
+   "Alternate_HighSpeedWiring": 5,
+   "Alternate_HeavyOilResidue": 177,
    "SpaceElevatorPart_4": 10,
    "SpaceElevatorPart_5": 8,
-   "Alternate_FusedWire": 233,
-   "Alternate_FlexibleFramework": 2,
-   "Alternate_ElectroAluminumScrap": 82,
+   "Alternate_FusedWire": 50,
+   "Alternate_FlexibleFramework": 1,
+   "Alternate_ElectroAluminumScrap": 98,
    "Alternate_DilutedPackagedFuel": 1,
-   "Alternate_CopperRotor": 151,
-   "Alternate_CopperAlloyIngot": 467,
-   "Alternate_CokeSteelIngot": 250,
-   "Alternate_CoatedIronPlate": 150,
+   "Alternate_CopperRotor": 94,
+   "Alternate_CopperAlloyIngot": 419,
+   "Alternate_CokeSteelIngot": 77,
+   "Alternate_CoatedIronPlate": 196,
    "Alternate_CoatedIronCanister": 16,
-   "Alternate_TurboPressureMotor": 9,
-   "PressureConversionCube": 33,
-   "NitricAcid": 49,
+   "Alternate_CoatedCable": 34,
+   "Alternate_TurboPressureMotor": 8,
+   "PressureConversionCube": 31,
+   "NitricAcid": 46,
    "CopperDust": 68,
    "SpaceElevatorPart_9": 34,
-   "UraniumCell": 7,
-   "RadioControlUnit": 79,
-   "SulfuricAcid": 51,
-   "SpaceElevatorPart_7": 6,
-   "Alternate_SuperStateComputer": 20,
-   "ElectromagneticControlRod": 152,
-   "SpaceElevatorPart_6": 4,
-   "Alternate_SloppyAlumina": 62,
+   "UraniumCell": 6,
+   "ComputerSuper": 23,
+   "RadioControlUnit": 82,
+   "SulfuricAcid": 64,
+   "SpaceElevatorPart_7": 5,
+   "SpaceElevatorPart_6": 3,
+   "Alternate_SloppyAlumina": 73,
    "GasTank": 7,
-   "PackagedNitrogen": 7,
-   "Alternate_HeatFusedFrame": 43,
-   "Alternate_ElectricMotor": 149,
-   "Alternate_DilutedFuel": 152,
+   "PackagedNitrogen": 6,
+   "Alternate_HeatFusedFrame": 42,
+   "Alternate_DilutedFuel": 126,
    "Alternate_CoolingDevice": 24,
-   "Alternate_ClassicBattery": 16,
-   "Alternate_AutomatedMiner": 14,
-   "Alternate_AlcladCasing": 39,
-   "Alternate_SteelPipe_Molded": 224,
-   "Alternate_AILimiter_Plastic": 138,
-   "Alternate_Silica_Distilled": 22,
-   "Alternate_Quartz_Purified": 43,
-   "Alternate_IronIngot_Leached": 235,
-   "Alternate_Wire_2": 23,
-   "IngotCaterium": 252,
+   "Alternate_ClassicBattery": 1,
+   "Alternate_AutomatedMiner": 13,
+   "Alternate_AlcladCasing": 40,
+   "Alternate_SteelPipe_Molded": 510,
+   "Alternate_AILimiter_Plastic": 98,
+   "Alternate_Silica_Distilled": 19,
+   "Alternate_Quartz_Purified": 38,
+   "Alternate_IronIngot_Leached": 302,
+   "IngotCaterium": 155,
    "SpaceElevatorPart_8": 4,
-   "Alternate_Stator": 132,
-   "Alternate_Silica": 229,
-   "Alternate_Screw_2": 113,
-   "Alternate_EncasedIndustrialBeam": 569,
-   "Alternate_ReinforcedIronPlate_2": 351,
-   "Alternate_Quickwire": 365,
-   "Alternate_Plastic_1": 201,
-   "Alternate_ModularFrame": 441,
-   "Alternate_IngotSteel_1": 448,
-   "Alternate_HighSpeedConnector": 26,
-   "Alternate_ModularFrameHeavy": 112,
-   "Alternate_HeatSink_1": 24,
+   "Alternate_Stator": 87,
+   "Alternate_Screw_2": 184,
+   "Alternate_EncasedIndustrialBeam": 536,
+   "Alternate_ReinforcedIronPlate_1": 118,
+   "Alternate_RadioControlUnit_1": 2,
+   "Alternate_Quickwire": 290,
+   "Alternate_Plastic_1": 157,
+   "Alternate_Motor_1": 149,
+   "Alternate_ModularFrame": 453,
+   "Alternate_IngotSteel_1": 571,
+   "Alternate_HighSpeedConnector": 72,
+   "Alternate_ModularFrameHeavy": 107,
+   "Alternate_HeatSink_1": 26,
    "Alternate_Gunpowder_1": 10,
-   "Alternate_CrystalOscillator": 235,
-   "Alternate_Computer_2": 131,
-   "Alternate_CircuitBoard_2": 88,
+   "Alternate_ElectromagneticControlRod_1": 1,
+   "Alternate_CrystalOscillator": 344,
+   "Alternate_Computer_2": 141,
+   "Alternate_CircuitBoard_1": 77,
    "SingularityCell": 2,
    "SpaceElevatorPart_11": 4,
    "FilterHazmat": 1,
@@ -278,50 +276,48 @@
    "NobeliskShockwave": 1,
    "Rebar_Spreadshot": 1,
    "CartridgeChaos_Packaged": 1,
-   "NobeliskNuke": 16,
+   "NobeliskNuke": 15,
    "Cartridge": 2,
-   "Rebar_Explosive": 10,
-   "NobeliskCluster": 7,
+   "Rebar_Explosive": 9,
+   "NobeliskCluster": 6,
    "Nobelisk": 9,
    "GunpowderMK2": 12,
-   "Cable": 83,
-   "Burn_RocketFuel_GeneratorFuel": 1559,
+   "Burn_RocketFuel_GeneratorFuel": 1524,
    "Geothermal_Pure": 9,
-   "Miner3_Pure_OreIron": 45,
+   "Miner3_Pure_OreIron": 34,
    "Miner3_Pure_OreGold": 8,
-   "Miner3_Normal_OreGold": 3,
    "Miner3_Pure_OreCopper": 13,
-   "Miner3_Normal_OreCopper": 13,
+   "Miner3_Normal_OreCopper": 8,
    "Miner3_Pure_Stone": 29,
-   "Miner3_Normal_Stone": 48,
+   "Miner3_Normal_Stone": 47,
    "Miner3_Pure_Coal": 16,
-   "Miner3_Normal_Coal": 25,
+   "Miner3_Normal_Coal": 31,
    "Miner3_Pure_RawQuartz": 7,
-   "Miner3_Normal_RawQuartz": 7,
+   "Miner3_Normal_RawQuartz": 2,
    "Miner3_Pure_Sulfur": 5,
    "Miner3_Normal_Sulfur": 3,
    "Miner3_Normal_OreUranium": 1,
    "Miner3_Pure_OreBauxite": 6,
    "Miner3_Normal_OreBauxite": 6,
-   "Miner3_Impure_OreBauxite": 5,
+   "Miner3_Impure_OreBauxite": 4,
    "Miner3_Pure_SAM": 3,
    "Miner3_Normal_SAM": 6,
-   "Miner3_Impure_SAM": 10,
+   "Miner3_Impure_SAM": 9,
    "WellPressurizer": 9,
    "Well_Impure_LiquidOil": 8,
    "Well_Normal_LiquidOil": 6,
    "Well_Pure_LiquidOil": 4,
    "OilExtractor_Pure": 8,
    "OilExtractor_Normal": 12,
-   "OilExtractor_Impure": 10,
+   "OilExtractor_Impure": 8,
    "Well_Impure_NitrogenGas": 2,
    "Well_Normal_NitrogenGas": 7,
    "Well_Pure_NitrogenGas": 36,
-   "WaterExtractor": 700
+   "WaterExtractor": 716
   }
  },
  "settings": {
-  "timescale": 68.16106004080576,
+  "timescale": 71.38251045369923,
   "lane": {
    "ConveyorBeltMk1": 1,
    "ConveyorBeltMk2": 1,
@@ -407,13 +403,17 @@
   "cal": 2
  },
  "optimizer": {
-  "T_min": 68.16106004080576,
-  "T_continuous_min": 65.53605242884194,
-  "T_continuous_unpruned_min": 65.53322139141302,
+  "T_min": 71.38251045369923,
+  "T_continuous_min": 66.63499768989998,
+  "T_continuous_unpruned_min": 66.61153651315603,
   "prune": 0.05,
-  "limited_by": "Rebar_Explosive",
-  "power_made_MW": 392819.94,
-  "power_drawn_MW": 392768.84753044613,
+  "excluded": [
+   "IngotAluminum",
+   "Alternate_Wire_2"
+  ],
+  "limited_by": "Wire",
+  "power_made_MW": 384443.028,
+  "power_drawn_MW": 382490.15314686944,
   "phase5": {
    "SpaceElevatorPart_9": 1000,
    "SpaceElevatorPart_10": 1000,
@@ -471,792 +471,785 @@
     "id": "Burn_RocketFuel_GeneratorFuel",
     "name": "Rocket Fuel (Burning)",
     "machine": "GeneratorFuel",
-    "machines": 1559,
-    "clock_pct": "99.8640"
-   },
-   {
-    "id": "SteelPipe",
-    "name": "Steel Pipe",
-    "machine": "ConstructorMk1",
-    "machines": 804,
-    "clock_pct": "99.2076"
-   },
-   {
-    "id": "Alternate_EncasedIndustrialBeam",
-    "name": "Alternate: Encased Industrial Pipe",
-    "machine": "AssemblerMk1",
-    "machines": 569,
-    "clock_pct": "97.5729"
-   },
-   {
-    "id": "Alternate_CopperAlloyIngot",
-    "name": "Alternate: Copper Alloy Ingot",
-    "machine": "FoundryMk1",
-    "machines": 467,
-    "clock_pct": "98.7999"
-   },
-   {
-    "id": "Alternate_WetConcrete",
-    "name": "Alternate: Wet Concrete",
-    "machine": "OilRefinery",
-    "machines": 460,
-    "clock_pct": "97.7186"
+    "machines": 1524,
+    "clock_pct": "99.9588"
    },
    {
     "id": "Alternate_IngotSteel_1",
     "name": "Alternate: Solid Steel Ingot",
     "machine": "FoundryMk1",
-    "machines": 448,
-    "clock_pct": "99.6000"
+    "machines": 571,
+    "clock_pct": "99.7950"
    },
    {
-    "id": "Alternate_ModularFrame",
-    "name": "Alternate: Steeled Frame",
+    "id": "Alternate_EncasedIndustrialBeam",
+    "name": "Alternate: Encased Industrial Pipe",
     "machine": "AssemblerMk1",
-    "machines": 441,
-    "clock_pct": "97.5735"
+    "machines": 536,
+    "clock_pct": "97.5385"
    },
    {
-    "id": "Alternate_HeavyOilResidue",
-    "name": "Alternate: Heavy Oil Residue",
+    "id": "Alternate_WetConcrete",
+    "name": "Alternate: Wet Concrete",
     "machine": "OilRefinery",
-    "machines": 420,
-    "clock_pct": "99.5587"
-   },
-   {
-    "id": "Alternate_Quickwire",
-    "name": "Alternate: Fused Quickwire",
-    "machine": "AssemblerMk1",
-    "machines": 365,
-    "clock_pct": "99.6356"
-   },
-   {
-    "id": "Alternate_ReinforcedIronPlate_2",
-    "name": "Alternate: Stitched Iron Plate",
-    "machine": "AssemblerMk1",
-    "machines": 351,
-    "clock_pct": "97.3171"
-   },
-   {
-    "id": "Alternate_SteamedCopperSheet",
-    "name": "Alternate: Steamed Copper Sheet",
-    "machine": "OilRefinery",
-    "machines": 284,
-    "clock_pct": "99.2747"
-   },
-   {
-    "id": "SteelBeam",
-    "name": "Steel Beam",
-    "machine": "ConstructorMk1",
-    "machines": 271,
-    "clock_pct": "99.8928"
-   },
-   {
-    "id": "IngotCaterium",
-    "name": "Caterium Ingot",
-    "machine": "SmelterMk1",
-    "machines": 252,
-    "clock_pct": "99.5221"
-   },
-   {
-    "id": "Alternate_CokeSteelIngot",
-    "name": "Alternate: Coke Steel Ingot",
-    "machine": "FoundryMk1",
-    "machines": 250,
-    "clock_pct": "99.1080"
-   },
-   {
-    "id": "Alternate_CrystalOscillator",
-    "name": "Alternate: Insulated Crystal Oscillator",
-    "machine": "ManufacturerMk1",
-    "machines": 235,
-    "clock_pct": "99.1637"
-   },
-   {
-    "id": "Alternate_IronIngot_Leached",
-    "name": "Alternate: Leached Iron ingot",
-    "machine": "OilRefinery",
-    "machines": 235,
-    "clock_pct": "99.7350"
-   },
-   {
-    "id": "Alternate_FusedWire",
-    "name": "Alternate: Fused Wire",
-    "machine": "AssemblerMk1",
-    "machines": 233,
-    "clock_pct": "99.6945"
-   },
-   {
-    "id": "Alternate_Silica",
-    "name": "Alternate: Cheap Silica",
-    "machine": "AssemblerMk1",
-    "machines": 229,
-    "clock_pct": "99.8597"
+    "machines": 532,
+    "clock_pct": "97.1124"
    },
    {
     "id": "Alternate_SteelPipe_Molded",
     "name": "Alternate: Molded Steel Pipe",
     "machine": "FoundryMk1",
-    "machines": 224,
-    "clock_pct": "99.0306"
-   },
-   {
-    "id": "IngotAluminum",
-    "name": "Aluminum Ingot",
-    "machine": "FoundryMk1",
-    "machines": 220,
-    "clock_pct": "99.6766"
-   },
-   {
-    "id": "ResidualRubber",
-    "name": "Residual Rubber",
-    "machine": "OilRefinery",
-    "machines": 210,
-    "clock_pct": "99.3155"
-   },
-   {
-    "id": "Alternate_Plastic_1",
-    "name": "Alternate: Recycled Plastic",
-    "machine": "OilRefinery",
-    "machines": 201,
-    "clock_pct": "99.7359"
-   },
-   {
-    "id": "PetroleumCoke",
-    "name": "Petroleum Coke",
-    "machine": "OilRefinery",
-    "machines": 197,
-    "clock_pct": "99.4026"
-   },
-   {
-    "id": "Alternate_DilutedFuel",
-    "name": "Alternate: Diluted Fuel",
-    "machine": "Blender",
-    "machines": 152,
-    "clock_pct": "99.6792"
-   },
-   {
-    "id": "ElectromagneticControlRod",
-    "name": "Electromagnetic Control Rod",
-    "machine": "AssemblerMk1",
-    "machines": 152,
-    "clock_pct": "97.9614"
-   },
-   {
-    "id": "Alternate_CopperRotor",
-    "name": "Alternate: Copper Rotor",
-    "machine": "AssemblerMk1",
-    "machines": 151,
-    "clock_pct": "97.6342"
-   },
-   {
-    "id": "Alternate_CoatedIronPlate",
-    "name": "Alternate: Coated Iron Plate",
-    "machine": "AssemblerMk1",
-    "machines": 150,
-    "clock_pct": "99.3672"
-   },
-   {
-    "id": "Alternate_ElectricMotor",
-    "name": "Alternate: Electric Motor",
-    "machine": "AssemblerMk1",
-    "machines": 149,
-    "clock_pct": "97.8112"
-   },
-   {
-    "id": "Alternate_AILimiter_Plastic",
-    "name": "Alternate: Plastic AI Limiter",
-    "machine": "AssemblerMk1",
-    "machines": 138,
-    "clock_pct": "99.7982"
-   },
-   {
-    "id": "Alternate_Stator",
-    "name": "Alternate: Quickwire Stator",
-    "machine": "AssemblerMk1",
-    "machines": 132,
-    "clock_pct": "98.2143"
-   },
-   {
-    "id": "Alternate_Computer_2",
-    "name": "Alternate: Crystal Computer",
-    "machine": "AssemblerMk1",
-    "machines": 131,
-    "clock_pct": "98.8218"
-   },
-   {
-    "id": "Alternate_RecycledRubber",
-    "name": "Alternate: Recycled Rubber",
-    "machine": "OilRefinery",
-    "machines": 117,
-    "clock_pct": "99.9663"
-   },
-   {
-    "id": "Alternate_Screw_2",
-    "name": "Alternate: Steel Screw",
-    "machine": "ConstructorMk1",
-    "machines": 113,
-    "clock_pct": "98.7972"
-   },
-   {
-    "id": "Alternate_ModularFrameHeavy",
-    "name": "Alternate: Heavy Encased Frame",
-    "machine": "ManufacturerMk1",
-    "machines": 112,
-    "clock_pct": "97.2561"
-   },
-   {
-    "id": "Alternate_CircuitBoard_2",
-    "name": "Alternate: Caterium Circuit Board",
-    "machine": "AssemblerMk1",
-    "machines": 88,
-    "clock_pct": "98.8170"
-   },
-   {
-    "id": "IngotSAM",
-    "name": "Reanimated SAM",
-    "machine": "ConstructorMk1",
-    "machines": 85,
-    "clock_pct": "99.4680"
-   },
-   {
-    "id": "TimeCrystal",
-    "name": "Time Crystal",
-    "machine": "Converter",
-    "machines": 85,
-    "clock_pct": "99.1462"
-   },
-   {
-    "id": "Cable",
-    "name": "Cable",
-    "machine": "ConstructorMk1",
-    "machines": 83,
-    "clock_pct": "96.8238"
-   },
-   {
-    "id": "Alternate_ElectroAluminumScrap",
-    "name": "Alternate: Electrode Aluminum Scrap",
-    "machine": "OilRefinery",
-    "machines": 82,
-    "clock_pct": "99.9192"
+    "machines": 510,
+    "clock_pct": "96.9723"
    },
    {
     "id": "PureAluminumIngot",
     "name": "Alternate: Pure Aluminum Ingot",
     "machine": "SmelterMk1",
-    "machines": 81,
-    "clock_pct": "99.6740"
+    "machines": 486,
+    "clock_pct": "96.5790"
+   },
+   {
+    "id": "Alternate_ModularFrame",
+    "name": "Alternate: Steeled Frame",
+    "machine": "AssemblerMk1",
+    "machines": 453,
+    "clock_pct": "96.7206"
+   },
+   {
+    "id": "Alternate_CopperAlloyIngot",
+    "name": "Alternate: Copper Alloy Ingot",
+    "machine": "FoundryMk1",
+    "machines": 419,
+    "clock_pct": "97.1326"
+   },
+   {
+    "id": "Alternate_CrystalOscillator",
+    "name": "Alternate: Insulated Crystal Oscillator",
+    "machine": "ManufacturerMk1",
+    "machines": 344,
+    "clock_pct": "96.5110"
+   },
+   {
+    "id": "Alternate_SteamedCopperSheet",
+    "name": "Alternate: Steamed Copper Sheet",
+    "machine": "OilRefinery",
+    "machines": 316,
+    "clock_pct": "96.7716"
+   },
+   {
+    "id": "Alternate_IronIngot_Leached",
+    "name": "Alternate: Leached Iron ingot",
+    "machine": "OilRefinery",
+    "machines": 302,
+    "clock_pct": "98.9904"
+   },
+   {
+    "id": "Alternate_Quickwire",
+    "name": "Alternate: Fused Quickwire",
+    "machine": "AssemblerMk1",
+    "machines": 290,
+    "clock_pct": "97.6152"
+   },
+   {
+    "id": "SteelBeam",
+    "name": "Steel Beam",
+    "machine": "ConstructorMk1",
+    "machines": 266,
+    "clock_pct": "96.8124"
+   },
+   {
+    "id": "Rubber",
+    "name": "Rubber",
+    "machine": "OilRefinery",
+    "machines": 243,
+    "clock_pct": "99.8571"
+   },
+   {
+    "id": "Alternate_CoatedIronPlate",
+    "name": "Alternate: Coated Iron Plate",
+    "machine": "AssemblerMk1",
+    "machines": 196,
+    "clock_pct": "96.6248"
+   },
+   {
+    "id": "Alternate_Screw_2",
+    "name": "Alternate: Steel Screw",
+    "machine": "ConstructorMk1",
+    "machines": 184,
+    "clock_pct": "96.4416"
+   },
+   {
+    "id": "Alternate_HeavyOilResidue",
+    "name": "Alternate: Heavy Oil Residue",
+    "machine": "OilRefinery",
+    "machines": 177,
+    "clock_pct": "92.5445"
+   },
+   {
+    "id": "Alternate_Plastic_1",
+    "name": "Alternate: Recycled Plastic",
+    "machine": "OilRefinery",
+    "machines": 157,
+    "clock_pct": "96.2995"
+   },
+   {
+    "id": "IngotCaterium",
+    "name": "Caterium Ingot",
+    "machine": "SmelterMk1",
+    "machines": 155,
+    "clock_pct": "97.4888"
+   },
+   {
+    "id": "Alternate_Motor_1",
+    "name": "Alternate: Rigor Motor",
+    "machine": "ManufacturerMk1",
+    "machines": 149,
+    "clock_pct": "96.7344"
+   },
+   {
+    "id": "Alternate_Computer_2",
+    "name": "Alternate: Crystal Computer",
+    "machine": "AssemblerMk1",
+    "machines": 141,
+    "clock_pct": "96.1808"
+   },
+   {
+    "id": "Alternate_DilutedFuel",
+    "name": "Alternate: Diluted Fuel",
+    "machine": "Blender",
+    "machines": 126,
+    "clock_pct": "97.2411"
+   },
+   {
+    "id": "Alternate_ReinforcedIronPlate_1",
+    "name": "Alternate: Bolted Iron Plate",
+    "machine": "AssemblerMk1",
+    "machines": 118,
+    "clock_pct": "96.4001"
+   },
+   {
+    "id": "Alternate_ModularFrameHeavy",
+    "name": "Alternate: Heavy Encased Frame",
+    "machine": "ManufacturerMk1",
+    "machines": 107,
+    "clock_pct": "96.2833"
+   },
+   {
+    "id": "TimeCrystal",
+    "name": "Time Crystal",
+    "machine": "Converter",
+    "machines": 100,
+    "clock_pct": "99.7265"
+   },
+   {
+    "id": "Alternate_AILimiter_Plastic",
+    "name": "Alternate: Plastic AI Limiter",
+    "machine": "AssemblerMk1",
+    "machines": 98,
+    "clock_pct": "96.3956"
+   },
+   {
+    "id": "Alternate_ElectroAluminumScrap",
+    "name": "Alternate: Electrode Aluminum Scrap",
+    "machine": "OilRefinery",
+    "machines": 98,
+    "clock_pct": "95.7906"
+   },
+   {
+    "id": "PetroleumCoke",
+    "name": "Petroleum Coke",
+    "machine": "OilRefinery",
+    "machines": 97,
+    "clock_pct": "90.2727"
+   },
+   {
+    "id": "Alternate_CopperRotor",
+    "name": "Alternate: Copper Rotor",
+    "machine": "AssemblerMk1",
+    "machines": 94,
+    "clock_pct": "96.4755"
+   },
+   {
+    "id": "ResidualRubber",
+    "name": "Residual Rubber",
+    "machine": "OilRefinery",
+    "machines": 88,
+    "clock_pct": "92.5647"
+   },
+   {
+    "id": "Alternate_Stator",
+    "name": "Alternate: Quickwire Stator",
+    "machine": "AssemblerMk1",
+    "machines": 87,
+    "clock_pct": "96.3870"
+   },
+   {
+    "id": "IngotSAM",
+    "name": "Reanimated SAM",
+    "machine": "ConstructorMk1",
+    "machines": 83,
+    "clock_pct": "96.9714"
    },
    {
     "id": "RadioControlUnit",
     "name": "Radio Control Unit",
     "machine": "ManufacturerMk1",
+    "machines": 82,
+    "clock_pct": "95.7863"
+   },
+   {
+    "id": "Alternate_RecycledRubber",
+    "name": "Alternate: Recycled Rubber",
+    "machine": "OilRefinery",
     "machines": 79,
-    "clock_pct": "97.9239"
+    "clock_pct": "95.1995"
+   },
+   {
+    "id": "Alternate_CircuitBoard_1",
+    "name": "Alternate: Silicon Circuit Board",
+    "machine": "AssemblerMk1",
+    "machines": 77,
+    "clock_pct": "96.5616"
+   },
+   {
+    "id": "Alternate_CokeSteelIngot",
+    "name": "Alternate: Coke Steel Ingot",
+    "machine": "FoundryMk1",
+    "machines": 77,
+    "clock_pct": "84.4200"
+   },
+   {
+    "id": "Alternate_PureQuartzCrystal",
+    "name": "Alternate: Pure Quartz Crystal",
+    "machine": "OilRefinery",
+    "machines": 75,
+    "clock_pct": "94.4568"
+   },
+   {
+    "id": "Alternate_SloppyAlumina",
+    "name": "Alternate: Sloppy Alumina",
+    "machine": "OilRefinery",
+    "machines": 73,
+    "clock_pct": "96.4467"
+   },
+   {
+    "id": "Alternate_HighSpeedConnector",
+    "name": "Alternate: Silicon High-Speed Connector",
+    "machine": "ManufacturerMk1",
+    "machines": 72,
+    "clock_pct": "99.7110"
    },
    {
     "id": "CopperDust",
     "name": "Copper Powder",
     "machine": "ConstructorMk1",
     "machines": 68,
-    "clock_pct": "97.4592"
-   },
-   {
-    "id": "Alternate_SloppyAlumina",
-    "name": "Alternate: Sloppy Alumina",
-    "machine": "OilRefinery",
-    "machines": 62,
-    "clock_pct": "99.1134"
-   },
-   {
-    "id": "AluminumSheet",
-    "name": "Alclad Aluminum Sheet",
-    "machine": "AssemblerMk1",
-    "machines": 60,
-    "clock_pct": "99.4408"
+    "clock_pct": "95.4288"
    },
    {
     "id": "SulfuricAcid",
     "name": "Sulfuric Acid",
     "machine": "OilRefinery",
-    "machines": 51,
-    "clock_pct": "98.8382"
+    "machines": 64,
+    "clock_pct": "99.0183"
    },
    {
-    "id": "NitricAcid",
-    "name": "Nitric Acid",
-    "machine": "Blender",
-    "machines": 49,
-    "clock_pct": "97.6616"
+    "id": "Alternate_FusedWire",
+    "name": "Alternate: Fused Wire",
+    "machine": "AssemblerMk1",
+    "machines": 50,
+    "clock_pct": "95.6560"
    },
    {
     "id": "PackagedTurboFuel",
     "name": "Packaged Turbofuel",
     "machine": "Packager",
-    "machines": 48,
-    "clock_pct": "99.6295"
+    "machines": 47,
+    "clock_pct": "99.4320"
+   },
+   {
+    "id": "NitricAcid",
+    "name": "Nitric Acid",
+    "machine": "Blender",
+    "machines": 46,
+    "clock_pct": "96.2321"
    },
    {
     "id": "Alternate_RocketFuel_Nitro",
     "name": "Alternate: Nitro Rocket Fuel",
     "machine": "Blender",
-    "machines": 44,
-    "clock_pct": "99.3420"
+    "machines": 43,
+    "clock_pct": "99.3204"
    },
    {
     "id": "Alternate_HeatFusedFrame",
     "name": "Alternate: Heat-Fused Frame",
     "machine": "Blender",
-    "machines": 43,
-    "clock_pct": "97.4650"
-   },
-   {
-    "id": "Alternate_Quartz_Purified",
-    "name": "Alternate: Quartz Purification",
-    "machine": "OilRefinery",
-    "machines": 43,
-    "clock_pct": "99.9504"
+    "machines": 42,
+    "clock_pct": "94.4180"
    },
    {
     "id": "Alternate_AlcladCasing",
     "name": "Alternate: Alclad Casing",
     "machine": "AssemblerMk1",
-    "machines": 39,
-    "clock_pct": "98.8888"
+    "machines": 40,
+    "clock_pct": "95.5819"
+   },
+   {
+    "id": "Alternate_Quartz_Purified",
+    "name": "Alternate: Quartz Purification",
+    "machine": "OilRefinery",
+    "machines": 38,
+    "clock_pct": "99.0183"
+   },
+   {
+    "id": "Alternate_CoatedCable",
+    "name": "Alternate: Coated Cable",
+    "machine": "OilRefinery",
+    "machines": 34,
+    "clock_pct": "95.8300"
    },
    {
     "id": "SpaceElevatorPart_9",
     "name": "Nuclear Pasta",
     "machine": "HadronCollider",
     "machines": 34,
-    "clock_pct": "97.4592"
-   },
-   {
-    "id": "FicsiteMesh",
-    "name": "Ficsite Trigon",
-    "machine": "ConstructorMk1",
-    "machines": 33,
-    "clock_pct": "99.0194"
-   },
-   {
-    "id": "PressureConversionCube",
-    "name": "Pressure Conversion Cube",
-    "machine": "AssemblerMk1",
-    "machines": 33,
-    "clock_pct": "97.6968"
+    "clock_pct": "95.4288"
    },
    {
     "id": "Alternate_TurboHeavyFuel",
     "name": "Alternate: Turbo Heavy Fuel",
     "machine": "OilRefinery",
     "machines": 32,
-    "clock_pct": "99.6295"
+    "clock_pct": "97.3605"
    },
    {
-    "id": "Alternate_PureQuartzCrystal",
-    "name": "Alternate: Pure Quartz Crystal",
-    "machine": "OilRefinery",
-    "machines": 28,
-    "clock_pct": "94.5456"
+    "id": "AluminumSheet",
+    "name": "Alclad Aluminum Sheet",
+    "machine": "AssemblerMk1",
+    "machines": 31,
+    "clock_pct": "94.7024"
    },
    {
-    "id": "Alternate_HighSpeedConnector",
-    "name": "Alternate: Silicon High-Speed Connector",
-    "machine": "ManufacturerMk1",
-    "machines": 26,
-    "clock_pct": "98.5745"
+    "id": "PressureConversionCube",
+    "name": "Pressure Conversion Cube",
+    "machine": "AssemblerMk1",
+    "machines": 31,
+    "clock_pct": "96.4836"
+   },
+   {
+    "id": "FicsiteMesh",
+    "name": "Ficsite Trigon",
+    "machine": "ConstructorMk1",
+    "machines": 30,
+    "clock_pct": "96.6132"
    },
    {
     "id": "SAMFluctuator",
     "name": "SAM Fluctuator",
     "machine": "ManufacturerMk1",
+    "machines": 29,
+    "clock_pct": "94.7378"
+   },
+   {
+    "id": "Alternate_HeatSink_1",
+    "name": "Alternate: Heat Exchanger",
+    "machine": "AssemblerMk1",
     "machines": 26,
-    "clock_pct": "97.5321"
+    "clock_pct": "99.7710"
    },
    {
     "id": "Alternate_CoolingDevice",
     "name": "Alternate: Cooling Device",
     "machine": "Blender",
     "machines": 24,
-    "clock_pct": "95.9431"
+    "clock_pct": "97.1277"
+   },
+   {
+    "id": "ComputerSuper",
+    "name": "Supercomputer",
+    "machine": "ManufacturerMk1",
+    "machines": 23,
+    "clock_pct": "95.4649"
    },
    {
     "id": "Alternate_Diamond_Turbo",
     "name": "Alternate: Turbo Diamonds",
     "machine": "HadronCollider",
-    "machines": 24,
-    "clock_pct": "97.2665"
-   },
-   {
-    "id": "Alternate_HeatSink_1",
-    "name": "Alternate: Heat Exchanger",
-    "machine": "AssemblerMk1",
-    "machines": 24,
-    "clock_pct": "95.9431"
+    "machines": 22,
+    "clock_pct": "96.5647"
    },
    {
     "id": "Alternate_SteelRod",
     "name": "Alternate: Steel Rod",
     "machine": "ConstructorMk1",
-    "machines": 24,
-    "clock_pct": "99.5175"
-   },
-   {
-    "id": "Alternate_Wire_2",
-    "name": "Alternate: Caterium Wire",
-    "machine": "ConstructorMk1",
-    "machines": 23,
-    "clock_pct": "97.8395"
+    "machines": 21,
+    "clock_pct": "95.6480"
    },
    {
     "id": "Alternate_Silica_Distilled",
     "name": "Alternate: Distilled Silica",
     "machine": "Blender",
-    "machines": 22,
-    "clock_pct": "97.6788"
+    "machines": 19,
+    "clock_pct": "99.0183"
    },
    {
-    "id": "Alternate_SuperStateComputer",
-    "name": "Alternate: Super-State Computer",
-    "machine": "ManufacturerMk1",
-    "machines": 20,
-    "clock_pct": "96.1409"
-   },
-   {
-    "id": "Alternate_ClassicBattery",
-    "name": "Alternate: Classic Battery",
-    "machine": "ManufacturerMk1",
-    "machines": 16,
-    "clock_pct": "99.4345"
+    "id": "Bauxite_Caterium",
+    "name": "Bauxite (Caterium)",
+    "machine": "Converter",
+    "machines": 19,
+    "clock_pct": "98.1426"
    },
    {
     "id": "Alternate_CoatedIronCanister",
     "name": "Alternate: Coated Iron Canister",
     "machine": "AssemblerMk1",
     "machines": 16,
-    "clock_pct": "99.9979"
+    "clock_pct": "97.5098"
    },
    {
     "id": "NobeliskNuke",
     "name": "Nuke Nobelisk",
     "machine": "ManufacturerMk1",
-    "machines": 16,
-    "clock_pct": "91.9800"
+    "machines": 15,
+    "clock_pct": "99.4864"
    },
    {
     "id": "Alternate_AutomatedMiner",
     "name": "Alternate: Automated Miner",
     "machine": "AssemblerMk1",
-    "machines": 14,
-    "clock_pct": "94.9689"
-   },
-   {
-    "id": "DarkMatter",
-    "name": "Dark Matter Crystal",
-    "machine": "HadronCollider",
     "machines": 13,
-    "clock_pct": "99.8324"
+    "clock_pct": "100.0000"
    },
    {
     "id": "GunpowderMK2",
     "name": "Smokeless Powder",
     "machine": "OilRefinery",
     "machines": 12,
-    "clock_pct": "99.9960"
-   },
-   {
-    "id": "FicsiteIngot_AL",
-    "name": "Ficsite Ingot (Aluminum)",
-    "machine": "Converter",
-    "machines": 11,
-    "clock_pct": "99.0194"
+    "clock_pct": "98.8833"
    },
    {
     "id": "Alternate_Gunpowder_1",
     "name": "Alternate: Fine Black Powder",
     "machine": "AssemblerMk1",
     "machines": 10,
-    "clock_pct": "93.3266"
+    "clock_pct": "91.0866"
    },
    {
-    "id": "Rebar_Explosive",
-    "name": "Explosive Rebar",
-    "machine": "ManufacturerMk1",
+    "id": "FicsiteIngot_AL",
+    "name": "Ficsite Ingot (Aluminum)",
+    "machine": "Converter",
     "machines": 10,
-    "clock_pct": "88.0268"
+    "clock_pct": "96.6132"
    },
    {
     "id": "SpaceElevatorPart_4",
     "name": "Modular Engine",
     "machine": "ManufacturerMk1",
     "machines": 10,
-    "clock_pct": "94.0032"
-   },
-   {
-    "id": "Alternate_TurboPressureMotor",
-    "name": "Alternate: Turbo Pressure Motor",
-    "machine": "ManufacturerMk1",
-    "machines": 9,
-    "clock_pct": "92.8704"
+    "clock_pct": "92.0448"
    },
    {
     "id": "Nobelisk",
     "name": "Nobelisk",
     "machine": "AssemblerMk1",
     "machines": 9,
-    "clock_pct": "99.9885"
+    "clock_pct": "95.8721"
+   },
+   {
+    "id": "Rebar_Explosive",
+    "name": "Explosive Rebar",
+    "machine": "ManufacturerMk1",
+    "machines": 9,
+    "clock_pct": "95.5488"
+   },
+   {
+    "id": "SteelPipe",
+    "name": "Steel Pipe",
+    "machine": "ConstructorMk1",
+    "machines": 9,
+    "clock_pct": "99.9550"
    },
    {
     "id": "SuperpositionOscillator",
     "name": "Superposition Oscillator",
     "machine": "QuantumEncoder",
     "machines": 9,
-    "clock_pct": "93.2146"
+    "clock_pct": "86.9068"
    },
    {
-    "id": "DarkEnergy",
-    "name": "Dark Matter Residue",
-    "machine": "Converter",
+    "id": "Alternate_TurboPressureMotor",
+    "name": "Alternate: Turbo Pressure Motor",
+    "machine": "ManufacturerMk1",
     "machines": 8,
-    "clock_pct": "90.3513"
+    "clock_pct": "91.2468"
    },
    {
     "id": "SpaceElevatorPart_10",
     "name": "Biochemical Sculptor",
     "machine": "Blender",
     "machines": 8,
-    "clock_pct": "91.8000"
+    "clock_pct": "89.8875"
    },
    {
     "id": "SpaceElevatorPart_5",
     "name": "Adaptive Control Unit",
     "machine": "ManufacturerMk1",
     "machines": 8,
-    "clock_pct": "91.8000"
+    "clock_pct": "89.8875"
    },
    {
     "id": "SpikedRebar",
     "name": "Iron Rebar",
     "machine": "ConstructorMk1",
     "machines": 8,
-    "clock_pct": "88.1280"
+    "clock_pct": "86.3963"
    },
    {
     "id": "GasTank",
     "name": "Empty Fluid Tank",
     "machine": "ConstructorMk1",
     "machines": 7,
-    "clock_pct": "97.8361"
-   },
-   {
-    "id": "NobeliskCluster",
-    "name": "Cluster Nobelisk",
-    "machine": "AssemblerMk1",
-    "machines": 7,
-    "clock_pct": "83.8866"
-   },
-   {
-    "id": "PackagedNitrogen",
-    "name": "Packaged Nitrogen Gas",
-    "machine": "Packager",
-    "machines": 7,
-    "clock_pct": "89.5536"
+    "clock_pct": "85.2094"
    },
    {
     "id": "QuantumEnergy",
     "name": "Excited Photonic Matter",
     "machine": "Converter",
     "machines": 7,
-    "clock_pct": "97.0677"
+    "clock_pct": "89.3340"
+   },
+   {
+    "id": "Alternate_DarkMatter_Trap",
+    "name": "Alternate: Dark Matter Trap",
+    "machine": "HadronCollider",
+    "machines": 6,
+    "clock_pct": "95.6662"
+   },
+   {
+    "id": "NobeliskCluster",
+    "name": "Cluster Nobelisk",
+    "machine": "AssemblerMk1",
+    "machines": 6,
+    "clock_pct": "95.4283"
+   },
+   {
+    "id": "PackagedNitrogen",
+    "name": "Packaged Nitrogen Gas",
+    "machine": "Packager",
+    "machines": 6,
+    "clock_pct": "91.2468"
    },
    {
     "id": "UraniumCell",
     "name": "Encased Uranium Cell",
     "machine": "Blender",
-    "machines": 7,
-    "clock_pct": "84.0960"
+    "machines": 6,
+    "clock_pct": "99.4864"
    },
    {
     "id": "Alternate_HighSpeedWiring",
     "name": "Alternate: Automated Speed Wiring",
     "machine": "ManufacturerMk1",
-    "machines": 6,
-    "clock_pct": "81.6000"
+    "machines": 5,
+    "clock_pct": "95.8800"
    },
    {
     "id": "SpaceElevatorPart_7",
     "name": "Assembly Director System",
     "machine": "AssemblerMk1",
-    "machines": 6,
-    "clock_pct": "81.6000"
+    "machines": 5,
+    "clock_pct": "95.8800"
    },
    {
     "id": "Alternate_PlasticSmartPlating",
     "name": "Alternate: Plastic Smart Plating",
     "machine": "ManufacturerMk1",
     "machines": 4,
-    "clock_pct": "94.0032"
+    "clock_pct": "92.0448"
    },
    {
     "id": "SpaceElevatorPart_11",
     "name": "Ballistic Warp Drive",
     "machine": "ManufacturerMk1",
     "machines": 4,
-    "clock_pct": "94.0032"
-   },
-   {
-    "id": "SpaceElevatorPart_6",
-    "name": "Magnetic Field Generator",
-    "machine": "AssemblerMk1",
-    "machines": 4,
-    "clock_pct": "73.4400"
+    "clock_pct": "92.0448"
    },
    {
     "id": "SpaceElevatorPart_8",
     "name": "Thermal Propulsion Rocket",
     "machine": "ManufacturerMk1",
     "machines": 4,
-    "clock_pct": "94.0032"
+    "clock_pct": "92.0448"
+   },
+   {
+    "id": "DarkMatter",
+    "name": "Dark Matter Crystal",
+    "machine": "HadronCollider",
+    "machines": 3,
+    "clock_pct": "86.5956"
+   },
+   {
+    "id": "SpaceElevatorPart_6",
+    "name": "Magnetic Field Generator",
+    "machine": "AssemblerMk1",
+    "machines": 3,
+    "clock_pct": "95.8800"
    },
    {
     "id": "TemporalProcessor",
     "name": "Neural-Quantum Processor",
     "machine": "QuantumEncoder",
     "machines": 3,
-    "clock_pct": "95.4742"
+    "clock_pct": "79.7716"
    },
    {
-    "id": "Alternate_FlexibleFramework",
-    "name": "Alternate: Flexible Framework",
+    "id": "Alternate_RadioControlUnit_1",
+    "name": "Alternate: Radio Connection Unit",
     "machine": "ManufacturerMk1",
     "machines": 2,
-    "clock_pct": "48.9600"
+    "clock_pct": "87.6604"
    },
    {
     "id": "Cartridge",
     "name": "Rifle Ammo",
     "machine": "AssemblerMk1",
     "machines": 2,
-    "clock_pct": "98.2949"
+    "clock_pct": "97.2711"
    },
    {
     "id": "CartridgeSmart",
     "name": "Homing Rifle Ammo",
     "machine": "AssemblerMk1",
     "machines": 2,
-    "clock_pct": "58.7520"
+    "clock_pct": "57.2819"
    },
    {
     "id": "FilterGasMask",
     "name": "Gas Filter",
     "machine": "ManufacturerMk1",
     "machines": 2,
-    "clock_pct": "68.0960"
+    "clock_pct": "59.3262"
    },
    {
     "id": "SingularityCell",
     "name": "Singularity Cell",
     "machine": "ManufacturerMk1",
     "machines": 2,
-    "clock_pct": "94.0032"
+    "clock_pct": "92.0448"
    },
    {
-    "id": "Alternate_DarkMatter_Trap",
-    "name": "Alternate: Dark Matter Trap",
-    "machine": "HadronCollider",
+    "id": "Alternate_ClassicBattery",
+    "name": "Alternate: Classic Battery",
+    "machine": "ManufacturerMk1",
     "machines": 1,
-    "clock_pct": "90.0176"
+    "clock_pct": "47.7299"
    },
    {
     "id": "Alternate_DilutedPackagedFuel",
     "name": "Alternate: Diluted Packaged Fuel",
     "machine": "OilRefinery",
     "machines": 1,
-    "clock_pct": "5.8944"
+    "clock_pct": "2.3888"
+   },
+   {
+    "id": "Alternate_ElectromagneticControlRod_1",
+    "name": "Alternate: Electromagnetic Connection Rod",
+    "machine": "AssemblerMk1",
+    "machines": 1,
+    "clock_pct": "35.9550"
+   },
+   {
+    "id": "Alternate_FlexibleFramework",
+    "name": "Alternate: Flexible Framework",
+    "machine": "ManufacturerMk1",
+    "machines": 1,
+    "clock_pct": "95.8800"
    },
    {
     "id": "Alternate_PolyesterFabric",
     "name": "Alternate: Polyester Fabric",
     "machine": "OilRefinery",
     "machines": 1,
-    "clock_pct": "68.0960"
+    "clock_pct": "59.3262"
    },
    {
     "id": "CartridgeChaos_Packaged",
     "name": "Turbo Rifle Ammo",
     "machine": "ManufacturerMk1",
     "machines": 1,
-    "clock_pct": "11.7504"
+    "clock_pct": "11.4591"
    },
    {
     "id": "FilterHazmat",
     "name": "Iodine-Infused Filter",
     "machine": "ManufacturerMk1",
     "machines": 1,
-    "clock_pct": "78.3360"
+    "clock_pct": "76.3840"
    },
    {
     "id": "IonizedFuel",
     "name": "Ionized Fuel",
     "machine": "OilRefinery",
     "machines": 1,
-    "clock_pct": "73.4220"
+    "clock_pct": "71.9280"
    },
    {
     "id": "NobeliskShockwave",
     "name": "Pulse Nobelisk",
     "machine": "AssemblerMk1",
     "machines": 1,
-    "clock_pct": "29.3760"
+    "clock_pct": "28.6488"
    },
    {
     "id": "PackagedIonizedFuel",
     "name": "Packaged Ionized Fuel",
     "machine": "Packager",
     "machines": 1,
-    "clock_pct": "36.7110"
+    "clock_pct": "35.9640"
    },
    {
     "id": "PackagedRocketFuel",
     "name": "Packaged Rocket Fuel",
     "machine": "Packager",
     "machines": 1,
-    "clock_pct": "33.5035"
+    "clock_pct": "25.0090"
    },
    {
     "id": "PackagedWater",
     "name": "Packaged Water",
     "machine": "Packager",
     "machines": 1,
-    "clock_pct": "5.8944"
+    "clock_pct": "2.3888"
    },
    {
     "id": "Rebar_Spreadshot",
     "name": "Shatter Rebar",
     "machine": "AssemblerMk1",
     "machines": 1,
-    "clock_pct": "88.1280"
+    "clock_pct": "85.9403"
    },
    {
     "id": "Rebar_Stunshot",
     "name": "Stun Rebar",
     "machine": "AssemblerMk1",
     "machines": 1,
-    "clock_pct": "44.0640"
+    "clock_pct": "43.0117"
    },
    {
     "id": "SpaceElevatorPart_12",
     "name": "AI Expansion Server",
     "machine": "QuantumEncoder",
     "machines": 1,
-    "clock_pct": "73.4400"
+    "clock_pct": "71.9100"
    },
    {
     "id": "SyntheticPowerShard",
     "name": "Synthetic Power Shard",
     "machine": "QuantumEncoder",
     "machines": 1,
-    "clock_pct": "36.7110"
+    "clock_pct": "35.9640"
    }
   ],
   "sources": [
@@ -1266,15 +1259,15 @@
    },
    {
     "id": "Miner3_Impure_OreBauxite",
-    "count": 5
+    "count": 4
    },
    {
     "id": "Miner3_Impure_SAM",
-    "count": 10
+    "count": 9
    },
    {
     "id": "Miner3_Normal_Coal",
-    "count": 25
+    "count": 31
    },
    {
     "id": "Miner3_Normal_OreBauxite",
@@ -1282,11 +1275,7 @@
    },
    {
     "id": "Miner3_Normal_OreCopper",
-    "count": 13
-   },
-   {
-    "id": "Miner3_Normal_OreGold",
-    "count": 3
+    "count": 8
    },
    {
     "id": "Miner3_Normal_OreUranium",
@@ -1294,7 +1283,7 @@
    },
    {
     "id": "Miner3_Normal_RawQuartz",
-    "count": 7
+    "count": 2
    },
    {
     "id": "Miner3_Normal_SAM",
@@ -1302,7 +1291,7 @@
    },
    {
     "id": "Miner3_Normal_Stone",
-    "count": 48
+    "count": 47
    },
    {
     "id": "Miner3_Normal_Sulfur",
@@ -1326,7 +1315,7 @@
    },
    {
     "id": "Miner3_Pure_OreIron",
-    "count": 45
+    "count": 34
    },
    {
     "id": "Miner3_Pure_RawQuartz",
@@ -1346,7 +1335,7 @@
    },
    {
     "id": "OilExtractor_Impure",
-    "count": 10
+    "count": 8
    },
    {
     "id": "OilExtractor_Normal",
@@ -1358,7 +1347,7 @@
    },
    {
     "id": "WaterExtractor",
-    "count": 700
+    "count": 716
    },
    {
     "id": "Well_LiquidOil",
@@ -1370,106 +1359,106 @@
    }
   ],
   "buildings": {
-   "AssemblerMk1": 3508,
-   "Blender": 349,
+   "AssemblerMk1": 2338,
+   "Blender": 314,
    "BlueprintDesigner_MK3": 30,
    "CatwalkCross": 2000,
    "CeilingLight": 1000,
    "CentralStorage": 56,
-   "ConstructorMk1": 1519,
-   "Converter": 111,
-   "ConveyorAttachmentMerger": 10501,
-   "ConveyorAttachmentSplitter": 16544,
+   "ConstructorMk1": 676,
+   "Converter": 136,
+   "ConveyorAttachmentMerger": 9010,
+   "ConveyorAttachmentSplitter": 14559,
    "ConveyorAttachmentSplitterSmart": 212,
-   "ConveyorBeltMk1": 27045,
-   "ConveyorBeltMk2": 27045,
-   "ConveyorBeltMk3": 27045,
-   "ConveyorBeltMk4": 27045,
-   "ConveyorBeltMk5": 27045,
-   "ConveyorBeltMk6": 27045,
-   "ConveyorPole": 6491,
+   "ConveyorBeltMk1": 23569,
+   "ConveyorBeltMk2": 23569,
+   "ConveyorBeltMk3": 23569,
+   "ConveyorBeltMk4": 23569,
+   "ConveyorBeltMk5": 23569,
+   "ConveyorBeltMk6": 23569,
+   "ConveyorPole": 5657,
    "DroneStation": 200,
    "DroneTransport": 100,
    "Elevator": 30,
    "ElevatorFloorStop": 150,
    "FloodlightWall": 1000,
-   "Foundation_8x1_01": 26464,
-   "Foundation_Asphalt_8x1": 26464,
-   "Foundation_ConcretePolished_8x1": 26464,
-   "Foundation_Metal_8x1": 26464,
-   "FoundryMk1": 1609,
+   "Foundation_8x1_01": 23414,
+   "Foundation_Asphalt_8x1": 23414,
+   "Foundation_ConcretePolished_8x1": 23414,
+   "Foundation_Metal_8x1": 23414,
+   "FoundryMk1": 1577,
    "FrackingExtractor": 63,
    "FrackingSmasher": 9,
    "FreightWagon": 500,
-   "GeneratorFuel": 1559,
+   "GeneratorFuel": 1524,
    "GeneratorGeoThermal": 9,
-   "HadronCollider": 72,
+   "HadronCollider": 65,
    "IndustrialTank": 14,
-   "Ladder": 13232,
+   "Ladder": 11707,
    "Locomotive": 100,
-   "ManufacturerMk1": 593,
-   "MinerMk3": 259,
-   "OilPump": 30,
-   "OilRefinery": 2437,
-   "Packager": 58,
-   "PipeHyper": 13232,
-   "Pipeline": 6528,
-   "PipelineJunction_T": 6528,
-   "PipelineMK2": 6528,
-   "PipelinePump": 66,
-   "PipelinePumpMk2": 66,
+   "ManufacturerMk1": 883,
+   "MinerMk3": 238,
+   "OilPump": 28,
+   "OilRefinery": 2420,
+   "Packager": 56,
+   "PipeHyper": 11707,
+   "Pipeline": 6407,
+   "PipelineJunction_T": 6407,
+   "PipelineMK2": 6407,
+   "PipelinePump": 65,
+   "PipelinePumpMk2": 65,
    "Portal": 1,
    "PortalSatellite": 200,
-   "PowerLine": 26464,
-   "PowerPoleMk1": 6616,
-   "PowerTower": 662,
+   "PowerLine": 23414,
+   "PowerPoleMk1": 5854,
+   "PowerTower": 586,
    "QuantumEncoder": 14,
    "RadarTower": 200,
    "RailroadBlockSignal": 200,
-   "RailroadTrack": 33573,
+   "RailroadTrack": 29976,
    "ResourceSink": 200,
    "ResourceSinkShop": 1,
-   "Roof_A_01": 13232,
-   "Roof_Orange_01": 13232,
-   "Roof_Tar_01": 13232,
-   "Roof_Window_01": 13232,
-   "SmelterMk1": 333,
+   "Roof_A_01": 11707,
+   "Roof_Orange_01": 11707,
+   "Roof_Tar_01": 11707,
+   "Roof_Window_01": 11707,
+   "SmelterMk1": 641,
    "StandaloneWidgetSign_Huge": 100,
    "StandaloneWidgetSign_SmallVeryWide": 1000,
    "StandaloneWidgetSign_Square": 1000,
    "StorageContainerMk2": 530,
    "TrainDockingStation": 300,
-   "Wall_8x4_01": 26464,
-   "Wall_8x4_02": 26464,
-   "Wall_Concrete_8x4": 26464,
-   "WaterPump": 700
+   "Wall_8x4_01": 23414,
+   "Wall_8x4_02": 23414,
+   "Wall_Concrete_8x4": 23414,
+   "WaterPump": 716
   },
   "time_per_item_min": {
-   "Explosive Rebar": 68.2,
-   "Encased Industrial Beam": 68.1,
-   "Modular Frame": 68.1,
-   "Concrete": 68.1,
-   "Reinforced Iron Plate": 68.1,
-   "Cable": 68.1,
-   "Cooling System": 68.1,
-   "Stun Rebar": 68.1,
-   "Shatter Rebar": 68.1,
-   "Homing Rifle Ammo": 68.1,
-   "Turbo Rifle Ammo": 68.1,
-   "Cluster Nobelisk": 68.1,
-   "Pulse Nobelisk": 68.1,
-   "Iodine-Infused Filter": 68.1,
-   "Packaged Ionized Fuel": 68.1,
-   "Nuclear Pasta": 68.1,
-   "Biochemical Sculptor": 68.1,
-   "Ballistic Warp Drive": 68.1,
-   "AI Expansion Server": 68.1,
-   "Motor": 68.0,
-   "Heavy Modular Frame": 68.0,
-   "Fused Modular Frame": 68.0,
-   "Radio Control Unit": 67.9,
-   "Nuke Nobelisk": 67.9,
-   "Rotor": 67.8
+   "Wire": 71.4,
+   "Iron Plate": 71.2,
+   "Steel Pipe": 71.2,
+   "Quickwire": 70.5,
+   "Copper Sheet": 70.3,
+   "Iron Rod": 69.9,
+   "Steel Beam": 69.9,
+   "Fused Modular Frame": 69.9,
+   "Crystal Oscillator": 69.9,
+   "Aluminum Casing": 69.9,
+   "Radio Control Unit": 69.9,
+   "Heavy Modular Frame": 69.9,
+   "Cluster Nobelisk": 69.9,
+   "Concrete": 69.8,
+   "Rotor": 69.8,
+   "Motor": 69.8,
+   "SAM Fluctuator": 69.8,
+   "Superposition Oscillator": 69.8,
+   "Shatter Rebar": 69.8,
+   "Explosive Rebar": 69.8,
+   "Homing Rifle Ammo": 69.8,
+   "Turbo Rifle Ammo": 69.8,
+   "Pulse Nobelisk": 69.8,
+   "Iodine-Infused Filter": 69.8,
+   "Packaged Fuel": 69.8
   }
  }
 }
