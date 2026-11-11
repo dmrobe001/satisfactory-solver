@@ -305,8 +305,10 @@ gave 68.2 min with 12,162 machines). T = 69.9 min: 66.6 min continuous, 67.8 min
 with whole machines, and 68.2 min is the continuous bound for the exact-clock
 stage. The plan has 112 recipes on 10,644 machines plus 997 sources and
 504,709 buildings in all. Power is 382 GW, from 1,524 rocket-fuel generators
-and the 9 pure geysers. Every quartz, bauxite, SAM, crude oil and nitrogen
-node is used, so those are what bind; only the better iron, copper, limestone
-and coal nodes are used, because each miner costs 151 MW and its buildings.
-These are good solutions, not proven optima: the integer stages fix choices
-made by the stage before them.
+and the 9 pure geysers. Every bauxite, coal and nitrogen node is used, and
+all but 3 impure crude oil nodes, so those are what bind (with standard
+Aluminum Ingot left out, bauxite goes further only through scrap). Quartz and
+SAM are no longer all used; iron uses 34 of its 46 pure nodes and nothing
+worse, because each miner costs 151 MW and its buildings. These are good
+solutions, not proven optima: the integer stages fix choices made by the stage
+before them.
