@@ -17,6 +17,7 @@ for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
                      ("/*__DATA__*/", data),
                      ("/*__PLAN__*/", "window.DEFAULT_PLAN = " + (ROOT / "data" / "default_plan.json").read_text() + ";"),
                      ("/*__SOLVER__*/", (src / "solver.js").read_text()),
+                     ("/*__BUILDINGS__*/", (src / "buildings.js").read_text()),
                      ("/*__APP__*/", (src / "app.js").read_text())]:
     assert marker in page, marker
     page = page.replace(marker, text)

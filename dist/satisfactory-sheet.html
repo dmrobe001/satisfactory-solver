@@ -1055,17 +1055,11 @@ window.DEFAULT_PLAN = {
 
 </script>
 <script>
-/* UI for the production sheet.  Expects GAME (data/game.json) and SatSolver. */
-(function () {
+/* Building counts and bill of materials, shared by the production sheet and
+ * the recipe matrix.  Pure logic over a SatSolver (machine counts and flows);
+ * no DOM.  window.SatBuildings in the browser, module.exports in node. */
+(function (root) {
   "use strict";
-  const G = window.GAME;
-  const S = new window.SatSolver(G);
-  const R = G.recipes;
-  const IT = G.items;
-  const KEYS = S.itemKeys;
-  const B = G.buildings;
-  const STORE = "satisfactory-sheet.v3";
-
   const BELTS = [1, 2, 3, 4, 5, 6].map((k) => "ConveyorBeltMk" + k);
   const PIPES = ["Pipeline", "PipelineMK2"];
   const RAIL = "RailroadTrack";
@@ -1112,7 +1106,7 @@ window.DEFAULT_PLAN = {
     "Filter", "HazmatFilter", "Biofuel", "Fuel", "TurboFuel", "PackagedBiofuel", "PackagedRocketFuel",
     "PackagedIonizedFuel", "Battery",
     // FICSMAS hand equipment (thrown)
-    "SnowballProjectile", "Fireworks_Projectile_01", "Fireworks_Projectile_02", "Fireworks_Projectile_03"].filter((k) => k in G.items);
+    "SnowballProjectile", "Fireworks_Projectile_01", "Fireworks_Projectile_02", "Fireworks_Projectile_03"];
   const CAL = 2; // building calibration version; older saves get the new rules and default extras
   const cloneRules = () => JSON.parse(JSON.stringify(DEFAULT_RULES));
   const DEFAULTS = () => ({
@@ -1123,6 +1117,112 @@ window.DEFAULT_PLAN = {
     ficsmas: false,
     cal: CAL,
   });
+
+  /* Settings from a saved snapshot (any version) merged over the defaults. */
+  function normalize(saved) {
+    const o = { settings: saved || {} };
+    const d = DEFAULTS();
+    let settings = Object.assign(d, o.settings || {});
+    settings.lane = Object.assign(d.lane, (o.settings || {}).lane || {});
+    const os = o.settings || {};
+    settings.rules = cloneRules();
+    if ((os.cal || 0) >= CAL) {
+      for (const [b, m] of Object.entries(os.rules || {})) if (settings.rules[b]) Object.assign(settings.rules[b], m);
+      settings.extra = Object.assign({}, os.extra || {});
+    } else {
+      // Saved before the recalibration: new rules, and default extras under the user's own.
+      settings.extra = Object.assign({}, DEFAULT_EXTRA, os.extra || {});
+    }
+    delete settings.perMachine;
+    settings.cal = CAL;
+    return settings;
+  }
+
+  /* Buildings and bill of materials for the solver's current machine counts.
+   * Returns {comp, total, machines, solid, fluid, basis, bom, need, ts}. */
+  function compute(S, G, settings) {
+    const R = G.recipes, IT = G.items, B = G.buildings, KEYS = S.itemKeys;
+    const comp = {};
+    let machines = 0, solid = 0, fluid = 0, inLanes = 0, outLanes = 0;
+    const seen = new Uint8Array(KEYS.length);
+    R.forEach((rec, r) => {
+      const b = S.buildings(r);
+      if (S.isActive(r) && S.n[r] > 0) for (const [k] of S.ins[r].concat(S.outs[r])) seen[k] = 1;
+      if (!b) return;
+      comp[rec.m] = (comp[rec.m] || 0) + b;
+      machines += b;
+      const [s, f] = S.lanes(r);
+      solid += s * b; fluid += f * b;
+      for (const [k] of S.ins[r]) if (k !== S.P && !IT[KEYS[k]].f) inLanes += b;
+      for (const [k] of S.outs[r]) if (k !== S.P && !IT[KEYS[k]].f) outLanes += b;
+    });
+    const add = (k, v) => { if (v > 0) comp[k] = (comp[k] || 0) + Math.ceil(v - 1e-9); };
+    BELTS.forEach((k) => add(k, solid * (settings.lane[k] || 0)));
+    PIPES.forEach((k) => add(k, fluid * (settings.lane[k] || 0)));
+    add(RAIL, (solid + fluid) * (settings.lane[RAIL] || 0));
+    let solidTypes = 0, fluidTypes = 0;
+    for (let k = 0; k < KEYS.length; k++) if (seen[k] && k !== S.P) { if (IT[KEYS[k]].f) fluidTypes++; else solidTypes++; }
+    const basis = { machines, inLanes, outLanes, fluidLanes: fluid, solidTypes, fluidTypes,
+      belts: BELTS.reduce((a, k) => a + (comp[k] || 0), 0), pipe1: comp.Pipeline || 0, pipe2: comp.PipelineMK2 || 0 };
+    const applyRules = (b) => { for (const [k, v] of Object.entries(settings.rules[b] || {})) if (B[k]) add(k, basis[b] * (+v || 0)); };
+    ["machines", "inLanes", "outLanes", "fluidLanes", "solidTypes", "fluidTypes", "belts", "pipe1", "pipe2"].forEach(applyRules);
+    /* Depot uploaders depend on the bill of materials, which depends on the buildings, including
+     * the uploaders themselves; two passes settle it (an uploader's own materials are added last). */
+    const isBuildable = (k) => !B[k].xmas || settings.ficsmas;
+    const bomItems = (extraComp) => {
+      const has = new Uint8Array(KEYS.length);
+      for (const k of Object.keys(B)) {
+        if (!isBuildable(k)) continue;
+        const t = (comp[k] || 0) + (extraComp[k] || 0) + (+settings.extra[k] || 0);
+        if (t) for (const [it] of B[k].cost) has[S.itemIdx[it]] = 1;
+      }
+      for (const k of EXPENDABLE) { const i = S.itemIdx[k]; if (i !== undefined && S.prod[i] > 1e-9) has[i] = 1; }
+      return has.reduce((a, x) => a + x, 0);
+    };
+    let depotItems = bomItems({});
+    const depotComp = {};
+    for (let pass = 0; pass < 2; pass++) {
+      for (const k in depotComp) delete depotComp[k];
+      for (const [k, v] of Object.entries(settings.rules.depotItems || {})) if (B[k] && v > 0) depotComp[k] = Math.ceil(depotItems * v - 1e-9);
+      depotItems = bomItems(depotComp);
+    }
+    basis.depotItems = depotItems;
+    applyRules("depotItems");
+    const total = {};
+    for (const k of Object.keys(B)) {
+      if (B[k].xmas && !settings.ficsmas) continue;
+      const t = (comp[k] || 0) + (+settings.extra[k] || 0);
+      if (t) total[k] = t;
+    }
+    const bom = new Float64Array(KEYS.length);
+    for (const [k, t] of Object.entries(total)) {
+      for (const [it, q] of B[k].cost) bom[S.itemIdx[it]] += t * q;
+    }
+    const ts = Math.max(1e-6, +settings.timescale || 60);
+    const need = bom.map((q) => q / ts);
+    return { comp, total, machines, solid, fluid, basis, bom, need, ts };
+  }
+
+  const api = { BELTS, PIPES, RAIL, RULE_BASES, DEFAULT_RULES, DEFAULT_EXTRA, EXPENDABLE, CAL, cloneRules, DEFAULTS, normalize, compute };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.SatBuildings = api;
+})(typeof window !== "undefined" ? window : this);
+
+</script>
+<script>
+/* UI for the production sheet.  Expects GAME (data/game.json) and SatSolver. */
+(function () {
+  "use strict";
+  const G = window.GAME;
+  const S = new window.SatSolver(G);
+  const R = G.recipes;
+  const IT = G.items;
+  const KEYS = S.itemKeys;
+  const B = G.buildings;
+  const STORE = "satisfactory-sheet.v3";
+
+  const SB = window.SatBuildings;
+  const { BELTS, PIPES, RAIL, RULE_BASES, DEFAULT_RULES, DEFAULT_EXTRA, CAL, cloneRules, DEFAULTS } = SB;
   let settings = DEFAULTS();
 
   const KIND_GROUP = { machine: "machine", miner: "extract", extractor: "extract", well: "extract", gather: "extract",
@@ -1156,20 +1256,7 @@ window.DEFAULT_PLAN = {
     }, 250);
   }
   function applySnapshot(o) {
-    const d = DEFAULTS();
-    settings = Object.assign(d, o.settings || {});
-    settings.lane = Object.assign(d.lane, (o.settings || {}).lane || {});
-    const os = o.settings || {};
-    settings.rules = cloneRules();
-    if ((os.cal || 0) >= CAL) {
-      for (const [b, m] of Object.entries(os.rules || {})) if (settings.rules[b]) Object.assign(settings.rules[b], m);
-      settings.extra = Object.assign({}, os.extra || {});
-    } else {
-      // Saved before the recalibration: new rules, and default extras under the user's own.
-      settings.extra = Object.assign({}, DEFAULT_EXTRA, os.extra || {});
-    }
-    delete settings.perMachine;
-    settings.cal = CAL;
+    settings = SB.normalize(o.settings);
     S.load(o.sheet || {});
     applyFicsmas();
   }
@@ -1282,68 +1369,11 @@ window.DEFAULT_PLAN = {
   /* ---- derived numbers ---- */
   let derived = null;
   function derive() {
-    const comp = {};
-    let machines = 0, solid = 0, fluid = 0, inLanes = 0, outLanes = 0;
-    const seen = new Uint8Array(KEYS.length);
-    R.forEach((rec, r) => {
-      const b = S.buildings(r);
-      if (S.isActive(r) && S.n[r] > 0) for (const [k] of S.ins[r].concat(S.outs[r])) seen[k] = 1;
-      if (!b) return;
-      comp[rec.m] = (comp[rec.m] || 0) + b;
-      machines += b;
-      const [s, f] = S.lanes(r);
-      solid += s * b; fluid += f * b;
-      for (const [k] of S.ins[r]) if (k !== S.P && !IT[KEYS[k]].f) inLanes += b;
-      for (const [k] of S.outs[r]) if (k !== S.P && !IT[KEYS[k]].f) outLanes += b;
-    });
-    const add = (k, v) => { if (v > 0) comp[k] = (comp[k] || 0) + Math.ceil(v - 1e-9); };
-    BELTS.forEach((k) => add(k, solid * (settings.lane[k] || 0)));
-    PIPES.forEach((k) => add(k, fluid * (settings.lane[k] || 0)));
-    add(RAIL, (solid + fluid) * (settings.lane[RAIL] || 0));
-    let solidTypes = 0, fluidTypes = 0;
-    for (let k = 0; k < KEYS.length; k++) if (seen[k] && k !== S.P) { if (IT[KEYS[k]].f) fluidTypes++; else solidTypes++; }
-    const basis = { machines, inLanes, outLanes, fluidLanes: fluid, solidTypes, fluidTypes,
-      belts: BELTS.reduce((a, k) => a + (comp[k] || 0), 0), pipe1: comp.Pipeline || 0, pipe2: comp.PipelineMK2 || 0 };
-    const applyRules = (b) => { for (const [k, v] of Object.entries(settings.rules[b] || {})) if (B[k]) add(k, basis[b] * (+v || 0)); };
-    ["machines", "inLanes", "outLanes", "fluidLanes", "solidTypes", "fluidTypes", "belts", "pipe1", "pipe2"].forEach(applyRules);
-    /* Depot uploaders depend on the bill of materials, which depends on the buildings, including
-     * the uploaders themselves; two passes settle it (an uploader's own materials are added last). */
-    const isBuildable = (k) => !B[k].xmas || settings.ficsmas;
-    const bomItems = (extraComp) => {
-      const has = new Uint8Array(KEYS.length);
-      for (const k of Object.keys(B)) {
-        if (!isBuildable(k)) continue;
-        const t = (comp[k] || 0) + (extraComp[k] || 0) + (+settings.extra[k] || 0);
-        if (t) for (const [it] of B[k].cost) has[S.itemIdx[it]] = 1;
-      }
-      for (const k of EXPENDABLE) if (S.prod[S.itemIdx[k]] > 1e-9) has[S.itemIdx[k]] = 1;
-      return has.reduce((a, x) => a + x, 0);
-    };
-    let depotItems = bomItems({});
-    const depotComp = {};
-    for (let pass = 0; pass < 2; pass++) {
-      for (const k in depotComp) delete depotComp[k];
-      for (const [k, v] of Object.entries(settings.rules.depotItems || {})) if (B[k] && v > 0) depotComp[k] = Math.ceil(depotItems * v - 1e-9);
-      depotItems = bomItems(depotComp);
-    }
-    basis.depotItems = depotItems;
-    applyRules("depotItems");
-    const total = {};
-    for (const k of Object.keys(B)) {
-      if (B[k].xmas && !settings.ficsmas) continue;
-      const t = (comp[k] || 0) + (+settings.extra[k] || 0);
-      if (t) total[k] = t;
-    }
-    const bom = new Float64Array(KEYS.length);
-    for (const [k, t] of Object.entries(total)) {
-      for (const [it, q] of B[k].cost) bom[S.itemIdx[it]] += t * q;
-    }
-    const ts = Math.max(1e-6, +settings.timescale || 60);
-    const need = bom.map((q) => q / ts);
+    const b = SB.compute(S, G, settings);
     const deficit = new Uint8Array(KEYS.length);
     const target = new Float64Array(KEYS.length);
     for (let k = 0; k < KEYS.length; k++) { deficit[k] = S.inDeficit(k) ? 1 : 0; target[k] = S.target(k); }
-    derived = { comp, total, machines, solid, fluid, basis, bom, need, deficit, target, ts };
+    derived = Object.assign(b, { deficit, target });
     return derived;
   }
 
