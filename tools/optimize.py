@@ -654,6 +654,7 @@ def lll(B, delta=0.99):
 
 
 UNIT = 10 ** 6  # clock steps per 100 % (0.0001 %)
+TWO = False     # --two-clocks: a recipe's machines may run at two adjacent clocks
 SHORT = 3000    # lattice directions up to this length (0.3 % of a clock) are rounded, not searched
 
 
@@ -680,7 +681,7 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
             d = {}
             for j in recs:
                 a = V[j].rates.get(k)
-                if a: d[col[j]] = a * n[j]
+                if a: d[col[j]] = a * (1 if TWO else n[j])
             if d:
                 eq.append(d)
         p5 = list(PHASE5)
@@ -688,7 +689,7 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
             d = {}
             for j in recs:
                 ca, cb = V[j].rates.get(a, 0), V[j].rates.get(b, 0)
-                c = (ca * PHASE5[b] - cb * PHASE5[a]) * n[j]
+                c = (ca * PHASE5[b] - cb * PHASE5[a]) * (1 if TWO else n[j])
                 if c: d[col[j]] = c
             eq.append(d)
         Mint = []
@@ -722,7 +723,7 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
     n = dict(n)
     t0 = time.time()
     K, neq = lattice_for(n)
-    for _ in range(12):
+    for _ in range(0 if TWO else 12):  # with two clocks the lattice does not depend on n
         if max(abs(a) for a in longest(K)) <= UNIT // 20:  # a step of at most 5 % of a clock
             break
         n, K = bump(n, K, "coarse lattice")
@@ -735,14 +736,15 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
         LAM = d
         nv = d + 1
         rows = []
-        for i in range(m):  # 1 <= q_i <= UNIT
-            rows.append(({t: float(K[t][i]) for t in range(d) if K[t][i]}, 1.0, float(UNIT)))
+        for i in range(m):  # 1 <= q_i <= UNIT (two clocks: n <= total steps <= n UNIT)
+            lo_i, hi_i = (n[recs[i]], n[recs[i]] * UNIT) if TWO else (1, UNIT)
+            rows.append(({t: float(K[t][i]) for t in range(d) if K[t][i]}, float(lo_i), float(hi_i)))
 
         def net_row(k):
             """net(k) in UNIT-scaled y: coefficient per z, plus source constant."""
             dd = {}
             for t in range(d):
-                s = sum(V[j].rates.get(k, 0) * n[j] * K[t][col[j]] for j in recs)
+                s = sum(V[j].rates.get(k, 0) * (1 if TWO else n[j]) * K[t][col[j]] for j in recs)
                 if s: dd[t] = float(s) / UNIT
             const = sum(float(V[j].rates.get(k, 0)) * cnt[j] for j in srcs)
             return dd, const
@@ -764,13 +766,13 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
         # power: generation scales with clock, draw is per machine
         dd = {}
         for t in range(d):
-            s = sum(V[j].gen * n[j] * K[t][col[j]] for j in recs)
+            s = sum(V[j].gen * (1 if TWO else n[j]) * K[t][col[j]] for j in recs)
             if s: dd[t] = s / UNIT
         const = sum(V[j].gen * cnt[j] for j in srcs) - sum(V[j].power * n[j] for j in recs) - sum(V[j].power * cnt[j] for j in srcs)
         rows.append((dd, -const, None))
         # start near the continuous solution: least-squares z
         Kf = np.array(K, dtype=float).T  # m x d
-        q0 = np.array([x[j] / n[j] * UNIT for j in recs])
+        q0 = np.array([x[j] * UNIT if TWO else x[j] / n[j] * UNIT for j in recs])
         z0 = np.linalg.lstsq(Kf, q0, rcond=None)[0]
         cost = [0.0] * d + [1.0]
         lb = [None] * d + [0.0]
@@ -817,18 +819,35 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
 
 
 # ------------------------------------------------------------- reporting ----
+def steps(q, n, j):
+    """Clock steps of recipe j summed over its machines."""
+    return q[j] if TWO else q[j] * n[j]
+
+
+def clock_text(q, n, j):
+    """Per-machine clock(s) in percent; with two clocks, m machines at a steps and
+    the rest at a - 1 (m = total - n (a - 1), a = ceil(total / n))."""
+    pct = lambda v: ("%.4f" % (100 * v / UNIT)).rstrip("0").rstrip(".")
+    if not TWO:
+        return pct(q[j])
+    y, nn = q[j], n[j]
+    a = -(-y // nn)
+    mm = y - nn * (a - 1)
+    return pct(a) if mm == nn else "%d x %s + %d x %s" % (mm, pct(a), nn - mm, pct(a - 1))
+
+
 def evaluate(V, n, cnt, q, raw):
     """Exact nets (Fractions) and the bill of materials for an integer plan."""
     net = {}
     for j in n:
-        y = Fraction(q[j] * n[j], UNIT)
+        y = Fraction(steps(q, n, j), UNIT)
         for k, a in V[j].rates.items(): net[k] = net.get(k, 0) + a * y
     for j in cnt:
         for k, a in V[j].rates.items(): net[k] = net.get(k, 0) + a * cnt[j]
     # miners back up: draw only what is used
     counts = dict(n); counts.update(cnt)
     total, bom, basis = bom_exact(counts, V)
-    power_gen = sum(V[j].gen * q[j] * n[j] / UNIT for j in n) + sum(V[j].gen * cnt[j] for j in cnt)
+    power_gen = sum(V[j].gen * steps(q, n, j) / UNIT for j in n) + sum(V[j].gen * cnt[j] for j in cnt)
     power_use = sum(V[j].power * n[j] for j in n) + sum(V[j].power * cnt[j] for j in cnt)
     return net, total, bom, basis, power_gen, power_use
 
@@ -837,7 +856,7 @@ def trim_sources(V, n, cnt, q):
     """Fewest sources that still cover the draw, pure nodes first."""
     draw = {}
     for j in n:
-        y = Fraction(q[j] * n[j], UNIT)
+        y = Fraction(steps(q, n, j), UNIT)
         for k, a in V[j].rates.items(): draw[k] = draw.get(k, 0) - a * y
     out = {}
     by_item = {}
@@ -864,6 +883,8 @@ def main():
     ap.add_argument("--prune", type=float, default=0.05)
     ap.add_argument("--out", default=str(ROOT / "data" / "optimized_plan.json"))
     ap.add_argument("--time", type=float, default=120)
+    ap.add_argument("--two-clocks", action="store_true",
+                    help="let each recipe run its machines at two adjacent clocks (m at a steps, the rest at a - 1)")
     ap.add_argument("--steps", type=int, default=10 ** 6,
                     help="clock steps per 100 %% (default 1000000, i.e. 0.0001 %%; 100 = whole percents)")
     ap.add_argument("--cache", help="save/reuse the continuous result in this JSON file")
@@ -871,8 +892,8 @@ def main():
                     help="recipe ids left out, comma-separated (default: %(default)s; '' for none)")
     args = ap.parse_args()
     log = lambda s: print(s, flush=True)
-    global UNIT, SHORT
-    UNIT, SHORT = args.steps, 0.003 * args.steps
+    global UNIT, SHORT, TWO
+    UNIT, SHORT, TWO = args.steps, 0.003 * args.steps, args.two_clocks
     if UNIT != 10 ** 6:
         log("clock steps: 1/%d of 100 %% (%.4f %%)" % (UNIT, 100 / UNIT))
     recs, raw, have = scope()
@@ -948,7 +969,7 @@ def main():
     sheet = {"c": {}, "f": {}, "n": {}}
     for j in n:
         rid = V[j].id
-        sheet["c"][rid] = q[j] / UNIT
+        sheet["c"][rid] = steps(q, n, j) / (n[j] * UNIT)
         sheet["n"][rid] = n[j]
     for j, c in cnt.items():
         v = V[j]
@@ -970,16 +991,16 @@ def main():
     for k, amt in list(EQUIPMENT.items()) + list(PHASE5.items()):
         makers = [j for j in n if V[j].rec["outs"][0][0] == k]
         if makers:
-            j = max(makers, key=lambda j: q[j] * n[j])
+            j = max(makers, key=lambda j: steps(q, n, j))
             sheet["f"][V[j].id] = sheet["f"].get(V[j].id, 0) + amt / T
     settings = {"timescale": T, "lane": LANE, "rules": RULES, "extra": FIXED_BUILDINGS, "ficsmas": False, "cal": 2}
     out = {"app": "satisfactory-production-sheet", "v": 1, "sheet": sheet, "settings": settings,
            "optimizer": {"T_min": T, "T_continuous_min": 1 / lam, "T_continuous_unpruned_min": T0,
-                         "prune": args.prune, "excluded": excl, "clock_steps": UNIT, "limited_by": lim, "power_made_MW": pg, "power_drawn_MW": pu,
+                         "prune": args.prune, "excluded": excl, "clock_steps": UNIT, "two_clocks": TWO, "limited_by": lim, "power_made_MW": pg, "power_drawn_MW": pu,
                          "phase5": PHASE5, "equipment": EQUIPMENT, "extra_buildings": FIXED_BUILDINGS,
                          "checks": "ok" if not bad else str(bad), "gathered_by_hand": gathered,
                          "recipes": sorted(({"id": V[j].id, "name": V[j].rec["name"], "machine": V[j].rec["m"],
-                                             "machines": n[j], "clock_pct": "%.4f" % (100 * q[j] / UNIT)} for j in n),
+                                             "machines": n[j], "clock_pct": clock_text(q, n, j)} for j in n),
                                            key=lambda r: (-r["machines"], r["id"])),
                          "sources": [{"id": V[j].id, "count": c} for j, c in sorted(cnt.items(), key=lambda t: V[t[0]].id)],
                          "buildings": dict(sorted(total.items())),
