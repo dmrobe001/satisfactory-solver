@@ -663,87 +663,127 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
     items = sorted({k for j in recs for k in V[j].rates} | {k for j in srcs for k in V[j].rates})
     m = len(recs)
     col = {j: i for i, j in enumerate(recs)}
-    # exact equalities: non-BOM, non-raw items, and Phase 5 proportions
-    eq = []
-    for k in items:
-        if k in usable or k in raw:
-            continue
-        d = {}
-        for j in recs:
-            a = V[j].rates.get(k)
-            if a: d[col[j]] = a * n[j]
-        if d:
+
+    def lattice_for(n):
+        """Integer basis of the clocks q (one per recipe, n[j] machines each) that
+        balance every non-BOM item exactly and keep Phase 5 in proportion."""
+        eq = []
+        for k in items:
+            if k in usable or k in raw:
+                continue
+            d = {}
+            for j in recs:
+                a = V[j].rates.get(k)
+                if a: d[col[j]] = a * n[j]
+            if d:
+                eq.append(d)
+        p5 = list(PHASE5)
+        for a, b in zip(p5, p5[1:]):  # net_a * P5_b - net_b * P5_a = 0
+            d = {}
+            for j in recs:
+                ca, cb = V[j].rates.get(a, 0), V[j].rates.get(b, 0)
+                c = (ca * PHASE5[b] - cb * PHASE5[a]) * n[j]
+                if c: d[col[j]] = c
             eq.append(d)
-    p5 = [k for k in PHASE5]
-    for a, b in zip(p5, p5[1:]):  # net_a * P5_b - net_b * P5_a = 0
-        d = {}
-        for j in recs:
-            ca, cb = V[j].rates.get(a, 0), V[j].rates.get(b, 0)
-            c = (ca * PHASE5[b] - cb * PHASE5[a]) * n[j]
-            if c: d[col[j]] = c
-        eq.append(d)
-    # scale each row to integers
-    Mint = []
-    for d in eq:
-        L = 1
-        for c in d.values(): L = L * Fraction(c).denominator // math.gcd(L, Fraction(c).denominator)
-        Mint.append({i: int(c * L) for i, c in d.items()})
+        Mint = []
+        for d in eq:  # scale each row to integers
+            L = 1
+            for c in d.values(): L = L * Fraction(c).denominator // math.gcd(L, Fraction(c).denominator)
+            Mint.append({i: int(c * L) for i, c in d.items()})
+        return int_kernel(Mint, m), len(Mint)
+
+    def longest(K):
+        return max(K, key=lambda b: sum(a * a for a in b))
+
+    def bump(n, K, why):
+        """One more machine (at a lower clock) on the recipe of the longest lattice
+        direction that shortens it most.  Small machine counts along a chain of exact
+        ratios can make the only whole-number step longer than a clock's range."""
+        v = longest(K)
+        cands = sorted((i for i in range(m) if v[i]), key=lambda i: -abs(v[i]))[:6]
+        best = None
+        for i in cands:
+            j = recs[i]
+            n2 = dict(n); n2[j] += 1
+            K2, _ = lattice_for(n2)
+            score = max(abs(a) for a in longest(K2))
+            if best is None or score < best[0]:
+                best = (score, j, n2, K2)
+        log("  %s: one more %s (%d -> %d machines); longest step %d -> %d"
+            % (why, V[best[1]].rec["name"], n[best[1]], best[2][best[1]], max(abs(a) for a in v), best[0]))
+        return best[2], best[3]
+
+    n = dict(n)
     t0 = time.time()
-    K = int_kernel(Mint, m)
+    K, neq = lattice_for(n)
+    for _ in range(12):
+        if max(abs(a) for a in longest(K)) <= UNIT // 20:  # a step of at most 5 % of a clock
+            break
+        n, K = bump(n, K, "coarse lattice")
     d = len(K)
     log("integer stage: %d recipes, %d exact balances, lattice of dimension %d (%.1f s), largest basis entry %d"
-        % (m, len(Mint), d, time.time() - t0, max((abs(a) for b in K for a in b), default=0)))
-    # MIP over z (d integers) + lam; q = K^T z
-    LAM = d
-    nv = d + 1
-    rows = []
-    for i in range(m):  # 1 <= q_i <= UNIT
-        rows.append(({t: float(K[t][i]) for t in range(d) if K[t][i]}, 1.0, float(UNIT)))
+        % (m, neq, d, time.time() - t0, max((abs(a) for b in K for a in b), default=0)))
+    def mip(n, K):
+        d = len(K)
+        # MIP over z (d integers) + lam; q = K^T z
+        LAM = d
+        nv = d + 1
+        rows = []
+        for i in range(m):  # 1 <= q_i <= UNIT
+            rows.append(({t: float(K[t][i]) for t in range(d) if K[t][i]}, 1.0, float(UNIT)))
 
-    def net_row(k):
-        """net(k) in UNIT-scaled y: coefficient per z, plus source constant."""
+        def net_row(k):
+            """net(k) in UNIT-scaled y: coefficient per z, plus source constant."""
+            dd = {}
+            for t in range(d):
+                s = sum(V[j].rates.get(k, 0) * n[j] * K[t][col[j]] for j in recs)
+                if s: dd[t] = float(s) / UNIT
+            const = sum(float(V[j].rates.get(k, 0)) * cnt[j] for j in srcs)
+            return dd, const
+        for k in items:
+            if k in raw:
+                dd, c = net_row(k)
+                rows.append((dd, -c, None))
+            elif k in usable and k not in PHASE5:
+                dd, c = net_row(k)
+                dd[LAM] = -bom.get(k, 0.0)
+                rows.append((dd, -c, None))
+        for k in PHASE5:
+            dd, c = net_row(k)
+            dd[LAM] = -PHASE5[k]
+            rows.append((dd, -c, None))
+        for k in usable:
+            if k not in items and bom.get(k, 0) > 0:
+                raise RuntimeError("BOM item %s is not made" % k)
+        # power: generation scales with clock, draw is per machine
         dd = {}
         for t in range(d):
-            s = sum(V[j].rates.get(k, 0) * n[j] * K[t][col[j]] for j in recs)
-            if s: dd[t] = float(s) / UNIT
-        const = sum(float(V[j].rates.get(k, 0)) * cnt[j] for j in srcs)
-        return dd, const
-    for k in items:
-        if k in raw:
-            dd, c = net_row(k)
-            rows.append((dd, -c, None))
-        elif k in usable and k not in PHASE5:
-            dd, c = net_row(k)
-            dd[LAM] = -bom.get(k, 0.0)
-            rows.append((dd, -c, None))
-    for k in PHASE5:
-        dd, c = net_row(k)
-        dd[LAM] = -PHASE5[k]
-        rows.append((dd, -c, None))
-    for k in usable:
-        if k not in items and bom.get(k, 0) > 0:
-            raise RuntimeError("BOM item %s is not made" % k)
-    # power: generation scales with clock, draw is per machine
-    dd = {}
-    for t in range(d):
-        s = sum(V[j].gen * n[j] * K[t][col[j]] for j in recs)
-        if s: dd[t] = s / UNIT
-    const = sum(V[j].gen * cnt[j] for j in srcs) - sum(V[j].power * n[j] for j in recs) - sum(V[j].power * cnt[j] for j in srcs)
-    rows.append((dd, -const, None))
-    # start near the continuous solution: least-squares z
-    Kf = np.array(K, dtype=float).T  # m x d
-    q0 = np.array([x[j] / n[j] * UNIT for j in recs])
-    z0 = np.linalg.lstsq(Kf, q0, rcond=None)[0]
-    cost = [0.0] * d + [1.0]
-    lb = [None] * d + [0.0]
-    ub = [None] * d + [None]
-    integ = [1] * d + [0]
-    ok, sol, obj = solve(nv, cost, rows, lb, ub, integer=integ, time_limit=time_limit, sense_max=True)
-    if not ok:
+            s = sum(V[j].gen * n[j] * K[t][col[j]] for j in recs)
+            if s: dd[t] = s / UNIT
+        const = sum(V[j].gen * cnt[j] for j in srcs) - sum(V[j].power * n[j] for j in recs) - sum(V[j].power * cnt[j] for j in srcs)
+        rows.append((dd, -const, None))
+        # start near the continuous solution: least-squares z
+        Kf = np.array(K, dtype=float).T  # m x d
+        q0 = np.array([x[j] / n[j] * UNIT for j in recs])
+        z0 = np.linalg.lstsq(Kf, q0, rcond=None)[0]
+        cost = [0.0] * d + [1.0]
+        lb = [None] * d + [0.0]
+        ub = [None] * d + [None]
+        integ = [1] * d + [0]
+        ok, sol, obj = solve(nv, cost, rows, lb, ub, integer=integ, time_limit=time_limit, sense_max=True)
+        return sol if ok else None
+
+    for attempt in range(6):
+        sol = mip(n, K)
+        if sol is not None:
+            break
+        n, K = bump(n, K, "no whole-number point")
+        d = len(K)
+    else:
         raise RuntimeError("integer stage infeasible")
     z = [int(round(sol[t])) for t in range(d)]
     q = {j: sum(z[t] * K[t][col[j]] for t in range(d)) for j in recs}
-    return n, cnt, q, z0
+    return n, cnt, q, None
 
 
 # ------------------------------------------------------------- reporting ----
