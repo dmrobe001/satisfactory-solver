@@ -25,6 +25,8 @@ capability, so the button only appears on claude.ai.
 | `tools/test_lattice.js` | Command-line checks of the lattice engine. |
 | `src/buildings.js` | Building counts and bill of materials (support-building rules, lanes, extras), shared by the production sheet and the recipe matrix. |
 | `src/matrix_app.js`, `src/matrix.css`, `src/matrix.html` | The third page, recipe matrix. |
+| `tools/optimize.py` | Optimizer: the fastest self-building factory for Phase 5 (needs `pip install numpy highspy`). Writes `data/optimized_plan.json`. |
+| `tools/check_plan.js` | Re-checks an optimizer plan with the production sheet's own solver and bill-of-materials code. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
 ## Rebuild
@@ -231,3 +233,69 @@ rows still count). Two frozen footer rows cover every recipe in the sheet:
 the rebuild rate (bill of materials from `src/buildings.js` divided by the
 rebuild time) and net = made - used - rebuild. It starts from the production
 sheet's default plan and imports production-sheet exports as well as its own.
+
+## Optimizer (Phase 5 build time)
+
+`python3 tools/optimize.py` looks for the factory that makes its whole bill of
+materials in the least time T, and writes `data/optimized_plan.json`, a
+production-sheet export (import it into the sheet or the matrix; the sheet's
+rebuild time is set to T). `node tools/check_plan.js` re-checks that file with
+the pages' own code. A run from scratch takes roughly half an hour;
+`--cache FILE` keeps the continuous result for re-runs of the integer stages.
+
+**What is made.** The bill of materials is
+* every building the factory needs: its machines, extractors and generators,
+  plus the sheet's support rules (per machine, lane and pipe), with the
+  per-item-type rule set to 5 industrial storage containers and 2 smart
+  splitters per solid item type (1 fluid buffer per fluid type);
+* the fixed list of extra buildings and equipment at the top of the script;
+* the Phase 5 parts (1,000 Nuclear Pasta, 1,000 Biochemical Sculptors,
+  256 AI Expansion Servers, 200 Ballistic Warp Drives), in exact proportion.
+
+**Rules.**
+* Items in the bill of materials need net >= (amount) / T; Phase 5 parts are in
+  exact proportion; every other item balances exactly (net = 0).
+* Raw resources: Miner Mk.3, Oil Extractors and well pressurizers all at 250 %,
+  on the 1.2 nodes (wiki counts); any number of water extractors at 100 %;
+  geothermal generators on geysers (average output). A source may be drawn
+  below capacity (it backs up); its power and buildings count in full.
+* Clocks are capped at 100 %, and a machine draws its full 100 % power at any
+  clock; generators make power in proportion to clock (fuel burned).
+  Net power >= 0.
+* No Somersloops (no augmentors, no amplification); recipes that need
+  hand-gathered items are left out. The Gas Nobelisk needs Biomass, so it is
+  dropped from the list; Dimensional Depot Uploaders need Mercer Spheres, which
+  are reported as gathered by hand and not timed.
+* Wells: the wiki gives satellite totals only (nitrogen: 6 wells, 2/7/36
+  impure/normal/pure; oil: 3 wells, 8/6/4), so each well is an average well.
+  The sheet cannot overclock a pressurizer, so its pressurizer power reads low.
+
+**Method.**
+1. Continuous linear program. For a fixed lam = 1/T every constraint is
+   linear (the bill of materials is linear in the machine counts), so the best
+   lam is found by bisection, solving with HiGHS (an open-source linear and
+   mixed-integer solver). The item-type counts and the set of
+   bill-of-materials items are taken from the previous solution and the
+   solve is repeated until they stop changing.
+2. Pruning: recipes that make under 5 % (`--prune`) of every product they make,
+   and generators under 5 % of the power, are removed and the problem solved
+   again, until nothing is removed.
+3. Whole machines: a mixed-integer program with whole machine counts (each
+   clock <= 100 %) and whole sources, bisecting lam down from the continuous
+   optimum.
+4. Exact clocks: with the machine counts fixed, each machine's clock is a whole
+   number of 0.0001 % steps. The exact balances (rational recipe rates) and the
+   Phase 5 proportions define an integer lattice; its basis is found by integer
+   column reduction, reduced with LLL (Lenstra-Lenstra-Lovasz), and a
+   mixed-integer program over the lattice coordinates maximises lam. Every
+   integer point of the lattice balances exactly, so the result is checked in
+   exact rational arithmetic, not to a tolerance.
+
+**Current result.** T = 68.2 min (65.5 min continuous, 66.4 min with whole
+machines). The plan has 113 recipes on 12,162 machines plus 1,019 sources. Power is
+392.8 GW, from 1,559 rocket-fuel generators and the 9 pure geysers. Every quartz,
+bauxite, SAM, crude oil and nitrogen node is used, so those are what bind;
+only the better iron, copper, limestone and coal nodes are used, because each
+miner costs 151 MW and its buildings; pruning at 5 % changed T by less than 0.01 min. The
+bill of materials is 569,833 buildings. These are good solutions, not proven
+optima: the integer stages fix choices made by the stage before them.

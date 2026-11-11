@@ -866,8 +866,8 @@ def main():
             fl = v.id.split("_", 1)[1]
             nw, sats = WELLS[fl]
             sheet["n"]["WellPressurizer"] = sheet["n"].get("WellPressurizer", 0) + c
-            for pu, s in zip(PUR, sats):
-                rid = "Well_%s_%s" % (pu, fl)
+            for pur, s in zip(PUR, sats):
+                rid = "Well_%s_%s" % (pur, fl)
                 k = math.ceil(Fraction(s * c, nw) - Fraction(1, 10 ** 9))
                 if k: sheet["c"][rid] = OC; sheet["n"][rid] = k
     # equipment and Phase 5 as adjustments on their makers, so the sheet shows them as wanted
