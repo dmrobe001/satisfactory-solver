@@ -736,8 +736,8 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
         LAM = d
         nv = d + 1
         rows = []
-        for i in range(m):  # 1 <= q_i <= UNIT (two clocks: n <= total steps <= n UNIT)
-            lo_i, hi_i = (n[recs[i]], n[recs[i]] * UNIT) if TWO else (1, UNIT)
+        for i in range(m):  # 1 <= q_i <= UNIT (two clocks: 1 <= total steps <= n UNIT)
+            lo_i, hi_i = (1, n[recs[i]] * UNIT) if TWO else (1, UNIT)
             rows.append(({t: float(K[t][i]) for t in range(d) if K[t][i]}, float(lo_i), float(hi_i)))
 
         def net_row(k):
