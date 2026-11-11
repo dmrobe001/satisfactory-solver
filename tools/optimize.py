@@ -108,6 +108,10 @@ GEO_MW = (100, 200, 400)  # average output
 OC = 2.5                  # extraction clock
 PUR = ("Impure", "Normal", "Pure")
 
+# Recipes left out by choice (a smaller factory with fewer recipes; see README):
+# standard Aluminum Ingot and Caterium Wire.
+EXCLUDE = ["IngotAluminum", "Alternate_Wire_2"]
+
 ITEM_KEYS = list(ITEMS)
 MAKEABLE = set()  # items reachable without hand gathering (filled in main)
 FLUID = {k for k, v in ITEMS.items() if v["f"]}
@@ -791,6 +795,8 @@ def main():
     ap.add_argument("--out", default=str(ROOT / "data" / "optimized_plan.json"))
     ap.add_argument("--time", type=float, default=120)
     ap.add_argument("--cache", help="save/reuse the continuous result in this JSON file")
+    ap.add_argument("--exclude", default=",".join(EXCLUDE),
+                    help="recipe ids left out, comma-separated (default: %(default)s; '' for none)")
     args = ap.parse_args()
     log = lambda s: print(s, flush=True)
     recs, raw, have = scope()
@@ -799,6 +805,13 @@ def main():
         if k not in have:
             log("cannot be made without gathered items, dropped from the bill of materials: %s" % ITEMS[k]["n"])
             EQUIPMENT.pop(k, None)
+    excl = [e for e in args.exclude.split(",") if e]
+    unknown = [e for e in excl if e not in {r["id"] for r in recs}]
+    if unknown:
+        raise SystemExit("not an in-scope recipe: " + ", ".join(unknown))
+    recs = [r for r in recs if r["id"] not in excl]
+    if excl:
+        log("left out by choice: " + ", ".join(r["name"] for r in R_ALL if r["id"] in excl))
     V = make_vars(recs)
     log("%d production recipes in scope (%d need hand-gathered items and are left out)"
         % (len(recs), sum(1 for r in R_ALL if r["kind"] in ("machine", "burn") and not r.get("xmas")) - len(recs)))
@@ -879,7 +892,7 @@ def main():
     settings = {"timescale": T, "lane": LANE, "rules": RULES, "extra": FIXED_BUILDINGS, "ficsmas": False, "cal": 2}
     out = {"app": "satisfactory-production-sheet", "v": 1, "sheet": sheet, "settings": settings,
            "optimizer": {"T_min": T, "T_continuous_min": 1 / lam, "T_continuous_unpruned_min": T0,
-                         "prune": args.prune, "limited_by": lim, "power_made_MW": pg, "power_drawn_MW": pu,
+                         "prune": args.prune, "excluded": excl, "limited_by": lim, "power_made_MW": pg, "power_drawn_MW": pu,
                          "phase5": PHASE5, "equipment": EQUIPMENT, "extra_buildings": FIXED_BUILDINGS,
                          "checks": "ok" if not bad else str(bad), "gathered_by_hand": gathered,
                          "recipes": sorted(({"id": V[j].id, "name": V[j].rec["name"], "machine": V[j].rec["m"],
