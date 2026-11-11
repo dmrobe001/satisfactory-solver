@@ -814,7 +814,7 @@ def main():
         log("left out by choice: " + ", ".join(r["name"] for r in R_ALL if r["id"] in excl))
     V = make_vars(recs)
     log("%d production recipes in scope (%d need hand-gathered items and are left out)"
-        % (len(recs), sum(1 for r in R_ALL if r["kind"] in ("machine", "burn") and not r.get("xmas")) - len(recs)))
+        % (len(recs), sum(1 for r in R_ALL if r["kind"] in ("machine", "burn") and not r.get("xmas")) - len(recs) - len(excl)))
     model = Model(V, raw)
     cache = Path(args.cache) if args.cache else None
     if cache and cache.exists():
@@ -829,7 +829,14 @@ def main():
         if cache:
             cache.write_text(json.dumps({"T0": T0, "lam": lam, "x": x, "usable": sorted(usable), "allowed": model.allowed}))
     log("continuous optimum after pruning: T = %.1f min" % (1 / lam))
-    x, n, cnt = whole_counts(model, x, usable, lam, log, args.time)
+    wc = Path(str(cache) + ".whole.json") if cache else None
+    if wc and wc.exists():
+        c = json.loads(wc.read_text())
+        x, n, cnt = c["x"], {int(k): v for k, v in c["n"].items()}, {int(k): v for k, v in c["cnt"].items()}
+    else:
+        x, n, cnt = whole_counts(model, x, usable, lam, log, args.time)
+        if wc:
+            wc.write_text(json.dumps({"x": x, "n": n, "cnt": cnt}))
     n, cnt, q, _ = integer_stage(model, x, n, cnt, log, args.time)
     for _ in range(3):  # sources follow the exact draw; re-run with them fixed
         cnt2 = trim_sources(V, n, cnt, q)
