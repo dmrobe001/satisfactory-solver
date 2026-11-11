@@ -286,16 +286,27 @@ the pages' own code. A run from scratch takes roughly half an hour;
 4. Exact clocks: with the machine counts fixed, each machine's clock is a whole
    number of 0.0001 % steps. The exact balances (rational recipe rates) and the
    Phase 5 proportions define an integer lattice; its basis is found by integer
-   column reduction, reduced with LLL (Lenstra-Lenstra-Lovasz), and a
-   mixed-integer program over the lattice coordinates maximises lam. Every
+   column reduction and reduced with LLL (Lenstra-Lenstra-Lovasz). Every
    integer point of the lattice balances exactly, so the result is checked in
    exact rational arithmetic, not to a tolerance.
+   * If a lattice step is longer than 5 % of a clock (small machine counts along
+     a chain of exact ratios, such as the Phase 5 parts, can make the only step
+     longer than a clock's whole range), one machine is added to the recipe that
+     shortens it most.
+   * Directions up to 0.3 % of a clock are solved continuously and rounded, with
+     every constraint tightened by the most rounding can move it; only the long
+     directions are searched as integers. A full integer search, started from
+     the rounded point, then tries to improve it (a plain integer search stalls
+     or runs out of memory here).
 
-**Current result.** T = 68.2 min (65.5 min continuous, 66.4 min with whole
-machines). The plan has 113 recipes on 12,162 machines plus 1,019 sources. Power is
-392.8 GW, from 1,559 rocket-fuel generators and the 9 pure geysers. Every quartz,
-bauxite, SAM, crude oil and nitrogen node is used, so those are what bind;
-only the better iron, copper, limestone and coal nodes are used, because each
-miner costs 151 MW and its buildings; pruning at 5 % changed T by less than 0.01 min. The
-bill of materials is 569,833 buildings. These are good solutions, not proven
-optima: the integer stages fix choices made by the stage before them.
+**Current result** (standard Aluminum Ingot and Caterium Wire left out by
+choice, `--exclude`, for a smaller factory with fewer recipes; leaving them in
+gave 68.2 min with 12,162 machines). T = 69.9 min: 66.6 min continuous, 67.8 min
+with whole machines, and 68.2 min is the continuous bound for the exact-clock
+stage. The plan has 112 recipes on 10,644 machines plus 997 sources and
+504,709 buildings in all. Power is 382 GW, from 1,524 rocket-fuel generators
+and the 9 pure geysers. Every quartz, bauxite, SAM, crude oil and nitrogen
+node is used, so those are what bind; only the better iron, copper, limestone
+and coal nodes are used, because each miner costs 151 MW and its buildings.
+These are good solutions, not proven optima: the integer stages fix choices
+made by the stage before them.
