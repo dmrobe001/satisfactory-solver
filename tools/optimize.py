@@ -649,6 +649,7 @@ def lll(B, delta=0.99):
 
 
 UNIT = 10 ** 6  # clock steps per 100 % (0.0001 %)
+SHORT = 3000    # lattice directions up to this length (0.3 % of a clock) are rounded, not searched
 
 
 def integer_stage(model, x, n, cnt, log, time_limit=120):
@@ -769,9 +770,24 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
         cost = [0.0] * d + [1.0]
         lb = [None] * d + [0.0]
         ub = [None] * d + [None]
-        integ = [1] * d + [0]
-        ok, sol, obj = solve(nv, cost, rows, lb, ub, integer=integ, time_limit=time_limit, sense_max=True)
-        return sol if ok else None
+        # Short lattice directions are solved continuously and rounded afterwards;
+        # each row is tightened by the most that rounding can move it (half the sum
+        # of its short coefficients), so the rounded point still satisfies it.  Only
+        # the long directions are searched as integers.  Full search as a fallback.
+        for hybrid in (True, False):
+            short = [hybrid and sum(a * a for a in K[t]) <= SHORT ** 2 for t in range(d)]
+            tight = []
+            for dd, lo, hi in rows:
+                delta = 0.5 * sum(abs(a) for t, a in dd.items() if t < d and short[t])
+                tight.append((dd, None if lo is None else lo + delta, None if hi is None else hi - delta))
+            integ = [0 if short[t] else 1 for t in range(d)] + [0]
+            ok, sol, obj = solve(nv, cost, tight, lb, ub, integer=integ, time_limit=time_limit, sense_max=True)
+            if ok:
+                if hybrid:
+                    log("  %d of %d lattice directions rounded, %d searched as integers"
+                        % (sum(short), d, d - sum(short)))
+                return sol
+        return None
 
     for attempt in range(6):
         sol = mip(n, K)
