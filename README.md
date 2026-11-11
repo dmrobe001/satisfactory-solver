@@ -19,10 +19,12 @@ capability, so the button only appears on claude.ai.
 | `data/game.json` | Compact recipe/item/building data the page uses. |
 | `src/solver.js` | The update rules, no DOM. Runs in node and in the browser. |
 | `src/app.js`, `src/style.css`, `src/index.html` | The page. |
-| `tools/build.py` | Inlines everything into `dist/satisfactory-sheet.html` and `dist/lattice-clocks.html`. |
+| `tools/build.py` | Inlines everything into `dist/satisfactory-sheet.html`, `dist/lattice-clocks.html` and `dist/recipe-matrix.html`. |
 | `tools/test_solver.js` | Command-line checks of the solver. |
 | `src/lattice.js`, `src/lattice_app.js`, `src/lattice.css`, `src/lattice.html` | The second page, lattice clocks (engine, page script, styles, page). |
 | `tools/test_lattice.js` | Command-line checks of the lattice engine. |
+| `src/buildings.js` | Building counts and bill of materials (support-building rules, lanes, extras), shared by the production sheet and the recipe matrix. |
+| `src/matrix_app.js`, `src/matrix.css`, `src/matrix.html` | The third page, recipe matrix. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
 ## Rebuild
@@ -216,3 +218,16 @@ Method:
 
 "Use sheet's recipes" reads a production-sheet export and turns every recipe
 that is not running there off.
+
+## Recipe matrix (third page)
+
+`dist/recipe-matrix.html` is a recipe x product table. Choose products; the
+rows are the recipes that make or use at least one of them and the columns are
+every product those recipes touch. Each cell is base / actual: the recipe's
+net rate of that product for one machine at 100 % (power in MW), then that
+rate x clock x count. Clock and count are typed in (whole machines; nothing is
+resized). A Hide tickbox per row hides it unless "Show hidden" is on (hidden
+rows still count). Two frozen footer rows cover every recipe in the sheet:
+the rebuild rate (bill of materials from `src/buildings.js` divided by the
+rebuild time) and net = made - used - rebuild. It starts from the production
+sheet's default plan and imports production-sheet exports as well as its own.

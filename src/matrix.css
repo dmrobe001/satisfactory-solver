@@ -1,0 +1,53 @@
+/* Recipe matrix: a filterable recipe x product table with frozen header,
+   first column and two frozen footer rows. Shares the sheet's tokens. */
+.io-top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.pick { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; position: relative; }
+.pick-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.pick .srch, .pick .chk { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.85rem; }
+.pick .srch { flex-wrap: wrap; }
+.pick .srch input { width: min(280px, 62vw); background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; }
+.pick .chk input[type="number"] { width: 5.5em; }
+.plist {
+  position: absolute; z-index: 5; left: 10px; top: 44px; width: min(420px, calc(100% - 20px)); max-height: 320px; overflow: auto;
+  background: var(--surface); border: 1px solid var(--accent); border-radius: 6px; box-shadow: 0 6px 20px rgb(0 0 0 / 0.18); padding: 4px 0;
+}
+.plist label { display: flex; gap: 8px; align-items: center; padding: 3px 10px; cursor: pointer; font-size: 0.88rem; }
+.plist label:hover, .plist label.cur { background: var(--surface-2); }
+.plist .k { margin-left: auto; color: var(--muted); font-size: 0.75rem; }
+.plist .none { padding: 6px 10px; color: var(--muted); font-size: 0.85rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 6px; max-height: 64px; overflow: auto; }
+.chips:empty { display: none; }
+.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--surface-2); border: 1px solid var(--accent); border-radius: 12px; padding: 1px 4px 1px 9px; font-size: 0.82rem; }
+.chip button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 0.95rem; line-height: 1; padding: 0 4px; }
+.chip button:hover { color: var(--red-edge); }
+
+.mwrap { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
+.mstatus { padding: 2px 4px 6px; }
+.mscroll { overflow: auto; max-height: calc(100vh - 210px); min-height: 240px; border: 1px solid var(--line); border-radius: 4px; }
+#matrix { border-collapse: separate; border-spacing: 0; font-size: 0.82rem; }
+#matrix th, #matrix td { padding: 3px 8px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); white-space: nowrap; background: var(--surface); }
+#matrix thead th { position: sticky; top: 0; z-index: 2; background: var(--surface-2); font-family: var(--font-display); font-weight: 600; letter-spacing: 0.02em; vertical-align: bottom; }
+#matrix thead th.sel { box-shadow: inset 0 -3px 0 var(--accent); }
+#matrix thead th .u { display: block; font-family: var(--font-body); font-weight: 400; font-size: 0.7rem; color: var(--muted); }
+#matrix tfoot td, #matrix tfoot th { position: sticky; z-index: 2; background: var(--surface-2); font-weight: 500; }
+#matrix tfoot tr.f1 > * { bottom: var(--f2h, 26px); }
+#matrix tfoot tr.f2 > * { bottom: 0; border-top: 1px solid var(--line); }
+#matrix .rc { position: sticky; left: 0; z-index: 1; text-align: left; min-width: 220px; max-width: 320px; white-space: normal; }
+#matrix thead .rc, #matrix tfoot .rc { z-index: 3; }
+#matrix td.v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+#matrix td.v .b { color: var(--muted); }
+#matrix td.v.pos .a { color: var(--good); }
+#matrix td.v.neg .a { color: var(--red-edge); }
+#matrix td.v.zero .a { color: var(--muted); }
+#matrix td.e { text-align: center; }
+#matrix td.e input.num { width: 6.5em; font-family: var(--font-mono); text-align: right; }
+#matrix td.e input.cnt { width: 4.5em; }
+#matrix tr.hid td, #matrix tr.hid th { opacity: 0.55; }
+#matrix tr.on .rc .rn { font-weight: 600; }
+#matrix .rm { display: block; color: var(--muted); font-size: 0.74rem; }
+#matrix tfoot td.v.neg { background: var(--red-bg); }
+#matrix .colhide { display: none; }
+#matrix.showhid .colhide { display: table-cell; }
+.mnotes { margin-top: 10px; }
+.mnotes summary { cursor: pointer; color: var(--muted); }
+.empty-msg { padding: 24px; color: var(--muted); }

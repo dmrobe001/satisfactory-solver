@@ -1,0 +1,71 @@
+<title>Satisfactory Recipe Matrix</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+/*__MCSS__*/
+</style>
+
+<header class="top">
+  <div>
+    <h1>Satisfactory Recipe Matrix</h1>
+    <div class="sub">Satisfactory 1.2. Every recipe against every product. Pick products to see the recipes that make or use them.</div>
+  </div>
+  <div class="io-top">
+    <button class="btn" type="button" id="btnExport" hidden>Export state</button>
+    <label class="btn" for="fileState" title="Load a state exported from this page, or a production-sheet export">Import</label>
+    <input type="file" id="fileState" accept=".json,application/json" hidden>
+    <button class="btn" type="button" id="btnDefault">Load default plan</button>
+    <button class="btn danger" type="button" id="btnZero">Set all counts to 0</button>
+    <span class="count" id="ioMsg" role="status"></span>
+  </div>
+</header>
+
+<section class="pick" aria-label="Products">
+  <div class="pick-row">
+    <label class="srch">Products <input type="search" id="pq" placeholder="type to find a product" autocomplete="off" aria-controls="plist"></label>
+    <button class="btn" type="button" id="btnRunning" title="Select every product that a recipe with a count above 0 makes or uses">Products in use</button>
+    <button class="btn" type="button" id="btnAll">Select all</button>
+    <button class="btn" type="button" id="btnNone">Clear</button>
+    <label class="chk"><input type="checkbox" id="showHidden"> Show hidden</label>
+    <label class="chk"><input type="checkbox" id="ficsmas"> FICSMAS</label>
+    <label class="chk">Rebuild time <input class="cell-in" type="number" id="timescale" min="0.01" step="any" aria-label="Rebuild time in minutes"> min</label>
+  </div>
+  <div class="plist" id="plist" role="listbox" aria-multiselectable="true" hidden></div>
+  <div class="chips" id="chips"></div>
+</section>
+
+<section class="mwrap" aria-label="Recipe matrix">
+  <div class="mstatus count" id="mstatus"></div>
+  <div class="mscroll" id="mscroll"><table id="matrix"></table></div>
+</section>
+
+<details class="mnotes">
+  <summary>How the numbers are worked out</summary>
+  <div class="prose">
+    <ul>
+      <li>Rows are the recipes that make or use at least one selected product; columns are the products those recipes make or use. Each cell is <b>base / actual</b>: the net rate (per minute; m³ for fluids, MW for power) of one machine at 100%, then that rate × clock × count. Production is positive, consumption negative.</li>
+      <li>Power: consumers draw their 100% power × clock<sup>1.32</sup>; generators scale with clock. The Alien Power Augmenter’s boost is not in its row, but it is in the Power net.</li>
+      <li><b>Rebuild /min</b> is the bill of materials of every building the sheet needs, divided by the rebuild time, with the production sheet’s rules (support buildings per machine, lane and item type, plus its default extras). <b>Net /min</b> is everything made minus everything used minus the rebuild rate. Both footer rows count every recipe in the sheet, not only the rows shown.</li>
+      <li>Clocks and counts are typed in; nothing is resized automatically here (the production sheet does that). Hidden rows stay in the totals.</li>
+    </ul>
+  </div>
+</details>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__PLAN__*/
+</script>
+<script>
+/*__SOLVER__*/
+</script>
+<script>
+/*__BUILDINGS__*/
+</script>
+<script>
+/*__MAPP__*/
+</script>
