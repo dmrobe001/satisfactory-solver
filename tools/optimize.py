@@ -333,7 +333,7 @@ def bom_exact(counts, V, extra_items=True):
 
 
 # ------------------------------------------------------------- LP helpers ----
-def solve(nv, cost, rows, lb, ub, integer=None, time_limit=None, sense_max=False):
+def solve(nv, cost, rows, lb, ub, integer=None, time_limit=None, sense_max=False, start=None):
     """rows: list of (dict col->coef, lo, hi).  Returns (status, x, obj)."""
     h = highspy.Highs()
     h.setOptionValue("output_flag", False)
@@ -368,6 +368,11 @@ def solve(nv, cost, rows, lb, ub, integer=None, time_limit=None, sense_max=False
         lp.integrality_ = [highspy.HighsVarType.kInteger if integer[j] else highspy.HighsVarType.kContinuous
                            for j in range(nv)]
     h.passModel(lp)
+    if start is not None:
+        hs = highspy.HighsSolution()
+        hs.col_value = list(map(float, start))
+        hs.value_valid = True
+        h.setSolution(hs)
     h.run()
     st = h.getModelStatus()
     ok = st == highspy.HighsModelStatus.kOptimal
@@ -783,10 +788,19 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
             integ = [0 if short[t] else 1 for t in range(d)] + [0]
             ok, sol, obj = solve(nv, cost, tight, lb, ub, integer=integ, time_limit=time_limit, sense_max=True)
             if ok:
-                if hybrid:
-                    log("  %d of %d lattice directions rounded, %d searched as integers"
-                        % (sum(short), d, d - sum(short)))
-                return sol
+                if not hybrid:
+                    return sol
+                log("  %d of %d lattice directions rounded, %d searched as integers"
+                    % (sum(short), d, d - sum(short)))
+                # polish: the rounded point starts a full integer search on the untightened rows
+                zr = [round(v) for v in sol[:d]]
+                lam_r = sol[d]
+                ok2, sol2, obj2 = solve(nv, cost, rows, lb, ub, integer=[1] * d + [0], time_limit=time_limit,
+                                        sense_max=True, start=zr + [lam_r])
+                if ok2 and sol2[d] > lam_r:
+                    log("  polished: T %.2f -> %.2f min" % (1 / lam_r, 1 / sol2[d]))
+                    return sol2
+                return zr + [lam_r]
         return None
 
     for attempt in range(6):
