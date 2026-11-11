@@ -66,6 +66,8 @@ def feasible(model, lam, K, tl):
     t = time.time()
     ok, sol, _ = O.solve(n2, [0.0] * n2, rows, lb2, ub2, integer=integ, time_limit=tl)
     timed_out = (not ok) and time.time() - t >= tl * 0.95
+    if ST.get("verbose"):
+        print("    K=%d lam=%.6g T=%.2f: %s in %.1f s" % (K, lam, 1 / lam, "feasible" if ok else ("time limit" if timed_out else "infeasible"), time.time() - t), flush=True)
     if not ok:
         return None, timed_out
     on = [j for j in rec if sol[y[j]] > 0.5 and sol[j] > 1e-7]
@@ -106,15 +108,18 @@ def run_k(args):
     return {"K": K, "T_budget": 1 / lo, "T_polished": Tp, "recipes": used, "n_recipes": len(used), "timeouts": tos}
 
 
-def init(b0, usable):
+def init(b0, usable, verbose=False):
     setup(b0, usable)
+    ST["verbose"] = verbose
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--k", default="")
     ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--time", type=float, default=60)
+    ap.add_argument("--cache", help="save/reuse the all-recipe optimum (bill of materials) here")
     a = ap.parse_args()
     setup()
     V = ST["V"]
@@ -126,12 +131,19 @@ def main():
         seen["b0"], seen["usable"] = b0, usable
         return real_best(b0, usable, tol)
     model.best = rec_best
-    lam_all, x, _ = O.continuous(model, 0.0, lambda s: None, max_rounds=6)
+    cache = Path(a.cache) if a.cache else None
+    if cache and cache.exists():
+        c = json.loads(cache.read_text())
+        lam_all, x, seen["b0"], seen["usable"] = c["lam"], c["x"], c["b0"], set(c["usable"])
+    else:
+        lam_all, x, _ = O.continuous(model, 0.0, lambda s: None, max_rounds=6)
+        if cache:
+            cache.write_text(json.dumps({"lam": lam_all, "x": x, "b0": seen["b0"], "usable": sorted(seen["usable"])}))
     n_all = sum(1 for j, v in enumerate(V) if v.kind == "recipe" and x[j] > 1e-6)
     print("all recipes: T = %.2f min with %d recipes running" % (1 / lam_all, n_all), flush=True)
     ks = [int(k) for k in a.k.split(",")] if a.k else list(range(n_all - 5, 50, -5))
     out = []
-    with Pool(a.jobs, initializer=init, initargs=(seen["b0"], seen["usable"])) as pool:
+    with Pool(a.jobs, initializer=init, initargs=(seen["b0"], seen["usable"], a.verbose)) as pool:
         for r in pool.imap_unordered(run_k, [(k, lam_all, a.time) for k in ks]):
             out.append(r)
             print("K = %3d: T = %s (budget model), %s polished, %s recipes, %d timeouts" % (
