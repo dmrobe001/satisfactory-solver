@@ -864,11 +864,17 @@ def main():
     ap.add_argument("--prune", type=float, default=0.05)
     ap.add_argument("--out", default=str(ROOT / "data" / "optimized_plan.json"))
     ap.add_argument("--time", type=float, default=120)
+    ap.add_argument("--steps", type=int, default=10 ** 6,
+                    help="clock steps per 100 %% (default 1000000, i.e. 0.0001 %%; 100 = whole percents)")
     ap.add_argument("--cache", help="save/reuse the continuous result in this JSON file")
     ap.add_argument("--exclude", default=",".join(EXCLUDE),
                     help="recipe ids left out, comma-separated (default: %(default)s; '' for none)")
     args = ap.parse_args()
     log = lambda s: print(s, flush=True)
+    global UNIT, SHORT
+    UNIT, SHORT = args.steps, 0.003 * args.steps
+    if UNIT != 10 ** 6:
+        log("clock steps: 1/%d of 100 %% (%.4f %%)" % (UNIT, 100 / UNIT))
     recs, raw, have = scope()
     MAKEABLE.update(have)
     for k in list(EQUIPMENT) + list(PHASE5) + [it for b in FIXED_BUILDINGS for it, _ in BLD[b]["cost"]]:
@@ -969,11 +975,11 @@ def main():
     settings = {"timescale": T, "lane": LANE, "rules": RULES, "extra": FIXED_BUILDINGS, "ficsmas": False, "cal": 2}
     out = {"app": "satisfactory-production-sheet", "v": 1, "sheet": sheet, "settings": settings,
            "optimizer": {"T_min": T, "T_continuous_min": 1 / lam, "T_continuous_unpruned_min": T0,
-                         "prune": args.prune, "excluded": excl, "limited_by": lim, "power_made_MW": pg, "power_drawn_MW": pu,
+                         "prune": args.prune, "excluded": excl, "clock_steps": UNIT, "limited_by": lim, "power_made_MW": pg, "power_drawn_MW": pu,
                          "phase5": PHASE5, "equipment": EQUIPMENT, "extra_buildings": FIXED_BUILDINGS,
                          "checks": "ok" if not bad else str(bad), "gathered_by_hand": gathered,
                          "recipes": sorted(({"id": V[j].id, "name": V[j].rec["name"], "machine": V[j].rec["m"],
-                                             "machines": n[j], "clock_pct": "%.4f" % (q[j] / 10 ** 4)} for j in n),
+                                             "machines": n[j], "clock_pct": "%.4f" % (100 * q[j] / UNIT)} for j in n),
                                            key=lambda r: (-r["machines"], r["id"])),
                          "sources": [{"id": V[j].id, "count": c} for j, c in sorted(cnt.items(), key=lambda t: V[t[0]].id)],
                          "buildings": dict(sorted(total.items())),
