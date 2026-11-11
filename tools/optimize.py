@@ -442,13 +442,13 @@ class Model:
         return lo, self.lp(lo, b0, usable)
 
 
-def continuous(model, prune, log):
+def continuous(model, prune, log, max_rounds=30):
     V = model.V
     usable = set(EQUIPMENT) | set(PHASE5) | {it for k in FIXED_BUILDINGS for it, _ in BLD[k]["cost"]}
     usable |= {it for c in model.unitB for it in c}  # first pass: anything a building could use
     solid, fluid, depot = 60, 10, 60
     x = None
-    for rnd in range(30):
+    for rnd in range(max_rounds):
         b0 = cost_vec(fixed_buildings(solid, fluid, depot))
         for k, q in EQUIPMENT.items(): b0[k] = b0.get(k, 0) + q
         b0 = {k: q for k, q in b0.items() if k in MAKEABLE}  # hand-gathered parts are not timed
