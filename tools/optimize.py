@@ -654,6 +654,7 @@ def lll(B, delta=0.99):
 
 
 UNIT = 10 ** 6  # clock steps per 100 % (0.0001 %)
+LOOSE_P5 = False  # --loose-p5: Phase 5 parts need at least their share, not an exact ratio
 TWO = False     # --two-clocks: a recipe's machines may run at two adjacent clocks
 SHORT = 3000    # lattice directions up to this length (0.3 % of a clock) are rounded, not searched
 
@@ -684,7 +685,7 @@ def integer_stage(model, x, n, cnt, log, time_limit=120):
                 if a: d[col[j]] = a * (1 if TWO else n[j])
             if d:
                 eq.append(d)
-        p5 = list(PHASE5)
+        p5 = [] if LOOSE_P5 else list(PHASE5)
         for a, b in zip(p5, p5[1:]):  # net_a * P5_b - net_b * P5_a = 0
             d = {}
             for j in recs:
@@ -883,6 +884,8 @@ def main():
     ap.add_argument("--prune", type=float, default=0.05)
     ap.add_argument("--out", default=str(ROOT / "data" / "optimized_plan.json"))
     ap.add_argument("--time", type=float, default=120)
+    ap.add_argument("--loose-p5", action="store_true",
+                    help="integer stages: each Phase 5 part at least its share instead of an exact ratio")
     ap.add_argument("--two-clocks", action="store_true",
                     help="let each recipe run its machines at two adjacent clocks (m at a steps, the rest at a - 1)")
     ap.add_argument("--steps", type=int, default=10 ** 6,
@@ -892,8 +895,8 @@ def main():
                     help="recipe ids left out, comma-separated (default: %(default)s; '' for none)")
     args = ap.parse_args()
     log = lambda s: print(s, flush=True)
-    global UNIT, SHORT, TWO
-    UNIT, SHORT, TWO = args.steps, 0.003 * args.steps, args.two_clocks
+    global UNIT, SHORT, TWO, LOOSE_P5
+    UNIT, SHORT, TWO, LOOSE_P5 = args.steps, 0.003 * args.steps, args.two_clocks, args.loose_p5
     if UNIT != 10 ** 6:
         log("clock steps: 1/%d of 100 %% (%.4f %%)" % (UNIT, 100 / UNIT))
     recs, raw, have = scope()
@@ -952,7 +955,7 @@ def main():
         elif v != 0:
             bad.append((k, float(v)))
     p5r = {k: net.get(k, 0) / PHASE5[k] for k in PHASE5}
-    if len(set(p5r.values())) != 1:
+    if not LOOSE_P5 and len(set(p5r.values())) != 1:
         bad.append(("phase 5 proportions", [float(v) for v in p5r.values()]))
     gathered = {ITEMS[k]["n"]: q for k, q in bom.items() if k not in MAKEABLE}
     if gathered:
