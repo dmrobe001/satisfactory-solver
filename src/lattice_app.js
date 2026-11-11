@@ -297,6 +297,33 @@
   });
   ["#q", "#show"].forEach((s) => $(s).addEventListener("input", render));
 
+  /* ---- sorting: reorder the prebuilt rows once per change ---- */
+  let sortKey = "layer", sortDir = 1;
+  try { const v = JSON.parse(localStorage.getItem(STORE + ".sort") || "null"); if (v) { sortKey = v[0]; sortDir = v[1]; } } catch (e) { /* ignore */ }
+  const outName = (rec) => (rec.outs.length ? (G.items[rec.outs[0][0]] || { n: rec.outs[0][0] }).n : "\uffff");
+  const cmp = {
+    name: (a, b) => a.rec.name.localeCompare(b.rec.name),
+    output: (a, b) => outName(a.rec).localeCompare(outName(b.rec)) || cmp.name(a, b),
+    machine: (a, b) => mname(a.rec).localeCompare(mname(b.rec)) || cmp.name(a, b),
+    layer: (a, b) => a.rec.layer - b.rec.layer || cmp.output(a, b),
+  };
+  function applySort() {
+    if (!cmp[sortKey]) sortKey = "layer";
+    const f = document.createDocumentFragment();
+    rows.slice().sort((a, b) => sortDir * cmp[sortKey](a, b)).forEach((x) => f.appendChild(x.el));
+    rowsEl.appendChild(f);
+    document.querySelectorAll("#sortSeg button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === sortKey)));
+    $("#sortDir").textContent = sortDir > 0 ? "▲" : "▼";
+  }
+  function setSort(k) {
+    if (k === sortKey) sortDir = -sortDir; else { sortKey = k; sortDir = 1; }
+    try { localStorage.setItem(STORE + ".sort", JSON.stringify([sortKey, sortDir])); } catch (e) { /* ignore */ }
+    applySort();
+  }
+  $("#sortSeg").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) setSort(b.dataset.sort); });
+  $("#sortDir").addEventListener("click", () => setSort(sortKey));
+  applySort();
+
   itemsEl.addEventListener("change", (e) => {
     if (!e.target.classList.contains("surplus")) return;
     const x = irowByK.get(e.target.closest(".lrow").dataset.k);
