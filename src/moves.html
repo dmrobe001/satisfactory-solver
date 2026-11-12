@@ -11,7 +11,7 @@
 <header class="top">
   <div>
     <h1>Satisfactory Machine Moves</h1>
-    <div class="sub">Satisfactory 1.2. Whole machines, exact balances. Change the factory only by moves that keep every fluid and unusable product at exactly zero.</div>
+    <div class="sub">Satisfactory 1.2. Whole machines, all at 100 %, exact balances. Change the factory only by moves that keep every fluid and unusable product at exactly zero.</div>
   </div>
   <div class="io-top">
     <button class="btn" type="button" id="btnUndo" disabled title="Undo the last change">Undo</button>
@@ -45,9 +45,9 @@
     <div class="tools">
       <label>Search <input type="search" id="q" placeholder="recipe or machine"></label>
       <label class="chk"><input type="checkbox" id="lockP5" checked> Phase 5 in exact proportion</label>
-      <button class="btn" type="button" id="btnAll100" title="Set every clock to 100 % and snap to the nearest valid factory">All clocks 100 %</button>
-      <button class="btn" type="button" id="btnSnap" title="Snap again to the nearest valid factory at the current rates (after changing a minimum, say)">Snap again</button>
-      <button class="btn" type="button" id="btnClean" title="Round every clock to the nearest multiple of 0.8 %, 1 %, 1.25 % or 1.5625 % and snap">Clean clocks</button>
+      <label title="With the Phase 5 ratio locked, Phase 5 only comes in whole batches; the factory is sized to this many">Phase 5 batches <input class="cell-in" type="number" id="batches" min="1" step="1" value="1" style="width:5em"></label>
+      <span class="count" id="batchInfo"></span>
+      <button class="btn" type="button" id="btnSnap" title="Go back to the plan's recipe ratios at the current size and snap to the nearest valid factory">Snap to plan ratios</button>
       <label>Add recipe <input type="search" id="addq" placeholder="type to find a recipe" autocomplete="off" list="addlist"></label>
       <datalist id="addlist"></datalist>
       <span class="count" id="rowCount"></span>
@@ -58,7 +58,6 @@
           <thead><tr>
             <th class="sortable" data-sort="name">Recipe</th>
             <th class="n sortable" data-sort="n" aria-sort="descending" title="Whole machines">Machines</th>
-            <th class="n" title="Clock of every machine of this recipe, %">Clock %</th>
             <th class="n sortable" data-sort="step" title="Smallest change in this recipe's machine count that any combination of moves can make">Step</th>
             <th class="n" title="Change under the move you point at">Δ</th>
           </tr></thead>
@@ -82,14 +81,15 @@
   <section class="panel" id="tab-notes" role="tabpanel" hidden>
     <div class="prose">
       <h3>The idea</h3>
-      <p>Every recipe runs a whole number of machines, all at one clock you choose (default: the plan's). Fluids and unusable products must come out exactly even, and the Phase 5 parts in exact proportion if that box is ticked. The machine counts that satisfy those equations form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact balance exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
+      <p>Every machine runs at 100 %; only the number of machines of each recipe changes. Fluids and unusable products must come out exactly even, and the Phase 5 parts in exact proportion if that box is ticked. The machine counts that satisfy those equations form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact balance exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
       <p>A move can still make something go negative: a machine count, a building material that is used faster than it is made, or a raw resource that would be produced instead of drawn. Such moves are greyed out. Raw resources and power are not limited here.</p>
+      <h3>Phase 5 batches</h3>
+      <p>With whole machines at 100 % and the exact Phase 5 ratio, Phase 5 can only be made in whole batches: the smallest set of machine counts that balances every intermediate exactly. The batch depends on the recipes in use (and on the valves). The factory is sized to the number of batches you pick: the plan's recipe ratios are scaled to that output and snapped to the nearest valid whole-machine factory. Untick the ratio box to treat the Phase 5 parts like other surplus items, with minimums you set on the Items tab.</p>
       <h3>Reading the numbers</h3>
       <ul>
-        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different clock usually shrinks it.</li>
-        <li>The Phase 5 step is the smallest batch the current clocks allow. It shows how well the clocks fit together: rounding every clock on its own (<b>Clean clocks</b>) or setting them all to 100 % usually makes it very large, because the exact Phase 5 ratio needs clocks that suit one another. At the optimizer's own clocks the plan is exact, but some moves are large.</li>
-        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Minimums on the Items tab (Phase 5 parts start at their current rate) stop it from shrinking what you want to keep.</li>
-        <li>Changing a clock, a valve or the recipe list rebuilds the moves and snaps to the nearest valid factory.</li>
+        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different recipe usually shrinks it.</li>
+        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Phase 5 output and the minimums on the Items tab are kept.</li>
+        <li>Changing a valve, the recipe list or the number of batches rebuilds the moves and snaps to the nearest valid factory.</li>
       </ul>
       <p class="note">The lattice is exact (big-integer column reduction, then Lenstra–Lenstra–Lovász reduction). Recipe data is the production sheet's. Import takes production-sheet exports, optimizer plans and recipe-matrix exports; export gives a production-sheet file.</p>
     </div>

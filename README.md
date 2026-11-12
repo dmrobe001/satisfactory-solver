@@ -318,34 +318,36 @@ left out.)
 
 ## Machine moves (fourth page)
 
-`dist/machine-moves.html` works with whole machines. Every recipe runs a whole
-number of machines, all at one clock per recipe (by default the optimizer
-plan's). Fluids and unusable products must net exactly 0, and the Phase 5
-parts can be held in exact proportion; building materials, equipment and
-Phase 5 parts may pile up, raw resources may only be drawn. The machine counts
-that satisfy the exact equations form an integer lattice; its reduced basis
-(big-integer column reduction, with Lenstra-Lenstra-Lovasz reduction along the
-way) is a list of **moves**, and the page changes the factory only by moves, so
-every exact balance stays exact.
+`dist/machine-moves.html` works with whole machines, every one at 100 %: only
+the number of machines of each recipe changes. Fluids and unusable products
+must net exactly 0, and the Phase 5 parts can be held in exact proportion;
+building materials, equipment and Phase 5 parts may pile up, raw resources may
+only be drawn. The machine counts that satisfy the exact equations form an
+integer lattice; its reduced basis (big-integer column reduction, with
+Lenstra-Lenstra-Lovasz reduction along the way) is a list of **moves**, and the
+page changes the factory only by moves, so every exact balance stays exact.
 
+* **Phase 5 batches.** With whole machines at 100 % and the exact ratio, Phase
+  5 only comes in whole batches (the smallest exact set of machine counts).
+  With the optimizer plan's recipes one batch is 192 AI Expansion Servers per
+  minute, a 534,765-machine factory. The factory is sized to the number of
+  batches chosen: the imported plan's recipe ratios are scaled to that output
+  and snapped to the nearest valid factory (Babai rounding plus a greedy
+  repair). Unticking the ratio box keeps the current output as minimums.
 * Select a recipe to list the moves that change it, with their effect on every
   recipe, on surplus and raw draw, and on power; a move that would push a count
   or a surplus below zero is greyed out with the reason.
 * **Shrink this** searches combinations of up to three moves (each used once or
   twice) for the one that lowers the selected recipe most, then uses the fewest
-  machines in all. Minimums on the Items tab (Phase 5 parts start at the plan's
-  rate) keep it from shrinking what you want to keep.
+  machines in all, keeping Phase 5 output and the minimums on the Items tab.
 * **Step** is the smallest change in a recipe's count (or an item's net) any
   combination of moves can make. A large step is a chain of exact ratios that
   only works in big batches. The Items tab can turn a solid into a valve
-  (surplus allowed) or back, which usually shrinks steps.
-* Clocks are per recipe. Changing a clock, a valve or the recipe list rebuilds
-  the moves and snaps to the nearest valid factory (Babai rounding plus a
-  greedy repair). Clocks must fit together: at the optimizer's clocks the plan
-  is exact but many moves are large; with every clock at 100 % moves are small
-  but Phase 5 only comes in batches of 192 AI Expansion Servers per minute
-  (about 50 times the plan's rate), and rounding each clock on its own to a
-  clean value is worse still. The Phase 5 step in the summary shows this.
+  (surplus allowed) or back, which usually shrinks steps; adding or removing a
+  recipe changes them too.
 * Import takes production-sheet exports, optimizer plans and recipe-matrix
-  exports; export writes a production-sheet file (with this page's valves and
-  minimums).
+  exports (their recipe ratios; clocks are ignored); export writes a
+  production-sheet file with every clock at 100 %.
+
+The engine in `src/moves.js` also accepts per-recipe clocks (used by the tests),
+but the page keeps every machine at 100 %.

@@ -301,7 +301,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
 <header class="top">
   <div>
     <h1>Satisfactory Machine Moves</h1>
-    <div class="sub">Satisfactory 1.2. Whole machines, exact balances. Change the factory only by moves that keep every fluid and unusable product at exactly zero.</div>
+    <div class="sub">Satisfactory 1.2. Whole machines, all at 100 %, exact balances. Change the factory only by moves that keep every fluid and unusable product at exactly zero.</div>
   </div>
   <div class="io-top">
     <button class="btn" type="button" id="btnUndo" disabled title="Undo the last change">Undo</button>
@@ -335,9 +335,9 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     <div class="tools">
       <label>Search <input type="search" id="q" placeholder="recipe or machine"></label>
       <label class="chk"><input type="checkbox" id="lockP5" checked> Phase 5 in exact proportion</label>
-      <button class="btn" type="button" id="btnAll100" title="Set every clock to 100 % and snap to the nearest valid factory">All clocks 100 %</button>
-      <button class="btn" type="button" id="btnSnap" title="Snap again to the nearest valid factory at the current rates (after changing a minimum, say)">Snap again</button>
-      <button class="btn" type="button" id="btnClean" title="Round every clock to the nearest multiple of 0.8 %, 1 %, 1.25 % or 1.5625 % and snap">Clean clocks</button>
+      <label title="With the Phase 5 ratio locked, Phase 5 only comes in whole batches; the factory is sized to this many">Phase 5 batches <input class="cell-in" type="number" id="batches" min="1" step="1" value="1" style="width:5em"></label>
+      <span class="count" id="batchInfo"></span>
+      <button class="btn" type="button" id="btnSnap" title="Go back to the plan's recipe ratios at the current size and snap to the nearest valid factory">Snap to plan ratios</button>
       <label>Add recipe <input type="search" id="addq" placeholder="type to find a recipe" autocomplete="off" list="addlist"></label>
       <datalist id="addlist"></datalist>
       <span class="count" id="rowCount"></span>
@@ -348,7 +348,6 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
           <thead><tr>
             <th class="sortable" data-sort="name">Recipe</th>
             <th class="n sortable" data-sort="n" aria-sort="descending" title="Whole machines">Machines</th>
-            <th class="n" title="Clock of every machine of this recipe, %">Clock %</th>
             <th class="n sortable" data-sort="step" title="Smallest change in this recipe's machine count that any combination of moves can make">Step</th>
             <th class="n" title="Change under the move you point at">Δ</th>
           </tr></thead>
@@ -372,14 +371,15 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
   <section class="panel" id="tab-notes" role="tabpanel" hidden>
     <div class="prose">
       <h3>The idea</h3>
-      <p>Every recipe runs a whole number of machines, all at one clock you choose (default: the plan's). Fluids and unusable products must come out exactly even, and the Phase 5 parts in exact proportion if that box is ticked. The machine counts that satisfy those equations form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact balance exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
+      <p>Every machine runs at 100 %; only the number of machines of each recipe changes. Fluids and unusable products must come out exactly even, and the Phase 5 parts in exact proportion if that box is ticked. The machine counts that satisfy those equations form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact balance exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
       <p>A move can still make something go negative: a machine count, a building material that is used faster than it is made, or a raw resource that would be produced instead of drawn. Such moves are greyed out. Raw resources and power are not limited here.</p>
+      <h3>Phase 5 batches</h3>
+      <p>With whole machines at 100 % and the exact Phase 5 ratio, Phase 5 can only be made in whole batches: the smallest set of machine counts that balances every intermediate exactly. The batch depends on the recipes in use (and on the valves). The factory is sized to the number of batches you pick: the plan's recipe ratios are scaled to that output and snapped to the nearest valid whole-machine factory. Untick the ratio box to treat the Phase 5 parts like other surplus items, with minimums you set on the Items tab.</p>
       <h3>Reading the numbers</h3>
       <ul>
-        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different clock usually shrinks it.</li>
-        <li>The Phase 5 step is the smallest batch the current clocks allow. It shows how well the clocks fit together: rounding every clock on its own (<b>Clean clocks</b>) or setting them all to 100 % usually makes it very large, because the exact Phase 5 ratio needs clocks that suit one another. At the optimizer's own clocks the plan is exact, but some moves are large.</li>
-        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Minimums on the Items tab (Phase 5 parts start at their current rate) stop it from shrinking what you want to keep.</li>
-        <li>Changing a clock, a valve or the recipe list rebuilds the moves and snaps to the nearest valid factory.</li>
+        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different recipe usually shrinks it.</li>
+        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Phase 5 output and the minimums on the Items tab are kept.</li>
+        <li>Changing a valve, the recipe list or the number of batches rebuilds the moves and snaps to the nearest valid factory.</li>
       </ul>
       <p class="note">The lattice is exact (big-integer column reduction, then Lenstra–Lenstra–Lovász reduction). Recipe data is the production sheet's. Import takes production-sheet exports, optimizer plans and recipe-matrix exports; export gives a production-sheet file.</p>
     </div>
@@ -890,66 +890,77 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     else t = trim(a.toPrecision(4));
     return s + t;
   }
-  const pctText = (p) => trim(Number(p).toFixed(4));
   const mname = (r) => (B[r.m] ? B[r.m].n : r.m);
   const iname = (k) => (IT[k] ? IT[k].n : k);
 
   /* ---- state ---- */
-  let st = null;          // {recipes, clocks, n, valves, pins, lockP5}
+  let st = null;          // {recipes, n, base, batches, valves, pins, lockP5}; every machine at 100 %
   let E = null, nArr = [], netArr = null, pins = new Map();
   let selected = null, preview = null, sortKey = "n", sortDir = -1, lastShrink = null;
   const history = [];
 
   function fromSheet(sheet) {
-    const recipes = [], clocks = {}, n = {};
+    // the plan's effective rates (machines x clock) become the recipe ratios to aim for
+    const recipes = [], base = {};
     for (const [id, v] of Object.entries((sheet && sheet.n) || {})) {
       const r = byId[id];
       if (!r || !PROD(r) || !(v > 0)) continue;
       recipes.push(id);
-      const c = (sheet.c && sheet.c[id]) || 1;
-      clocks[id] = pctText(c * 100);
-      n[id] = Math.round(v);
+      base[id] = v * ((sheet.c && sheet.c[id]) || 1);
     }
-    return { recipes, clocks, n, valves: {}, pins: {}, lockP5: true };
+    return { recipes, n: {}, base, batches: 1, valves: {}, pins: {}, lockP5: true };
   }
   function save() { try { localStorage.setItem(STORE, JSON.stringify(st)); } catch (e) { /* storage unavailable */ } }
   function push() { history.push(JSON.stringify(st)); if (history.length > 100) history.shift(); $("#btnUndo").disabled = false; }
 
-  /* Build the engine for st; keep the counts if they are still exact and valid,
-   * otherwise snap to the nearest valid factory at the same effective rates. */
-  function rebuild(targetEff, why) {
-    const t0 = performance.now();
-    E = new Moves(G, { recipes: st.recipes, clocks: st.clocks, valves: st.valves, lockP5: st.lockP5 });
-    st.recipes = E.R.map((r) => r.id);
+  /* Phase 5 batch at the current recipes and valves (AI Expansion Servers per
+   * minute), or 0 when the ratio is unlocked or there is no AI Expansion Server. */
+  let batch = 0;
+  function p5pins() {
+    const ai = E.iIdx.SpaceElevatorPart_12;
+    batch = 0;
+    if (st.lockP5 && ai !== undefined) { const s = E.itemStep(ai); if (s) batch = Number(s[0]) / Number(s[1]); }
     pins = new Map();
-    for (const [k, v] of Object.entries(st.pins)) if (E.iIdx[k] !== undefined && isFinite(v)) pins.set(E.iIdx[k], +v);
+    for (const [k, v] of Object.entries(st.pins)) if (E.iIdx[k] !== undefined && isFinite(v) && !(batch && Moves.PHASE5[k])) pins.set(E.iIdx[k], +v);
+    if (batch) for (const k of Object.keys(Moves.PHASE5)) if (E.iIdx[k] !== undefined) pins.set(E.iIdx[k], st.batches * batch * Moves.PHASE5[k] / 256 - 1e-9);
+  }
+  /* The real-valued factory to snap to: the base ratios, scaled to the batches. */
+  function target() {
+    const base = E.R.map((r) => (st.base[r.id] !== undefined ? st.base[r.id] : st.n[r.id] || 0));
+    const ai = E.iIdx.SpaceElevatorPart_12;
+    if (batch && ai !== undefined) {
+      const have = E.netOf(base)[ai];
+      if (have > 0) { const f = st.batches * batch / have; return base.map((x) => x * f); }
+    }
+    return base;
+  }
+  /* Build the engine for st; keep the counts if they are still exact and valid
+   * (unless force), otherwise snap to the nearest valid factory. */
+  function rebuild(why, force) {
+    const t0 = performance.now();
+    E = new Moves(G, { recipes: st.recipes, valves: st.valves, lockP5: st.lockP5 });
+    st.recipes = E.R.map((r) => r.id);
+    p5pins();
     nArr = E.R.map((r) => st.n[r.id] || 0);
     let msg = "";
-    if (!E.balanced(nArr) || !E.valid(nArr, pins)) {
-      const t = E.R.map((r, j) => {
-        const eff = targetEff ? targetEff[r.id] : (st.n[r.id] || 0) * E.clockPct[j] / 100;
-        return (eff || 0) / (E.clockPct[j] / 100);
-      });
-      const res = E.snap(t, pins);
+    if (force || !nArr.some((x) => x) || !E.balanced(nArr) || !E.valid(nArr, pins)) {
+      const res = E.snap(target(), pins);
       nArr = res.n;
       msg = (why ? why + " " : "") + (res.ok ? "Snapped to the nearest valid factory." :
         "Snapped, but " + res.left.length + " condition" + (res.left.length > 1 ? "s are" : " is") + " still broken (see Status).");
-      const ai = E.iIdx.SpaceElevatorPart_12;
-      if (!res.ok && ai !== undefined && res.left.some((v) => v.kind === "pin" && Moves.PHASE5[E.items[v.i]])) {
-        const s = E.itemStep(ai);
-        if (s) msg += " At these clocks Phase 5 only comes in batches of " + fmt(Number(s[0]) / Number(s[1])) + " AI Expansion Servers per minute.";
-      }
+      msg += " (" + Math.round(performance.now() - t0) + " ms)";
     }
     syncN();
     netArr = E.netOf(nArr);
     selected = selected && E.rIdx[selected] !== undefined ? selected : null;
     preview = null; lastShrink = null;
-    if (msg) banner(msg + " (" + Math.round(performance.now() - t0) + " ms)");
-    else if (why !== undefined) banner(why || "");
+    $("#batches").value = st.batches;
+    $("#batches").disabled = !batch;
+    $("#batchInfo").textContent = batch ? "1 batch = " + fmt(batch) + " AI Expansion Servers/min" : st.lockP5 ? "no Phase 5 in these recipes" : "ratio unlocked";
+    banner(msg || why || "");
     render();
   }
   function syncN() { st.n = {}; E.R.forEach((r, j) => { if (nArr[j]) st.n[r.id] = nArr[j]; }); save(); }
-  function effMap() { const m = {}; E.R.forEach((r, j) => (m[r.id] = nArr[j] * E.clockPct[j] / 100)); return m; }
 
   function banner(t) { $("#msgText").textContent = t; $("#msgBanner").hidden = !t; }
   $("#msgClose").addEventListener("click", () => banner(""));
@@ -989,7 +1000,6 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
       return `<tr data-j="${j}" class="${r.id === selected ? "sel" : ""} ${nArr[j] ? "" : "zero"}">
         <td class="rcell"><span class="rn">${esc(r.name)}</span><span class="rm">${esc(mname(r))}</span></td>
         <td class="n">${nArr[j].toLocaleString("en-US")}</td>
-        <td class="n"><input class="clk" type="text" inputmode="decimal" value="${pctText(E.clockPct[j])}" aria-label="Clock of ${esc(r.name)}, percent"></td>
         <td class="n ${s > Math.max(4, nArr[j] / 4) ? "big" : ""}" title="${s ? "Machine count changes in steps of " + s : "Fixed: no move changes it"}">${s ? s.toLocaleString("en-US") : "fixed"}</td>
         <td class="n d ${d > 0 ? "up" : d < 0 ? "down" : ""}">${d ? (d > 0 ? "+" : "−") + Math.abs(d) : ""}</td></tr>`;
     }).join("");
@@ -1009,17 +1019,6 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     if (!tr) return;
     selected = E.R[+tr.dataset.j].id; lastShrink = null;
     renderTable(); renderSide();
-  });
-  $("#rbody").addEventListener("change", (e) => {
-    const inp = e.target.closest("input.clk");
-    if (!inp) return;
-    const j = +inp.closest("tr").dataset.j, r = E.R[j];
-    const v = inp.value.trim().replace(",", ".");
-    if (!Moves.clockFrac(v)) { inp.value = pctText(E.clockPct[j]); banner("A clock is a percentage above 0 and at most 250, with up to 4 decimals."); return; }
-    push();
-    const eff = effMap();
-    st.clocks[r.id] = trim(Number(v).toFixed(4));
-    rebuild(eff, "Clock of " + r.name + " set to " + st.clocks[r.id] + " %.");
   });
   $("#q").addEventListener("input", renderTable);
 
@@ -1072,7 +1071,7 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     if (!selected) { side.innerHTML = `<div class="side-empty">Select a recipe to see the moves that change it.</div>`; return; }
     const j = E.rIdx[selected], r = E.R[j], s = Number(E.steps[j]);
     const mv = E.movesFor(j);
-    let html = `<div class="side-head"><h2>${esc(r.name)}</h2><div class="meta">${esc(mname(r))} · ${nArr[j].toLocaleString("en-US")} machines at ${pctText(E.clockPct[j])} % · ${s ? "step " + s : "fixed by the exact balances"} · ${mv.length} move${mv.length === 1 ? "" : "s"}</div></div>`;
+    let html = `<div class="side-head"><h2>${esc(r.name)}</h2><div class="meta">${esc(mname(r))} · ${nArr[j].toLocaleString("en-US")} machines · ${s ? "step " + s : "fixed by the exact balances"} · ${mv.length} move${mv.length === 1 ? "" : "s"}</div></div>`;
     html += `<div class="shrink"><div class="row1"><button class="btn primary" type="button" id="btnShrink" ${nArr[j] > 0 && mv.length ? "" : "disabled"}>Shrink this</button><span class="count">searches combinations of up to 3 moves</span>${nArr[j] === 0 ? ` <button class="btn danger" type="button" id="btnRemove">Remove recipe</button>` : ""}</div><div class="res" id="shrinkRes">${shrinkHtml(j)}</div></div>`;
     html += mv.length ? mv.map((i) => {
       const self = E.K[i][j];
@@ -1082,13 +1081,13 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
       return `<div class="move" data-i="${i}" data-s="${self > 0 ? 1 : -1}"><div class="mh"><span class="mt">Move ${i + 1} · ${Math.abs(self)} machine${Math.abs(self) === 1 ? "" : "s"} of this</span>
         <span class="btns"><button class="btn" type="button" data-c="-1" ${wm ? `disabled title="${esc(wm)}"` : `title="Apply: ${Math.abs(self)} fewer of this"`}>−</button><button class="btn" type="button" data-c="1" ${wp ? `disabled title="${esc(wp)}"` : `title="Apply: ${Math.abs(self)} more of this"`}>+</button></span></div>
         <div class="chips">${chipsFor(deltaOf(plus), j)}</div><div class="eff">${esc(effectsText(plus))} <i>(for +; − is the reverse)</i></div>${wm && wp ? `<div class="why">Both directions blocked: ${esc(wm)}.</div>` : ""}</div>`;
-    }).join("") : `<div class="side-empty">No move changes this recipe: the exact balances fix its machine count. Opening a valve on the Items tab or changing a clock can free it.</div>`;
+    }).join("") : `<div class="side-empty">No move changes this recipe: the exact balances fix its machine count. Opening a valve on the Items tab or adding a recipe can free it.</div>`;
     side.innerHTML = html;
   }
   function shrinkHtml(j) {
     if (!lastShrink || lastShrink.j !== j) return "";
     const s = lastShrink.res;
-    if (!s) return `<span class="why">No combination of up to 3 moves lowers it without breaking something. Try lowering a minimum, opening a valve, or a different clock.</span>`;
+    if (!s) return `<span class="why">No combination of up to 3 moves lowers it without breaking something. Try lowering a minimum, opening a valve, or adding a recipe.</span>`;
     const d = deltaOf(s.coefs);
     return `<div><b>${nArr[j].toLocaleString("en-US")} → ${s.n[j].toLocaleString("en-US")}</b> machines of this; ${fmt(s.dTotal, true)} machines in all; ${s.coefs.length} move${s.coefs.length > 1 ? "s" : ""} (${s.coefs.map(([i, c]) => (c > 0 ? "+" : "−") + (Math.abs(c) > 1 ? Math.abs(c) + "×" : "") + "move " + (i + 1)).join(", ")}).</div>
       <div class="chips">${chipsFor(d, j)}</div><div class="eff">${esc(effectsText(s.coefs))}</div>
@@ -1123,11 +1122,10 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     if (b.id === "btnApplyShrink") { applyCoefs(lastShrink.res.coefs, "Applied the shrink."); return; }
     if (b.id === "btnRemove") {
       push();
-      const eff = effMap();
       st.recipes = st.recipes.filter((id) => id !== selected);
-      delete st.n[selected]; delete st.clocks[selected];
+      delete st.n[selected]; delete st.base[selected];
       selected = null;
-      rebuild(eff, "Recipe removed.");
+      rebuild("Recipe removed.");
       return;
     }
     const mvEl = b.closest(".move");
@@ -1173,9 +1171,8 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     const sel = e.target.closest("select");
     if (sel) {
       push();
-      const eff = effMap();
       st.valves[sel.dataset.k] = sel.value;
-      rebuild(eff, iname(sel.dataset.k) + ": " + (sel.value === "balance" ? "must balance." : "surplus allowed."));
+      rebuild(iname(sel.dataset.k) + ": " + (sel.value === "balance" ? "must balance." : "surplus allowed."));
       return;
     }
     const inp = e.target.closest("input.pin");
@@ -1185,25 +1182,35 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
       if (v === "") delete st.pins[inp.dataset.k];
       else if (isFinite(+v)) st.pins[inp.dataset.k] = +v;
       save();
-      pins = new Map();
-      for (const [k, x] of Object.entries(st.pins)) if (E.iIdx[k] !== undefined) pins.set(E.iIdx[k], +x);
+      p5pins();
       lastShrink = null;
       render();
     }
   });
 
   /* ---- toolbar ---- */
-  $("#lockP5").addEventListener("change", (e) => { push(); const eff = effMap(); st.lockP5 = e.target.checked; rebuild(eff, st.lockP5 ? "Phase 5 held in exact proportion." : "Phase 5 ratio released."); });
+  $("#lockP5").addEventListener("change", (e) => {
+    push();
+    st.lockP5 = e.target.checked;
+    if (!st.lockP5) { // keep at least the current Phase 5 output as minimums
+      for (const k of Object.keys(Moves.PHASE5)) { const i = E.iIdx[k]; if (i !== undefined && netArr[i] > 0) st.pins[k] = Math.floor(netArr[i] * 1e4) / 1e4; }
+    }
+    rebuild(st.lockP5 ? "Phase 5 held in exact proportion." : "Phase 5 ratio released; the current output is kept as minimums (Items tab).", st.lockP5);
+  });
+  $("#batches").addEventListener("change", (e) => {
+    const k = Math.max(1, Math.round(+e.target.value || 1));
+    if (k === st.batches) { e.target.value = k; return; }
+    push();
+    st.batches = k;
+    rebuild("Sized to " + k + " Phase 5 batch" + (k > 1 ? "es" : "") + ".", true);
+  });
   $("#btnSnap").addEventListener("click", () => {
     push();
-    const t = E.R.map((r, j) => nArr[j]);
-    const res = E.snap(t, pins);
+    const res = E.snap(target(), pins);
     nArr = res.n; syncN(); netArr = E.netOf(nArr); preview = null; lastShrink = null;
     banner(res.ok ? "Snapped; everything holds." : "Snapped, but " + res.left.length + " condition(s) still broken.");
     render();
   });
-  $("#btnClean").addEventListener("click", () => { push(); const eff = effMap(); E.R.forEach((r, j) => (st.clocks[r.id] = Moves.cleanClock(E.clockPct[j]))); rebuild(eff, "Every clock rounded to a clean value."); });
-  $("#btnAll100").addEventListener("click", () => { push(); const eff = effMap(); st.recipes.forEach((id) => (st.clocks[id] = "100")); rebuild(eff, "Every clock set to 100 %."); });
   const addList = $("#addlist");
   function fillAdd() {
     const have = new Set(st.recipes);
@@ -1214,18 +1221,17 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     const r = R.find((x) => PROD(x) && x.name === name && !st.recipes.includes(x.id));
     if (!r) return;
     push();
-    const eff = effMap();
-    st.recipes.push(r.id); st.clocks[r.id] = "100";
+    st.recipes.push(r.id);
     e.target.value = "";
     selected = r.id;
-    rebuild(eff, r.name + " added at 0 machines.");
+    rebuild(r.name + " added at 0 machines.");
   });
   $("#btnUndo").addEventListener("click", () => {
     if (!history.length) return;
     st = JSON.parse(history.pop());
     $("#btnUndo").disabled = !history.length;
     $("#lockP5").checked = st.lockP5;
-    rebuild(null, "Undone.");
+    rebuild("Undone.");
   });
   $("#tabs").addEventListener("click", (e) => {
     const b = e.target.closest("button[data-tab]");
@@ -1244,24 +1250,18 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
   /* ---- import / export ---- */
   function loadObject(o, label) {
     let next;
-    if (o && o.app === "satisfactory-machine-moves") next = Object.assign({ valves: {}, pins: {}, lockP5: true }, o.state);
+    if (o && o.app === "satisfactory-machine-moves") next = Object.assign({ valves: {}, pins: {}, lockP5: true, batches: 1, base: {}, n: {} }, o.state);
     else if (o && o.sheet) {
       next = fromSheet(o.sheet);
-      if (o.moves) Object.assign(next, { valves: o.moves.valves || {}, pins: o.moves.pins || {}, lockP5: o.moves.lockP5 !== false });
+      if (o.moves && o.moves.n100) Object.assign(next, { valves: o.moves.valves || {}, pins: o.moves.pins || {}, lockP5: o.moves.lockP5 !== false,
+        batches: o.moves.batches || 1, n: Object.assign({}, o.sheet.n) });
     } else if (o && o.n) next = fromSheet(o);
     if (!next || !next.recipes.length) { banner("That file has no production recipes with machines."); return; }
     if (st) push();
     st = next;
     $("#lockP5").checked = st.lockP5;
     selected = null;
-    // default minimums, set before any snapping: keep the Phase 5 parts at the loaded rate
-    if (!Object.keys(st.pins).length) {
-      const probe = new Moves(G, { recipes: st.recipes, clocks: st.clocks, valves: st.valves, lockP5: false });
-      const net = probe.netOf(probe.R.map((r) => st.n[r.id] || 0));
-      for (const k of Object.keys(Moves.PHASE5)) { const i = probe.iIdx[k]; if (i !== undefined && net[i] > 1e-9) st.pins[k] = Math.floor(net[i] * 1e4) / 1e4; }
-    }
-    rebuild(null, label || "");
-    if (label && !E.valid(nArr, pins)) banner(label + " Some conditions could not be met; the Status box and the Items tab show which.");
+    rebuild(label || "", !Object.keys(st.n).length);
   }
   $("#fileState").addEventListener("change", (e) => {
     const f = e.target.files[0];
@@ -1277,9 +1277,9 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
   $("#btnExport").addEventListener("click", async () => {
     if (!downloads) return;
     const sheet = { c: {}, n: {}, f: {}, x: [] };
-    E.R.forEach((r, j) => { if (nArr[j]) { sheet.n[r.id] = nArr[j]; sheet.c[r.id] = E.clockPct[j] / 100; } });
+    E.R.forEach((r, j) => { if (nArr[j]) { sheet.n[r.id] = nArr[j]; sheet.c[r.id] = 1; } });
     const data = JSON.stringify({ app: "satisfactory-production-sheet", v: 1, sheet, settings: {},
-      moves: { valves: st.valves, pins: st.pins, lockP5: st.lockP5 } }, null, 1);
+      moves: { valves: st.valves, pins: st.pins, lockP5: st.lockP5, batches: st.batches, n100: true } }, null, 1);
     const day = new Date().toISOString().slice(0, 10);
     try { await downloads.save({ filename: `machine-moves-${day}.json`, data }); $("#ioMsg").textContent = "Exported."; }
     catch (err) { $("#ioMsg").textContent = err && err.code === "declined" ? "Export cancelled." : "Export failed."; }
@@ -1288,7 +1288,7 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
   /* ---- start ---- */
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { saved = null; }
-  if (saved && saved.recipes && saved.recipes.length) { st = Object.assign({ valves: {}, pins: {}, lockP5: true }, saved); $("#lockP5").checked = st.lockP5; rebuild(null, ""); }
+  if (saved && saved.recipes && saved.recipes.length && saved.base) { st = Object.assign({ valves: {}, pins: {}, lockP5: true, batches: 1 }, saved); $("#lockP5").checked = st.lockP5; rebuild(""); }
   else loadObject({ sheet: window.MOVES_PLAN }, "");
 })();
 
