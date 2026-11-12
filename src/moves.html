@@ -1,0 +1,109 @@
+<title>Satisfactory Machine Moves</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+/*__VCSS__*/
+</style>
+
+<header class="top">
+  <div>
+    <h1>Satisfactory Machine Moves</h1>
+    <div class="sub">Satisfactory 1.2. Whole machines, exact balances. Change the factory only by moves that keep every fluid and unusable product at exactly zero.</div>
+  </div>
+  <div class="io-top">
+    <button class="btn" type="button" id="btnUndo" disabled title="Undo the last change">Undo</button>
+    <button class="btn" type="button" id="btnExport" hidden>Export</button>
+    <label class="btn" for="fileState" title="Load a plan exported from the production sheet, the optimizer, the recipe matrix or this page">Import</label>
+    <input type="file" id="fileState" accept=".json,application/json" hidden>
+    <button class="btn" type="button" id="btnDefault">Load optimizer plan</button>
+    <span class="count" id="ioMsg" role="status"></span>
+  </div>
+</header>
+
+<section class="summary" aria-label="Summary">
+  <div class="stat"><span class="lbl">Machines</span><span class="val" id="sv-mach">0</span></div>
+  <div class="stat"><span class="lbl">Recipes</span><span class="val" id="sv-rec">0</span></div>
+  <div class="stat"><span class="lbl">Moves</span><span class="val" id="sv-dim">0</span></div>
+  <div class="stat" id="st-valid"><span class="lbl">Status</span><span class="val" id="sv-valid">–</span></div>
+  <div class="stat"><span class="lbl">Phase 5</span><span class="val" id="sv-p5">–</span></div>
+  <div class="stat"><span class="lbl">Power</span><span class="val" id="sv-pow">–</span></div>
+</section>
+
+<div class="banner" id="msgBanner" hidden><span id="msgText"></span><button class="btn" type="button" id="msgClose">Dismiss</button></div>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" type="button" data-tab="recipes" aria-selected="true">Recipes &amp; moves</button>
+  <button role="tab" type="button" data-tab="items" aria-selected="false">Items</button>
+  <button role="tab" type="button" data-tab="notes" aria-selected="false">How it works</button>
+</nav>
+
+<main>
+  <section class="panel" id="tab-recipes" role="tabpanel">
+    <div class="tools">
+      <label>Search <input type="search" id="q" placeholder="recipe or machine"></label>
+      <label class="chk"><input type="checkbox" id="lockP5" checked> Phase 5 in exact proportion</label>
+      <button class="btn" type="button" id="btnAll100" title="Set every clock to 100 % and snap to the nearest valid factory">All clocks 100 %</button>
+      <button class="btn" type="button" id="btnClean" title="Round every clock to the nearest multiple of 0.8 %, 1 %, 1.25 % or 1.5625 % and snap">Clean clocks</button>
+      <label>Add recipe <input type="search" id="addq" placeholder="type to find a recipe" autocomplete="off" list="addlist"></label>
+      <datalist id="addlist"></datalist>
+      <span class="count" id="rowCount"></span>
+    </div>
+    <div class="mv-grid">
+      <div class="mv-table">
+        <div class="scroll"><table id="rtab">
+          <thead><tr>
+            <th class="sortable" data-sort="name">Recipe</th>
+            <th class="n sortable" data-sort="n" aria-sort="descending" title="Whole machines">Machines</th>
+            <th class="n" title="Clock of every machine of this recipe, %">Clock %</th>
+            <th class="n sortable" data-sort="step" title="Smallest change in this recipe's machine count that any combination of moves can make">Step</th>
+            <th class="n" title="Change under the move you point at">Δ</th>
+          </tr></thead>
+          <tbody id="rbody"></tbody>
+        </table></div>
+      </div>
+      <aside class="mv-side" id="side" aria-live="polite">
+        <div class="side-empty">Select a recipe to see the moves that change it.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-items" role="tabpanel" hidden>
+    <div class="tools"><span class="note">Fluids and unusable products must balance exactly. Building materials, equipment and Phase 5 parts may pile up; switch any solid to "must balance" (or back) here. A minimum keeps an item from dropping below that rate when you apply moves.</span></div>
+    <div class="scroll"><table id="itab">
+      <thead><tr><th>Item</th><th>Rule</th><th class="n">Net /min</th><th class="n" title="Smallest change in this item's net that moves can make">Step /min</th><th class="n">Keep at least /min</th></tr></thead>
+      <tbody id="ibody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="panel" id="tab-notes" role="tabpanel" hidden>
+    <div class="prose">
+      <h3>The idea</h3>
+      <p>Every recipe runs a whole number of machines, all at one clock you choose (default: the plan's). Fluids and unusable products must come out exactly even, and the Phase 5 parts in exact proportion if that box is ticked. The machine counts that satisfy those equations form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact balance exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
+      <p>A move can still make something go negative: a machine count, a building material that is used faster than it is made, or a raw resource that would be produced instead of drawn. Such moves are greyed out. Raw resources and power are not limited here.</p>
+      <h3>Reading the numbers</h3>
+      <ul>
+        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different clock usually shrinks it.</li>
+        <li>The Phase 5 step is the smallest batch the current clocks allow. It shows how well the clocks fit together: rounding every clock on its own (<b>Clean clocks</b>) or setting them all to 100 % usually makes it very large, because the exact Phase 5 ratio needs clocks that suit one another. At the optimizer's own clocks the plan is exact, but some moves are large.</li>
+        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Minimums on the Items tab (Phase 5 parts start at their current rate) stop it from shrinking what you want to keep.</li>
+        <li>Changing a clock, a valve or the recipe list rebuilds the moves and snaps to the nearest valid factory.</li>
+      </ul>
+      <p class="note">The lattice is exact (big-integer column reduction, then Lenstra–Lenstra–Lovász reduction). Recipe data is the production sheet's. Import takes production-sheet exports, optimizer plans and recipe-matrix exports; export gives a production-sheet file.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__PLAN__*/
+</script>
+<script>
+/*__MOVES__*/
+</script>
+<script>
+/*__VAPP__*/
+</script>

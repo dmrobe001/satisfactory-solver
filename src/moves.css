@@ -1,0 +1,44 @@
+/* Machine moves: recipe table on the left, moves for the selected recipe on the right. */
+.io-top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.tools .chk { color: var(--ink); }
+.mv-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 10px; align-items: start; }
+@media (max-width: 860px) { .mv-grid { grid-template-columns: minmax(0, 1fr); } }
+.mv-table .scroll { max-height: calc(100vh - 250px); }
+#rtab td, #rtab th { white-space: nowrap; }
+#rtab td.rcell { white-space: normal; min-width: 180px; }
+#rtab tbody tr { cursor: pointer; }
+#rtab tbody tr:hover { background: var(--surface-2); }
+#rtab tbody tr.sel { background: var(--surface-2); box-shadow: inset 4px 0 0 var(--accent); }
+#rtab tbody tr.zero { color: var(--muted); }
+#rtab input.clk { width: 6.2em; font-family: var(--font-mono); text-align: right; background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; }
+#rtab td.big { color: var(--ora-edge); font-weight: 600; }
+#rtab td.d { font-family: var(--font-mono); }
+#rtab td.d.up { color: var(--good); }
+#rtab td.d.down { color: var(--red-edge); }
+.mv-side { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px; position: sticky; top: 8px; max-height: calc(100vh - 24px); overflow: auto; }
+.side-empty { color: var(--muted); padding: 12px 4px; }
+.side-head h2 { font-size: 1.2rem; }
+.side-head .meta { color: var(--muted); font-size: 0.85rem; margin: 2px 0 8px; }
+.shrink { border: 1px dashed var(--accent); border-radius: 6px; padding: 8px; margin-bottom: 10px; }
+.shrink .row1 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.shrink .res { margin-top: 6px; font-size: 0.88rem; }
+.move { border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; background: var(--surface); }
+.move:hover { border-color: var(--accent); }
+.move .mh { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.move .mt { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.02em; }
+.move .btns { display: inline-flex; gap: 4px; }
+.move .btns button { min-width: 2.6em; }
+.move .btns button:disabled { opacity: 0.4; cursor: not-allowed; }
+.chips { display: flex; flex-wrap: wrap; gap: 3px 6px; margin-top: 4px; font-size: 0.8rem; }
+.chip { border-radius: 10px; padding: 0 7px; background: var(--surface-2); border: 1px solid var(--line); white-space: nowrap; }
+.chip.up { border-color: var(--good); }
+.chip.down { border-color: var(--red-edge); }
+.chip.self { font-weight: 600; }
+.eff { color: var(--muted); font-size: 0.78rem; margin-top: 3px; }
+.why { color: var(--red-edge); font-size: 0.78rem; margin-top: 3px; }
+#itab select { background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; }
+#itab input.pin { width: 7em; font-family: var(--font-mono); text-align: right; background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; }
+#itab tr.bad td { background: var(--red-bg); }
+#itab td.cls { color: var(--muted); font-size: 0.85rem; }
+.prose { max-width: 70ch; }
+.prose li { margin-bottom: 4px; }
