@@ -89,6 +89,9 @@ truthy("plan: shrink of the largest recipe stays exact and keeps Phase 5", !sh |
   const ch = A.chainMoves(n0, w, pins0);
   truthy("start: Iron Wire chains are exact", ch.every((c) => A.balanced(c.vec)));
   truthy("start: +12 Iron Wire, +5 Iron Ingot is among them and allowed", ch.some((c) => c.vec[w] === 12 && c.vec[A.rIdx.IngotIron] === 5 && c.plus));
+  const wire = A.productChains(A.iIdx.Wire, n0);
+  truthy("start: product chains for Wire are exact and raise Wire", wire.length > 0 && wire.every((c) => A.balanced(c.vec) && c.gain > 0));
+  truthy("start: one of them runs through the plain Iron Ingot smelter", wire.some((c) => c.vec[A.rIdx.IngotIron] > 0));
 }
 
 console.log(fails ? fails + " FAILED" : "all passed");

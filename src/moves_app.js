@@ -29,6 +29,35 @@
   let st = null;          // {recipes, n, base, batches, valves, pins, lockP5}; every machine at 100 %
   let E = null, nArr = [], netArr = null, pins = new Map();
   let chains = [];
+  /* Product chains ("make more of X"), indexed by every recipe they touch.
+   * Rebuilt in the background after each rebuild of the engine. */
+  let pchains = [], pindex = new Map(), pjob = 0;
+  function indexProducts() {
+    const job = ++pjob;
+    pchains = []; pindex = new Map();
+    const todo = E.items.map((k, i) => i).filter((i) => E.cls[i] === "surplus" && !Moves.PHASE5[E.items[i]] && [...E.rate[i].values()].some((a) => a > 0));
+    const seen = new Set();
+    let at = 0;
+    const step = () => {
+      if (job !== pjob) return; // superseded
+      const t0 = performance.now();
+      while (at < todo.length && performance.now() - t0 < 30) {
+        for (const c of E.productChains(todo[at], nArr)) {
+          const key = c.vec.join(",");
+          if (seen.has(key)) continue;
+          seen.add(key);
+          const id = pchains.length;
+          pchains.push(c);
+          c.vec.forEach((x, j) => { if (x) { if (!pindex.has(j)) pindex.set(j, []); pindex.get(j).push(id); } });
+        }
+        at++;
+      }
+      $("#pcStatus").textContent = at < todo.length ? `indexing product chains ${at}/${todo.length}…` : `${pchains.length} product chains`;
+      if (at < todo.length) setTimeout(step, 0);
+      else if (selected) renderSide();
+    };
+    setTimeout(step, 0);
+  }
   let selected = null, preview = null, sortKey = "n", sortDir = -1, lastShrink = null;
   const history = [];
 
@@ -98,6 +127,7 @@
     $("#batchInfo").textContent = batch ? "1 batch = " + fmt(batch) + " AI Expansion Servers/min" : st.lockP5 ? "no Phase 5 in these recipes" : "ratio unlocked";
     banner(msg || why || "");
     render();
+    indexProducts();
   }
   function syncN() { st.n = {}; E.R.forEach((r, j) => { if (nArr[j]) st.n[r.id] = nArr[j]; }); save(); }
 
@@ -234,8 +264,17 @@
           <span class="btns"><button class="btn" type="button" data-c="-1" ${wm ? `disabled title="${esc(wm)}"` : `title="Apply: ${self} fewer of this"`}>−</button><button class="btn" type="button" data-c="1" ${wp ? `disabled title="${esc(wp)}"` : `title="Apply: ${self} more of this"`}>+</button></span></div>
           <div class="chips">${chipsFor(c.vec, j)}</div><div class="eff">${esc(effectsOf(c.vec))} <i>(for +; − is the reverse)</i></div>${wm ? `<div class="why">− blocked: ${esc(wm)}.</div>` : ""}${wp ? `<div class="why">+ blocked: ${esc(wp)}.</div>` : ""}</div>`;
       }).join("");
-      html += `<h3 class="sec">Lattice moves <span class="count">the reduced basis; every exact change is a combination of these</span></h3>`;
     }
+    const pids = (pindex.get(j) || []).filter((id) => pchains[id].via !== j || !chains.some((c) => c.vec.join(",") === pchains[id].vec.join(",")));
+    if (pids.length) {
+      const rows = pids.map((id) => ({ id, c: pchains[id], wp: whyVec(pchains[id].vec, 1), wm: whyVec(pchains[id].vec, -1) }))
+        .sort((a, b) => (!a.wp || !a.wm ? 0 : 1) - (!b.wp || !b.wm ? 0 : 1) || a.c.size - b.c.size).slice(0, 12);
+      html += `<h3 class="sec">Product chains through this recipe <span class="count">“make more of X” moves that use it (${pids.length})</span></h3>`;
+      html += rows.map(({ id, c, wp, wm }) => `<div class="move chain pchain" data-pc="${id}"><div class="mh"><span class="mt">More ${esc(iname(E.items[c.item]))} · ${fmt(c.gain, true)}/min via ${esc(E.R[c.via].name)}</span>
+          <span class="btns"><button class="btn" type="button" data-c="-1" ${wm ? `disabled title="${esc(wm)}"` : `title="Apply: less ${esc(iname(E.items[c.item]))}"`}>−</button><button class="btn" type="button" data-c="1" ${wp ? `disabled title="${esc(wp)}"` : `title="Apply: more ${esc(iname(E.items[c.item]))}"`}>+</button></span></div>
+          <div class="chips">${chipsFor(c.vec, j)}</div><div class="eff">${esc(effectsOf(c.vec))}</div>${wm ? `<div class="why">− blocked: ${esc(wm)}.</div>` : ""}${wp ? `<div class="why">+ blocked: ${esc(wp)}.</div>` : ""}</div>`).join("");
+    }
+    if (chains.length || pids.length) html += `<h3 class="sec">Lattice moves <span class="count">the reduced basis; every exact change is a combination of these</span></h3>`;
     html += mv.length ? mv.map((i) => {
       const self = E.K[i][j];
       const plus = [[i, self > 0 ? 1 : -1]], minus = [[i, self > 0 ? -1 : 1]]; // "+" raises this recipe
@@ -293,7 +332,7 @@
     }
     const chEl = b.closest(".move.chain");
     if (chEl && b.dataset.c) {
-      const vec = chains[+chEl.dataset.ch].vec, c = +b.dataset.c;
+      const vec = chEl.dataset.pc !== undefined ? pchains[+chEl.dataset.pc].vec : chains[+chEl.dataset.ch].vec, c = +b.dataset.c;
       push();
       nArr = nArr.map((x, j) => x + c * vec[j]);
       netArr = E.netOf(nArr); syncN(); preview = null; lastShrink = null;
@@ -310,11 +349,11 @@
   let hoverKey = null;
   $("#side").addEventListener("mouseover", (e) => {
     const m = e.target.closest(".move");
-    const key = m ? (m.dataset.ch !== undefined ? "c" + m.dataset.ch : m.dataset.i) : null;
+    const key = m ? (m.dataset.pc !== undefined ? "p" + m.dataset.pc : m.dataset.ch !== undefined ? "c" + m.dataset.ch : m.dataset.i) : null;
     if (key === hoverKey) return;
     hoverKey = key;
     if (!m) return;
-    preview = m.dataset.ch !== undefined ? chains[+m.dataset.ch].vec.slice() : deltaOf([[+m.dataset.i, +m.dataset.s]]);
+    preview = m.dataset.pc !== undefined ? pchains[+m.dataset.pc].vec.slice() : m.dataset.ch !== undefined ? chains[+m.dataset.ch].vec.slice() : deltaOf([[+m.dataset.i, +m.dataset.s]]);
     renderTable();
   });
   $("#side").addEventListener("mouseleave", () => {

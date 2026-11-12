@@ -528,7 +528,7 @@
         const n2 = n.slice(), net2 = Float64Array.from(net0);
         for (let x = 0; x < M; x++) if (vec[x]) n2[x] += c * vec[x];
         this.rate.forEach((m, i) => { let d = 0; for (const [r, a] of m) if (vec[r]) d += a * vec[r]; net2[i] += c * d; });
-        return this.badness(n2, net2, pins) <= this.badness(n, net0, pins) + 1e-9 && n2.every((x) => x >= 0);
+        return this.badness(n2, net2, pins || null) <= this.badness(n, net0, pins || null) + 1e-9 && n2.every((x) => x >= 0);
       };
       found.set(key, { vec, size, plus: test(1), minus: test(-1) });
     };
@@ -562,6 +562,23 @@
     };
     visit([j]);
     return [...found.values()].sort((a, b) => (b.plus || b.minus) - (a.plus || a.minus) || a.size - b.size).slice(0, want);
+  };
+
+  /* Product chains for surplus item i: for each recipe that makes it, the chain
+   * moves through that recipe whose net effect raises item i.  Returns
+   * [{item, via, vec, size, gain}] (gain: per-minute rise of item i), where vec
+   * is oriented so that + makes more of the item. */
+  Moves.prototype.productChains = function (i, n, opts) {
+    const out = [];
+    const makers = [...this.rate[i]].filter(([, a]) => a > 0).map(([r]) => r);
+    for (const r of makers) {
+      for (const c of this.chainMoves(n, r, null, Object.assign({ want: 4 }, opts || {}))) {
+        let g = 0;
+        for (const [x, a] of this.rate[i]) if (c.vec[x]) g += a * c.vec[x];
+        if (g > 1e-9) out.push({ item: i, via: r, vec: c.vec, size: c.size, gain: g });
+      }
+    }
+    return out;
   };
 
   Moves.PHASE5 = PHASE5;
