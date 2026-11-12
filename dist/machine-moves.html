@@ -1539,7 +1539,7 @@ window.MOVES_START = {
       const wp = hugeMsg || why(plus), wm = hugeMsg || why(minus);
       return `<div class="move" data-i="${i}" data-s="${self > 0 ? 1 : -1}"><div class="mh"><span class="mt">Move ${i + 1} · ${Math.abs(self)} machine${Math.abs(self) === 1 ? "" : "s"} of this</span>
         <span class="btns"><button class="btn" type="button" data-c="-1" ${wm ? `disabled title="${esc(wm)}"` : `title="Apply: ${Math.abs(self)} fewer of this"`}>−</button><button class="btn" type="button" data-c="1" ${wp ? `disabled title="${esc(wp)}"` : `title="Apply: ${Math.abs(self)} more of this"`}>+</button></span></div>
-        <div class="chips">${chipsFor(deltaOf(plus), j)}</div><div class="eff">${esc(effectsText(plus))} <i>(for +; − is the reverse)</i></div>${wm && wp ? `<div class="why">Both directions blocked: ${esc(wm)}.</div>` : ""}</div>`;
+        <div class="chips">${chipsFor(deltaOf(plus), j)}</div><div class="eff">${esc(effectsText(plus))} <i>(for +; − is the reverse)</i></div>${wm ? `<div class="why">− blocked: ${esc(wm)}.</div>` : ""}${wp ? `<div class="why">+ blocked: ${esc(wp)}.</div>` : ""}</div>`;
     }).join("") : `<div class="side-empty">No move changes this recipe: the exact balances fix its machine count. Opening a valve on the Items tab or adding a recipe can free it.</div>`;
     side.innerHTML = html;
   }
