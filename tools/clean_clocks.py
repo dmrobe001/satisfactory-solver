@@ -59,10 +59,16 @@ def main():
     ap.add_argument("--s", type=int, default=1)
     ap.add_argument("--min-s", action="store_true", help="find the smallest scale S that works")
     ap.add_argument("--no-generators", action="store_true")
+    ap.add_argument("--recipes-from", help="only the recipes used in this --out file (a heuristic restriction)")
+    ap.add_argument("--max-machines", type=float, default=300.0,
+                    help="upper bound on any recipe's total, in machines at 100 %% (tightens --union)")
     ap.add_argument("--time", type=float, default=300)
     ap.add_argument("--out")
     a = ap.parse_args()
     recs, raw, bm = build(a.no_generators)
+    if a.recipes_from:
+        keep = set(json.loads(Path(a.recipes_from).read_text())["recipes"])
+        recs = [r for r in recs if r["id"] in keep]
     dens = [int(v) for v in a.union.split(",")] if a.union else None
     D = math.lcm(*dens) if dens else a.d
     rates = []
@@ -107,7 +113,6 @@ def main():
     lb = [0.0] * nv
     ub = [None] * nv
     if dens:  # Y_r = sum_k (D / d_k) W_rk, with at most one k per recipe (binary b_rk)
-        BIGW = 10 ** 6
         extra = []
         for j in range(R):
             ws = []
@@ -115,7 +120,7 @@ def main():
                 w, b = nv, nv + 1
                 nv += 2
                 lb += [0.0, 0.0]; ub += [None, 1.0]
-                hrows.append(({w: 1.0, b: -float(BIGW)}, None, 0.0))
+                hrows.append(({w: 1.0, b: -a.max_machines * dk}, None, 0.0))
                 ws.append((w, b, D // dk))
             hrows.append(({j: 1.0, **{w: -float(m) for w, _, m in ws}}, 0.0, 0.0))
             hrows.append(({b: 1.0 for _, b, _ in ws}, None, 1.0))
