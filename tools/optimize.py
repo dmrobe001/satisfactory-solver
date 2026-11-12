@@ -67,7 +67,7 @@ EQUIPMENT = {
 }
 # Phase 5: Nuclear Pasta, Biochemical Sculptor, AI Expansion Server, Ballistic Warp Drive
 PHASE5 = {"SpaceElevatorPart_9": 1000, "SpaceElevatorPart_10": 1000,
-          "SpaceElevatorPart_11": 256, "SpaceElevatorPart_12": 200}
+          "SpaceElevatorPart_12": 256, "SpaceElevatorPart_11": 200}  # _12 is the AI Expansion Server, _11 the Ballistic Warp Drive
 
 # Production-sheet rules (src/buildings.js DEFAULT_RULES), with the per-item-type
 # rule changed to 5 industrial storage containers and 2 smart splitters.
