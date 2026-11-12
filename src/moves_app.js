@@ -411,7 +411,7 @@
   function startState() {
     const S = window.MOVES_START;
     return { app: "satisfactory-machine-moves", state: { recipes: S.recipes.slice(), base: Object.assign({}, S.base),
-      n: Object.assign({}, S.n || {}), startN: S.n ? Object.assign({}, S.n) : null, batches: 1, valves: {}, pins: {}, lockP5: true } };
+      n: Object.assign({}, S.n || {}), startN: S.n ? Object.assign({}, S.n) : null, batches: 1, valves: Object.assign({}, S.valves || {}), pins: {}, lockP5: true } };
   }
   $("#btnStart").addEventListener("click", () => { st && push(); st = null; loadObject(startState(), "Loaded the all-recipe start."); });
   let downloads = null;
