@@ -59,6 +59,8 @@ def main():
     ap.add_argument("--s", type=int, default=1)
     ap.add_argument("--min-s", action="store_true", help="find the smallest scale S that works")
     ap.add_argument("--no-generators", action="store_true")
+    ap.add_argument("--grid", help="JSON file {recipe id: denominator} fixing each listed recipe's grid; "
+                    "other recipes use --d; the common unit is the lcm")
     ap.add_argument("--recipes-from", help="only the recipes used in this --out file (a heuristic restriction)")
     ap.add_argument("--max-machines", type=float, default=300.0,
                     help="upper bound on any recipe's total, in machines at 100 %% (tightens --union)")
@@ -70,7 +72,8 @@ def main():
         keep = set(json.loads(Path(a.recipes_from).read_text())["recipes"])
         recs = [r for r in recs if r["id"] in keep]
     dens = [int(v) for v in a.union.split(",")] if a.union else None
-    D = math.lcm(*dens) if dens else a.d
+    grid = {k: int(v) for k, v in json.loads(Path(a.grid).read_text()).items()} if a.grid else None
+    D = math.lcm(*dens) if dens else (math.lcm(a.d, *grid.values()) if grid else a.d)
     rates = []
     for r in recs:
         d = {}
@@ -112,6 +115,12 @@ def main():
         hrows.append((d, 0.0 if kind in ("eq", "ge") else None, 0.0 if kind in ("eq", "le") else None))
     lb = [0.0] * nv
     ub = [None] * nv
+    if grid:  # Y_r = (D / d_r) W_r: recipe r on its own fixed grid
+        for j, r in enumerate(recs):
+            m = D // grid.get(r["id"], a.d)
+            if m > 1:
+                w = nv; nv += 1; lb.append(0.0); ub.append(None)
+                hrows.append(({j: 1.0, w: -float(m)}, 0.0, 0.0))
     if dens:  # Y_r = sum_k (D / d_k) W_rk, with at most one k per recipe (binary b_rk)
         extra = []
         for j in range(R):
