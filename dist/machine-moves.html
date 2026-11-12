@@ -308,7 +308,8 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
     <button class="btn" type="button" id="btnExport" hidden>Export</button>
     <label class="btn" for="fileState" title="Load a plan exported from the production sheet, the optimizer, the recipe matrix or this page">Import</label>
     <input type="file" id="fileState" accept=".json,application/json" hidden>
-    <button class="btn" type="button" id="btnDefault">Load optimizer plan</button>
+    <button class="btn" type="button" id="btnStart" title="Every recipe that needs no hand-gathered items (no Unpackage recipes; packaging only for Fuel, Turbofuel, Rocket Fuel and Ionized Fuel), starting from the fewest whole machines for one Phase 5 batch">Load all-recipe start</button>
+    <button class="btn" type="button" id="btnDefault" title="The optimizer's recipes and ratios">Load optimizer plan</button>
     <span class="count" id="ioMsg" role="status"></span>
   </div>
 </header>
@@ -375,6 +376,7 @@ textarea { width: 100%; min-height: 120px; font-family: var(--font-mono); font-s
       <p>A move can still make something go negative: a machine count, a building material that is used faster than it is made, or a raw resource that would be produced instead of drawn. Such moves are greyed out. Raw resources and power are not limited here.</p>
       <h3>Phase 5 batches</h3>
       <p>With whole machines at 100 % and the exact Phase 5 ratio, Phase 5 can only be made in whole batches: the smallest set of machine counts that balances every intermediate exactly. The batch depends on the recipes in use (and on the valves). The factory is sized to the number of batches you pick: the plan's recipe ratios are scaled to that output and snapped to the nearest valid whole-machine factory. Untick the ratio box to treat the Phase 5 parts like other surplus items, with minimums you set on the Items tab.</p>
+      <p>The default start uses every recipe that needs no hand-gathered items, except Unpackage recipes and the Packager recipes other than Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel. Its counts are the fewest whole machines that make one exact Phase 5 batch (an integer program solved offline, <code>tools/moves_start.py</code>); more batches multiply them.</p>
       <h3>Reading the numbers</h3>
       <ul>
         <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different recipe usually shrinks it.</li>
@@ -391,6 +393,425 @@ window.GAME = {"version":"1.0","source":"https://raw.githubusercontent.com/green
 </script>
 <script>
 window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketFuel":0.24563,"QuantumEnergy":0.928365,"DarkMatter":0.895356,"SuperpositionOscillator":0.9798,"TemporalProcessor":0.906536,"SpaceElevatorPart_12":0.939264,"IonizedFuel":0.7338,"PackagedIonizedFuel":0.3669,"Alternate_Diamond_Turbo":0.968262,"SAMFluctuator":0.977239,"FicsiteMesh":0.961653,"TimeCrystal":0.98343,"IngotSAM":0.97224,"SpaceElevatorPart_10":0.91725,"FicsiteIngot_AL":0.903371,"Bauxite_Caterium":0.891834,"PackagedTurboFuel":0.98022,"PetroleumCoke":0.99724,"ResidualRubber":0.99183,"Alternate_DarkMatter_Trap":0.837592,"Alternate_WetConcrete":0.990996,"Alternate_TurboHeavyFuel":0.99076,"Alternate_SteelRod":0.980125,"SteelBeam":0.987878,"SteelPipe":2.4e-05,"PackagedWater":0.024484,"Alternate_SteamedCopperSheet":0.988448,"Alternate_RecycledRubber":0.984668,"Alternate_PureQuartzCrystal":0.988402,"PureAluminumIngot":0.987,"AluminumSheet":0.994506,"Alternate_PlasticSmartPlating":0.9784,"Alternate_HighSpeedWiring":0.9784,"Alternate_HeavyOilResidue":0.993926,"SpaceElevatorPart_4":0.91725,"SpaceElevatorPart_5":0.91725,"Alternate_FusedWire":0.98122,"Alternate_FlexibleFramework":0.626176,"Alternate_ElectroAluminumScrap":0.9786,"Alternate_DilutedPackagedFuel":0.024484,"Alternate_CopperRotor":0.983596,"Alternate_CopperAlloyIngot":0.988143,"Alternate_CokeSteelIngot":0.998976,"Alternate_CoatedIronPlate":0.988104,"Alternate_CoatedIronCanister":0.961329,"Alternate_CoatedCable":0.970456,"Alternate_TurboPressureMotor":0.871978,"PressureConversionCube":0.974109,"NitricAcid":0.985021,"CopperDust":0.9784,"SpaceElevatorPart_9":0.9784,"UraniumCell":0.999856,"ComputerSuper":0.964874,"RadioControlUnit":0.973811,"SulfuricAcid":0.958356,"SpaceElevatorPart_7":0.9784,"SpaceElevatorPart_6":0.939264,"Alternate_SloppyAlumina":0.98559,"GasTank":0.953683,"PackagedNitrogen":0.871978,"Alternate_HeatFusedFrame":0.96493,"Alternate_DilutedFuel":0.989378,"Alternate_CoolingDevice":0.96319,"Alternate_ClassicBattery":0.48902,"Alternate_AutomatedMiner":0.951143,"Alternate_AlcladCasing":0.97857,"Alternate_SteelPipe_Molded":0.997905,"Alternate_AILimiter_Plastic":0.981513,"Alternate_Silica_Distilled":0.983934,"Alternate_Quartz_Purified":0.983934,"Alternate_IronIngot_Leached":0.973944,"IngotCaterium":0.98897,"SpaceElevatorPart_8":0.9784,"Alternate_Stator":0.985521,"Alternate_Screw_2":0.983543,"Alternate_EncasedIndustrialBeam":0.987899,"Alternate_ReinforcedIronPlate_1":0.983407,"Alternate_RadioControlUnit_1":0.86156,"Alternate_Quickwire":0.990871,"Alternate_Plastic_1":0.984328,"Alternate_Motor_1":0.98752,"Alternate_ModularFrame":0.987949,"Alternate_IngotSteel_1":0.966105,"Alternate_HighSpeedConnector":0.99997,"Alternate_ModularFrameHeavy":0.983476,"Alternate_HeatSink_1":0.989522,"Alternate_Gunpowder_1":0.932372,"Alternate_ElectromagneticControlRod_1":0.469632,"Alternate_CrystalOscillator":0.984139,"Alternate_Computer_2":0.981956,"Alternate_CircuitBoard_1":0.976035,"SingularityCell":0.7338,"SpaceElevatorPart_11":0.9784,"FilterHazmat":0.782432,"SpikedRebar":0.896706,"CartridgeSmart":0.586824,"Rebar_Stunshot":0.440118,"FilterGasMask":0.58688,"Alternate_PolyesterFabric":0.58688,"SyntheticPowerShard":0.3669,"NobeliskShockwave":0.293412,"Rebar_Spreadshot":0.880235,"CartridgeChaos_Packaged":0.117365,"NobeliskNuke":0.999856,"Cartridge":0.731178,"Rebar_Explosive":0.999898,"NobeliskCluster":0.999931,"Nobelisk":0.999822,"GunpowderMK2":0.998331,"Burn_RocketFuel_GeneratorFuel":0.999216,"Geothermal_Pure":1,"Miner3_Pure_OreIron":2.5,"Miner3_Pure_OreGold":2.5,"Miner3_Pure_OreCopper":2.5,"Miner3_Normal_OreCopper":2.5,"Miner3_Pure_Stone":2.5,"Miner3_Normal_Stone":2.5,"Miner3_Pure_Coal":2.5,"Miner3_Normal_Coal":2.5,"Miner3_Pure_RawQuartz":2.5,"Miner3_Normal_RawQuartz":2.5,"Miner3_Pure_Sulfur":2.5,"Miner3_Normal_Sulfur":2.5,"Miner3_Normal_OreUranium":2.5,"Miner3_Pure_OreBauxite":2.5,"Miner3_Normal_OreBauxite":2.5,"Miner3_Impure_OreBauxite":2.5,"Miner3_Pure_SAM":2.5,"Miner3_Normal_SAM":2.5,"Miner3_Impure_SAM":2.5,"Well_Impure_LiquidOil":2.5,"Well_Normal_LiquidOil":2.5,"Well_Pure_LiquidOil":2.5,"OilExtractor_Pure":2.5,"OilExtractor_Normal":2.5,"OilExtractor_Impure":2.5,"Well_Impure_NitrogenGas":2.5,"Well_Normal_NitrogenGas":2.5,"Well_Pure_NitrogenGas":2.5,"WaterExtractor":1},"n":{"Alternate_RocketFuel_Nitro":43,"PackagedRocketFuel":1,"QuantumEnergy":7,"DarkMatter":5,"SuperpositionOscillator":8,"TemporalProcessor":3,"SpaceElevatorPart_12":1,"IonizedFuel":1,"PackagedIonizedFuel":1,"Alternate_Diamond_Turbo":21,"SAMFluctuator":27,"FicsiteMesh":31,"TimeCrystal":92,"IngotSAM":79,"SpaceElevatorPart_10":8,"FicsiteIngot_AL":11,"Bauxite_Caterium":14,"PackagedTurboFuel":47,"PetroleumCoke":192,"ResidualRubber":210,"Alternate_DarkMatter_Trap":5,"Alternate_WetConcrete":532,"Alternate_TurboHeavyFuel":31,"Alternate_SteelRod":21,"SteelBeam":267,"SteelPipe":12,"PackagedWater":1,"Alternate_SteamedCopperSheet":318,"Alternate_RecycledRubber":129,"Alternate_PureQuartzCrystal":73,"PureAluminumIngot":466,"AluminumSheet":30,"Alternate_PlasticSmartPlating":3,"Alternate_HighSpeedWiring":5,"Alternate_HeavyOilResidue":420,"SpaceElevatorPart_4":8,"SpaceElevatorPart_5":8,"Alternate_FusedWire":49,"Alternate_FlexibleFramework":2,"Alternate_ElectroAluminumScrap":94,"Alternate_DilutedPackagedFuel":1,"Alternate_CopperRotor":94,"Alternate_CopperAlloyIngot":413,"Alternate_CokeSteelIngot":233,"Alternate_CoatedIronPlate":194,"Alternate_CoatedIronCanister":16,"Alternate_CoatedCable":34,"Alternate_TurboPressureMotor":8,"PressureConversionCube":30,"NitricAcid":44,"CopperDust":66,"SpaceElevatorPart_9":33,"UraniumCell":6,"ComputerSuper":23,"RadioControlUnit":78,"SulfuricAcid":44,"SpaceElevatorPart_7":5,"SpaceElevatorPart_6":4,"Alternate_SloppyAlumina":70,"GasTank":6,"PackagedNitrogen":6,"Alternate_HeatFusedFrame":40,"Alternate_DilutedFuel":147,"Alternate_CoolingDevice":23,"Alternate_ClassicBattery":1,"Alternate_AutomatedMiner":12,"Alternate_AlcladCasing":38,"Alternate_SteelPipe_Molded":508,"Alternate_AILimiter_Plastic":97,"Alternate_Silica_Distilled":19,"Alternate_Quartz_Purified":38,"Alternate_IronIngot_Leached":198,"IngotCaterium":154,"SpaceElevatorPart_8":3,"Alternate_Stator":87,"Alternate_Screw_2":183,"Alternate_EncasedIndustrialBeam":539,"Alternate_ReinforcedIronPlate_1":117,"Alternate_RadioControlUnit_1":2,"Alternate_Quickwire":288,"Alternate_Plastic_1":181,"Alternate_Motor_1":151,"Alternate_ModularFrame":444,"Alternate_IngotSteel_1":313,"Alternate_HighSpeedConnector":71,"Alternate_ModularFrameHeavy":106,"Alternate_HeatSink_1":25,"Alternate_Gunpowder_1":10,"Alternate_ElectromagneticControlRod_1":1,"Alternate_CrystalOscillator":340,"Alternate_Computer_2":138,"Alternate_CircuitBoard_1":76,"SingularityCell":2,"SpaceElevatorPart_11":3,"FilterHazmat":1,"SpikedRebar":8,"CartridgeSmart":2,"Rebar_Stunshot":1,"FilterGasMask":2,"Alternate_PolyesterFabric":1,"SyntheticPowerShard":1,"NobeliskShockwave":1,"Rebar_Spreadshot":1,"CartridgeChaos_Packaged":1,"NobeliskNuke":15,"Cartridge":2,"Rebar_Explosive":9,"NobeliskCluster":6,"Nobelisk":9,"GunpowderMK2":12,"Burn_RocketFuel_GeneratorFuel":1510,"Geothermal_Pure":7,"Miner3_Pure_OreIron":40,"Miner3_Pure_OreGold":8,"Miner3_Pure_OreCopper":13,"Miner3_Normal_OreCopper":9,"Miner3_Pure_Stone":29,"Miner3_Normal_Stone":49,"Miner3_Pure_Coal":16,"Miner3_Normal_Coal":13,"Miner3_Pure_RawQuartz":7,"Miner3_Normal_RawQuartz":2,"Miner3_Pure_Sulfur":5,"Miner3_Normal_Sulfur":1,"Miner3_Normal_OreUranium":1,"Miner3_Pure_OreBauxite":6,"Miner3_Normal_OreBauxite":6,"Miner3_Impure_OreBauxite":5,"Miner3_Pure_SAM":3,"Miner3_Normal_SAM":6,"Miner3_Impure_SAM":7,"WellPressurizer":9,"Well_Impure_LiquidOil":8,"Well_Normal_LiquidOil":6,"Well_Pure_LiquidOil":4,"OilExtractor_Pure":8,"OilExtractor_Normal":12,"OilExtractor_Impure":10,"Well_Impure_NitrogenGas":2,"Well_Normal_NitrogenGas":7,"Well_Pure_NitrogenGas":36,"WaterExtractor":779}};
+window.MOVES_START = {
+ "recipes": [
+  "IronPlate",
+  "IronRod",
+  "IngotIron",
+  "Alternate_RocketFuel_Nitro",
+  "RocketFuel",
+  "PackagedRocketFuel",
+  "Alternate_IonizedFuel_Dark",
+  "DarkEnergy",
+  "QuantumEnergy",
+  "DarkMatter",
+  "SuperpositionOscillator",
+  "TemporalProcessor",
+  "SpaceElevatorPart_12",
+  "IonizedFuel",
+  "PackagedIonizedFuel",
+  "Alternate_Diamond_Turbo",
+  "SAMFluctuator",
+  "FicsiteMesh",
+  "FicsiteIngot_Iron",
+  "TimeCrystal",
+  "Diamond",
+  "IngotSAM",
+  "SpaceElevatorPart_10",
+  "FicsiteIngot_AL",
+  "FicsiteIngot_CAT",
+  "Bauxite_Caterium",
+  "Bauxite_Copper",
+  "Caterium_Copper",
+  "Caterium_Quartz",
+  "Coal_Iron",
+  "Coal_Limestone",
+  "Copper_Quartz",
+  "Copper_Sulfur",
+  "Iron_Limestone",
+  "Limestone_Sulfur",
+  "Nitrogen_Bauxite",
+  "Nitrogen_Caterium",
+  "Quartz_Bauxite",
+  "Quartz_Coal",
+  "Sulfur_Coal",
+  "Sulfur_Iron",
+  "Uranium_Bauxite",
+  "Alternate_Turbofuel",
+  "PackagedTurboFuel",
+  "Alternate_EnrichedCoal",
+  "CircuitBoard",
+  "LiquidFuel",
+  "PetroleumCoke",
+  "Plastic",
+  "Rubber",
+  "ResidualFuel",
+  "ResidualPlastic",
+  "ResidualRubber",
+  "Alternate_Diamond_Pink",
+  "Alternate_Diamond_Petroleum",
+  "Alternate_Diamond_OilBased",
+  "Alternate_Diamond_Cloudy",
+  "Alternate_DarkMatter_Trap",
+  "Alternate_DarkMatter_Crystallization",
+  "Alternate_WetConcrete",
+  "Alternate_TurboHeavyFuel",
+  "Alternate_SteelRod",
+  "SteelBeam",
+  "SteelPipe",
+  "IngotSteel",
+  "SpaceElevatorPart_2",
+  "Alternate_SteelCanister",
+  "FluidCanister",
+  "Fuel",
+  "Alternate_SteamedCopperSheet",
+  "Alternate_RubberConcrete",
+  "Alternate_RecycledRubber",
+  "Alternate_PureQuartzCrystal",
+  "QuartzCrystal",
+  "Alternate_PureIronIngot",
+  "Alternate_PureCopperIngot",
+  "Alternate_PureCateriumIngot",
+  "PureAluminumIngot",
+  "AluminumCasing",
+  "AluminumSheet",
+  "AluminaSolution",
+  "AluminumScrap",
+  "IngotAluminum",
+  "Silica",
+  "CrystalOscillator",
+  "Alternate_PolymerResin",
+  "Alternate_PlasticSmartPlating",
+  "Alternate_HighSpeedWiring",
+  "EncasedIndustrialBeam",
+  "Motor",
+  "Stator",
+  "SpaceElevatorPart_3",
+  "AILimiter",
+  "Alternate_HeavyOilResidue",
+  "Alternate_HeavyFlexibleFrame",
+  "Computer",
+  "ModularFrameHeavy",
+  "SpaceElevatorPart_4",
+  "SpaceElevatorPart_5",
+  "Alternate_FusedWire",
+  "Alternate_FlexibleFramework",
+  "Alternate_ElectrodeCircuitBoard",
+  "Alternate_ElectroAluminumScrap",
+  "Alternate_CopperRotor",
+  "ModularFrame",
+  "Rotor",
+  "CopperSheet",
+  "SpaceElevatorPart_1",
+  "Alternate_CopperAlloyIngot",
+  "Alternate_CokeSteelIngot",
+  "Alternate_CoatedIronPlate",
+  "Alternate_CoatedIronCanister",
+  "Alternate_CoatedCable",
+  "Alternate_BoltedFrame",
+  "Alternate_AdheredIronPlate",
+  "PlutoniumCell",
+  "PressureConversionCube",
+  "NitricAcid",
+  "NonFissileUranium",
+  "CopperDust",
+  "Plutonium",
+  "PlutoniumFuelRod",
+  "SpaceElevatorPart_9",
+  "Alternate_TurboBlendFuel",
+  "UraniumCell",
+  "CoolingSystem",
+  "Battery",
+  "ComputerSuper",
+  "RadioControlUnit",
+  "SulfuricAcid",
+  "SpaceElevatorPart_7",
+  "HighSpeedConnector",
+  "Alternate_SuperStateComputer",
+  "ElectromagneticControlRod",
+  "NuclearFuelRod",
+  "SpaceElevatorPart_6",
+  "Alternate_SloppyAlumina",
+  "Alternate_RadioControlSystem",
+  "Alternate_PlutoniumFuelUnit",
+  "Alternate_OCSupercomputer",
+  "HeatSink",
+  "FusedModularFrame",
+  "GasTank",
+  "Alternate_InstantScrap",
+  "Alternate_InstantPlutoniumCell",
+  "Alternate_HeatFusedFrame",
+  "Alternate_FertileUranium",
+  "Alternate_ElectricMotor",
+  "Alternate_DilutedFuel",
+  "Alternate_CoolingDevice",
+  "Alternate_ClassicBattery",
+  "Alternate_AutomatedMiner",
+  "Alternate_AlcladCasing",
+  "Alternate_SteelPipe_Molded",
+  "Alternate_SteelPipe_Iron",
+  "Alternate_SteelCastedPlate",
+  "Alternate_SteelBeam_Molded",
+  "Alternate_SteelBeam_Aluminum",
+  "Alternate_AluminumRod",
+  "Alternate_AILimiter_Plastic",
+  "Alternate_Silica_Distilled",
+  "Alternate_Quartz_Purified",
+  "Alternate_Quartz_Fused",
+  "Alternate_IronIngot_Leached",
+  "Alternate_IronIngot_Basic",
+  "Alternate_CopperIngot_Tempered",
+  "Alternate_CopperIngot_Leached",
+  "Alternate_CateriumIngot_Tempered",
+  "Alternate_CateriumIngot_Leached",
+  "Alternate_Wire_2",
+  "Alternate_Wire_1",
+  "Alternate_UraniumCell_1",
+  "IngotCaterium",
+  "Alternate_TurboMotor_1",
+  "MotorTurbo",
+  "SpaceElevatorPart_8",
+  "Alternate_Stator",
+  "Alternate_Silica",
+  "Alternate_Screw_2",
+  "Alternate_Screw",
+  "Alternate_Rotor",
+  "Alternate_EncasedIndustrialBeam",
+  "Alternate_ReinforcedIronPlate_2",
+  "Alternate_ReinforcedIronPlate_1",
+  "Alternate_RadioControlUnit_1",
+  "Alternate_Quickwire",
+  "Alternate_Plastic_1",
+  "Alternate_NuclearFuelRod_1",
+  "Alternate_Motor_1",
+  "Alternate_ModularFrame",
+  "Alternate_IngotSteel_2",
+  "Alternate_IngotSteel_1",
+  "Alternate_IngotIron",
+  "Alternate_HighSpeedConnector",
+  "Alternate_ModularFrameHeavy",
+  "Alternate_HeatSink_1",
+  "Alternate_Gunpowder_1",
+  "Alternate_ElectromagneticControlRod_1",
+  "Alternate_CrystalOscillator",
+  "Alternate_Concrete",
+  "Alternate_Computer_2",
+  "Alternate_Computer_1",
+  "Alternate_CircuitBoard_2",
+  "Alternate_CircuitBoard_1",
+  "Alternate_Cable_2",
+  "Alternate_Cable_1",
+  "Ficsonium",
+  "FicsoniumFuelRod",
+  "SingularityCell",
+  "SpaceElevatorPart_11",
+  "FilterHazmat",
+  "Quickwire",
+  "Gunpowder",
+  "AlienPowerFuel",
+  "SpikedRebar",
+  "CartridgeSmart",
+  "Rebar_Stunshot",
+  "FilterGasMask",
+  "Alternate_PolyesterFabric",
+  "SyntheticPowerShard",
+  "NobeliskShockwave",
+  "Rebar_Spreadshot",
+  "CartridgeChaos_Packaged",
+  "CartridgeChaos",
+  "NobeliskNuke",
+  "Cartridge",
+  "Rebar_Explosive",
+  "NobeliskCluster",
+  "Nobelisk",
+  "GunpowderMK2",
+  "IronPlateReinforced",
+  "Concrete",
+  "Screw",
+  "Cable",
+  "Wire",
+  "IngotCopper",
+  "Burn_Coal_GeneratorCoal",
+  "Burn_CompactedCoal_GeneratorCoal",
+  "Burn_PetroleumCoke_GeneratorCoal",
+  "Burn_NuclearFuelRod_GeneratorNuclear",
+  "Burn_PlutoniumFuelRod_GeneratorNuclear",
+  "Burn_FicsoniumFuelRod_GeneratorNuclear",
+  "Burn_LiquidFuel_GeneratorFuel",
+  "Burn_LiquidTurboFuel_GeneratorFuel",
+  "Burn_RocketFuel_GeneratorFuel",
+  "Burn_IonizedFuel_GeneratorFuel"
+ ],
+ "base": {
+  "DarkEnergy": 42.3,
+  "QuantumEnergy": 109.5,
+  "SuperpositionOscillator": 98.4,
+  "TemporalProcessor": 64.0,
+  "SpaceElevatorPart_12": 48.0,
+  "FicsiteMesh": 596.0,
+  "TimeCrystal": 1031.0,
+  "IngotSAM": 467.833333,
+  "SpaceElevatorPart_10": 375.0,
+  "FicsiteIngot_AL": 198.666667,
+  "PetroleumCoke": 210.1125,
+  "Rubber": 1456.140149,
+  "Alternate_Diamond_OilBased": 309.3,
+  "Alternate_DarkMatter_Trap": 174.2,
+  "Alternate_WetConcrete": 900.885,
+  "Alternate_SteamedCopperSheet": 1344.086694,
+  "Alternate_RecycledRubber": 566.065425,
+  "AluminumSheet": 147.6,
+  "AluminaSolution": 1379.780876,
+  "AluminumScrap": 658.265438,
+  "IngotAluminum": 2633.061752,
+  "Alternate_PlasticSmartPlating": 150.0,
+  "Alternate_HighSpeedWiring": 250.0,
+  "EncasedIndustrialBeam": 750.0,
+  "SpaceElevatorPart_4": 375.0,
+  "SpaceElevatorPart_5": 375.0,
+  "Alternate_FlexibleFramework": 64.0,
+  "Alternate_CopperRotor": 113.333333,
+  "Alternate_CopperAlloyIngot": 10867.547232,
+  "Alternate_CokeSteelIngot": 336.18,
+  "Alternate_CoatedIronPlate": 424.504128,
+  "PressureConversionCube": 825.0,
+  "NitricAcid": 672.780959,
+  "CopperDust": 3300.0,
+  "SpaceElevatorPart_9": 1650.0,
+  "CoolingSystem": 75.0,
+  "Battery": 189.75,
+  "SulfuricAcid": 389.43851,
+  "SpaceElevatorPart_7": 250.0,
+  "Alternate_SuperStateComputer": 158.125,
+  "SpaceElevatorPart_6": 192.0,
+  "Alternate_RadioControlSystem": 466.666667,
+  "Alternate_HeatFusedFrame": 325.0,
+  "Alternate_DilutedFuel": 414.36606,
+  "Alternate_AlcladCasing": 431.066667,
+  "Alternate_SteelPipe_Molded": 672.36,
+  "Alternate_SteelBeam_Aluminum": 724.698006,
+  "Alternate_AILimiter_Plastic": 289.947952,
+  "Alternate_Silica_Distilled": 619.171438,
+  "Alternate_Quartz_Purified": 1238.342876,
+  "Alternate_IronIngot_Leached": 159.189048,
+  "Alternate_CateriumIngot_Leached": 279.751167,
+  "Alternate_Wire_2": 235.3125,
+  "Alternate_TurboMotor_1": 53.333333,
+  "SpaceElevatorPart_8": 150.0,
+  "Alternate_Stator": 288.625,
+  "Alternate_Screw_2": 273.141026,
+  "Alternate_ReinforcedIronPlate_1": 195.666667,
+  "Alternate_Quickwire": 872.180603,
+  "Alternate_Plastic_1": 490.154773,
+  "Alternate_Motor_1": 146.666667,
+  "Alternate_ModularFrame": 1280.0,
+  "Alternate_HighSpeedConnector": 293.166667,
+  "Alternate_ModularFrameHeavy": 480.0,
+  "Alternate_HeatSink_1": 90.0,
+  "Alternate_ElectromagneticControlRod_1": 102.6875,
+  "Alternate_CrystalOscillator": 1237.111262,
+  "Alternate_Computer_2": 566.550057,
+  "Alternate_CircuitBoard_1": 1006.980023,
+  "SingularityCell": 75.0,
+  "SpaceElevatorPart_11": 150.0
+ },
+ "n": {
+  "DarkEnergy": 41,
+  "QuantumEnergy": 113,
+  "DarkMatter": 2,
+  "SuperpositionOscillator": 104,
+  "TemporalProcessor": 64,
+  "SpaceElevatorPart_12": 48,
+  "FicsiteMesh": 597,
+  "TimeCrystal": 1040,
+  "Diamond": 2,
+  "IngotSAM": 467,
+  "SpaceElevatorPart_10": 375,
+  "FicsiteIngot_AL": 199,
+  "PetroleumCoke": 210,
+  "Plastic": 2,
+  "Rubber": 1469,
+  "Alternate_Diamond_OilBased": 312,
+  "Alternate_DarkMatter_Trap": 176,
+  "Alternate_WetConcrete": 902,
+  "IngotSteel": 2,
+  "Alternate_SteamedCopperSheet": 1342,
+  "Alternate_RecycledRubber": 575,
+  "Alternate_PureIronIngot": 1,
+  "AluminumCasing": 1,
+  "AluminumSheet": 156,
+  "AluminaSolution": 1384,
+  "AluminumScrap": 661,
+  "IngotAluminum": 2644,
+  "Alternate_PlasticSmartPlating": 150,
+  "Alternate_HighSpeedWiring": 250,
+  "EncasedIndustrialBeam": 748,
+  "Stator": 1,
+  "SpaceElevatorPart_4": 375,
+  "SpaceElevatorPart_5": 375,
+  "Alternate_FlexibleFramework": 64,
+  "Alternate_CopperRotor": 118,
+  "Alternate_CopperAlloyIngot": 10872,
+  "Alternate_CokeSteelIngot": 336,
+  "Alternate_CoatedIronPlate": 426,
+  "PressureConversionCube": 825,
+  "NitricAcid": 674,
+  "CopperDust": 3300,
+  "SpaceElevatorPart_9": 1650,
+  "CoolingSystem": 80,
+  "Battery": 186,
+  "ComputerSuper": 1,
+  "RadioControlUnit": 1,
+  "SulfuricAcid": 389,
+  "SpaceElevatorPart_7": 250,
+  "Alternate_SuperStateComputer": 155,
+  "ElectromagneticControlRod": 4,
+  "SpaceElevatorPart_6": 192,
+  "Alternate_RadioControlSystem": 468,
+  "Alternate_OCSupercomputer": 2,
+  "Alternate_HeatFusedFrame": 325,
+  "Alternate_ElectricMotor": 15,
+  "Alternate_DilutedFuel": 420,
+  "Alternate_AlcladCasing": 433,
+  "Alternate_SteelPipe_Molded": 675,
+  "Alternate_SteelBeam_Aluminum": 724,
+  "Alternate_AILimiter_Plastic": 294,
+  "Alternate_Silica_Distilled": 621,
+  "Alternate_Quartz_Purified": 1242,
+  "Alternate_IronIngot_Leached": 157,
+  "Alternate_CateriumIngot_Leached": 286,
+  "Alternate_Wire_2": 233,
+  "Alternate_Wire_1": 4,
+  "Alternate_TurboMotor_1": 52,
+  "MotorTurbo": 2,
+  "SpaceElevatorPart_8": 150,
+  "Alternate_Stator": 288,
+  "Alternate_Silica": 3,
+  "Alternate_Screw_2": 277,
+  "Alternate_EncasedIndustrialBeam": 3,
+  "Alternate_ReinforcedIronPlate_1": 196,
+  "Alternate_Quickwire": 878,
+  "Alternate_Plastic_1": 500,
+  "Alternate_Motor_1": 133,
+  "Alternate_ModularFrame": 1280,
+  "Alternate_IngotSteel_1": 1,
+  "Alternate_IngotIron": 4,
+  "Alternate_HighSpeedConnector": 300,
+  "Alternate_ModularFrameHeavy": 480,
+  "Alternate_HeatSink_1": 96,
+  "Alternate_ElectromagneticControlRod_1": 106,
+  "Alternate_CrystalOscillator": 1242,
+  "Alternate_Computer_2": 563,
+  "Alternate_CircuitBoard_2": 14,
+  "Alternate_CircuitBoard_1": 999,
+  "SingularityCell": 75,
+  "SpaceElevatorPart_11": 150,
+  "Quickwire": 18,
+  "Wire": 3
+ },
+ "batch": 192.0,
+ "note": "base: fewest machines (fractional, all at 100 %) for one exact Phase 5 batch; n: fewest whole machines for the same (integer program), when found"
+};
 </script>
 <script>
 /* Machine moves: whole-machine factories that balance exactly, and the moves
@@ -457,6 +878,7 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
   function Moves(game, opts) {
     opts = opts || {};
     this.game = game;
+    this.opts = opts;
     const byId = {};
     game.recipes.forEach((r) => (byId[r.id] = r));
     this.R = (opts.recipes || []).map((id) => byId[id]).filter((r) => r && !EXTRACT[r.kind] && r.kind !== "gather");
@@ -718,6 +1140,25 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     }
     return this.repair(n, pins);
   };
+  /* Snap using only the recipes with a positive target (the others stay at 0):
+   * a valid point there is also a valid point of the full lattice.  Falls back
+   * to the full snap when that does not work. */
+  Moves.prototype.snapSupport = function (t, pins) {
+    const keep = this.R.filter((r, j) => t[j] > 0).map((r) => r.id);
+    if (keep.length && keep.length < this.R.length) {
+      const sub = new Moves(this.game, Object.assign({}, this.opts, { recipes: keep }));
+      const subPins = new Map();
+      if (pins) for (const [i, v] of pins) { const k = sub.iIdx[this.items[i]]; if (k !== undefined) subPins.set(k, v); }
+      const res = sub.snap(sub.R.map((r) => t[this.rIdx[r.id]]), subPins);
+      if (res.ok) {
+        const n = new Array(this.R.length).fill(0);
+        sub.R.forEach((r, j) => (n[this.rIdx[r.id]] = res.n[j]));
+        if (this.balanced(n) && this.valid(n, pins)) return { n, ok: true, left: [] };
+      }
+    }
+    return this.snap(t, pins);
+  };
+
   const dotA = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; };
 
   Moves.prototype.repair = function (n, pins, maxSteps) {
@@ -739,10 +1180,22 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
         const res = tryMove([[i, c]]);
         if (res[2] < bad - 1e-12 && (!best || res[2] < best[2])) best = res;
       }
-      if (!best && d <= 80) { // pairs
-        for (let i = 0; i < d && !best; i++) for (let k = i + 1; k < d; k++) for (const a of [1, -1]) for (const b of [1, -1]) {
-          const res = tryMove([[i, a], [k, b]]);
-          if (res[2] < bad - 1e-12 && (!best || res[2] < best[2])) best = res;
+      if (!best) { // pairs: the first move touches something broken, the second is any move
+        const v = this.violations(n, net, pins);
+        const first = new Set();
+        for (const x of v) {
+          if (x.kind === "count") this.K.forEach((m, i) => { if (m[x.j]) first.add(i); });
+          else this.moveNet.forEach((m, i) => { if (Math.abs(m[x.i]) > 1e-12) first.add(i); });
+        }
+        for (const i of first) {
+          for (let k = 0; k < d; k++) {
+            if (k === i) continue;
+            for (const a of [1, -1]) for (const b of [1, -1]) {
+              const res = tryMove([[i, a], [k, b]]);
+              if (res[2] < bad - 1e-12 && (!best || res[2] < best[2])) best = res;
+            }
+          }
+          if (best) break;
         }
       }
       if (!best) break;
@@ -866,7 +1319,7 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
 
 </script>
 <script>
-/* Machine moves page.  Expects GAME, MOVES_PLAN and SatMoves. */
+/* Machine moves page.  Expects GAME, MOVES_PLAN, MOVES_START and SatMoves. */
 (function () {
   "use strict";
   const G = window.GAME, Moves = window.SatMoves;
@@ -943,8 +1396,14 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     p5pins();
     nArr = E.R.map((r) => st.n[r.id] || 0);
     let msg = "";
-    if (force || !nArr.some((x) => x) || !E.balanced(nArr) || !E.valid(nArr, pins)) {
-      const res = E.snap(target(), pins);
+    let startK = null; // the start's whole counts times the batches are exact, when the recipes still allow it
+    if (force && st.startN) {
+      const c = E.R.map((r) => (st.startN[r.id] || 0) * st.batches);
+      if (c.some((x) => x) && E.balanced(c) && E.valid(c, pins)) startK = c;
+    }
+    if (startK) { nArr = startK; msg = why || ""; }
+    else if (force || !nArr.some((x) => x) || !E.balanced(nArr) || !E.valid(nArr, pins)) {
+      const res = E.snapSupport(target(), pins);
       nArr = res.n;
       msg = (why ? why + " " : "") + (res.ok ? "Snapped to the nearest valid factory." :
         "Snapped, but " + res.left.length + " condition" + (res.left.length > 1 ? "s are" : " is") + " still broken (see Status).");
@@ -1206,7 +1665,7 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
   });
   $("#btnSnap").addEventListener("click", () => {
     push();
-    const res = E.snap(target(), pins);
+    const res = E.snapSupport(target(), pins);
     nArr = res.n; syncN(); netArr = E.netOf(nArr); preview = null; lastShrink = null;
     banner(res.ok ? "Snapped; everything holds." : "Snapped, but " + res.left.length + " condition(s) still broken.");
     render();
@@ -1270,6 +1729,12 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
     e.target.value = "";
   });
   $("#btnDefault").addEventListener("click", () => { st && push(); st = null; loadObject({ sheet: window.MOVES_PLAN }, "Loaded the optimizer plan."); });
+  function startState() {
+    const S = window.MOVES_START;
+    return { app: "satisfactory-machine-moves", state: { recipes: S.recipes.slice(), base: Object.assign({}, S.base),
+      n: Object.assign({}, S.n || {}), startN: S.n ? Object.assign({}, S.n) : null, batches: 1, valves: {}, pins: {}, lockP5: true } };
+  }
+  $("#btnStart").addEventListener("click", () => { st && push(); st = null; loadObject(startState(), "Loaded the all-recipe start."); });
   let downloads = null;
   if (window.claude && window.claude.use) {
     window.claude.use("downloads").then((d) => { downloads = d; $("#btnExport").hidden = !d; }).catch(() => {});
@@ -1289,7 +1754,7 @@ window.MOVES_PLAN = {"c":{"Alternate_RocketFuel_Nitro":0.983808,"PackagedRocketF
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { saved = null; }
   if (saved && saved.recipes && saved.recipes.length && saved.base) { st = Object.assign({ valves: {}, pins: {}, lockP5: true, batches: 1 }, saved); $("#lockP5").checked = st.lockP5; rebuild(""); }
-  else loadObject({ sheet: window.MOVES_PLAN }, "");
+  else loadObject(startState(), "");
 })();
 
 </script>

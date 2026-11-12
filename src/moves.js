@@ -62,6 +62,7 @@
   function Moves(game, opts) {
     opts = opts || {};
     this.game = game;
+    this.opts = opts;
     const byId = {};
     game.recipes.forEach((r) => (byId[r.id] = r));
     this.R = (opts.recipes || []).map((id) => byId[id]).filter((r) => r && !EXTRACT[r.kind] && r.kind !== "gather");
@@ -323,6 +324,25 @@
     }
     return this.repair(n, pins);
   };
+  /* Snap using only the recipes with a positive target (the others stay at 0):
+   * a valid point there is also a valid point of the full lattice.  Falls back
+   * to the full snap when that does not work. */
+  Moves.prototype.snapSupport = function (t, pins) {
+    const keep = this.R.filter((r, j) => t[j] > 0).map((r) => r.id);
+    if (keep.length && keep.length < this.R.length) {
+      const sub = new Moves(this.game, Object.assign({}, this.opts, { recipes: keep }));
+      const subPins = new Map();
+      if (pins) for (const [i, v] of pins) { const k = sub.iIdx[this.items[i]]; if (k !== undefined) subPins.set(k, v); }
+      const res = sub.snap(sub.R.map((r) => t[this.rIdx[r.id]]), subPins);
+      if (res.ok) {
+        const n = new Array(this.R.length).fill(0);
+        sub.R.forEach((r, j) => (n[this.rIdx[r.id]] = res.n[j]));
+        if (this.balanced(n) && this.valid(n, pins)) return { n, ok: true, left: [] };
+      }
+    }
+    return this.snap(t, pins);
+  };
+
   const dotA = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; };
 
   Moves.prototype.repair = function (n, pins, maxSteps) {
@@ -344,10 +364,22 @@
         const res = tryMove([[i, c]]);
         if (res[2] < bad - 1e-12 && (!best || res[2] < best[2])) best = res;
       }
-      if (!best && d <= 80) { // pairs
-        for (let i = 0; i < d && !best; i++) for (let k = i + 1; k < d; k++) for (const a of [1, -1]) for (const b of [1, -1]) {
-          const res = tryMove([[i, a], [k, b]]);
-          if (res[2] < bad - 1e-12 && (!best || res[2] < best[2])) best = res;
+      if (!best) { // pairs: the first move touches something broken, the second is any move
+        const v = this.violations(n, net, pins);
+        const first = new Set();
+        for (const x of v) {
+          if (x.kind === "count") this.K.forEach((m, i) => { if (m[x.j]) first.add(i); });
+          else this.moveNet.forEach((m, i) => { if (Math.abs(m[x.i]) > 1e-12) first.add(i); });
+        }
+        for (const i of first) {
+          for (let k = 0; k < d; k++) {
+            if (k === i) continue;
+            for (const a of [1, -1]) for (const b of [1, -1]) {
+              const res = tryMove([[i, a], [k, b]]);
+              if (res[2] < bad - 1e-12 && (!best || res[2] < best[2])) best = res;
+            }
+          }
+          if (best) break;
         }
       }
       if (!best) break;

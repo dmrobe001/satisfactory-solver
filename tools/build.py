@@ -60,7 +60,8 @@ page = (src / "moves.html").read_text()
 for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
                      ("/*__VCSS__*/", (src / "moves.css").read_text()),
                      ("/*__DATA__*/", data),
-                     ("/*__PLAN__*/", "window.MOVES_PLAN = " + json.dumps(plan, separators=(",", ":")) + ";"),
+                     ("/*__PLAN__*/", "window.MOVES_PLAN = " + json.dumps(plan, separators=(",", ":")) + ";\n"
+                      "window.MOVES_START = " + (ROOT / "data" / "moves_start.json").read_text() + ";"),
                      ("/*__MOVES__*/", (src / "moves.js").read_text()),
                      ("/*__VAPP__*/", (src / "moves_app.js").read_text())]:
     assert marker in page, marker

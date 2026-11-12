@@ -29,6 +29,7 @@ capability, so the button only appears on claude.ai.
 | `tools/check_plan.js` | Re-checks an optimizer plan with the production sheet's own solver and bill-of-materials code. |
 | `src/moves.js`, `src/moves_app.js`, `src/moves.css`, `src/moves.html` | The fourth page, machine moves (engine, page script, styles, page). |
 | `tools/test_moves.js` | Command-line checks of the machine-moves engine. |
+| `tools/moves_start.py` | The machine-moves page's default start: fewest whole machines (all at 100 %) for one exact Phase 5 batch. Writes `data/moves_start.json`. |
 | `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
@@ -327,10 +328,19 @@ integer lattice; its reduced basis (big-integer column reduction, with
 Lenstra-Lenstra-Lovasz reduction along the way) is a list of **moves**, and the
 page changes the factory only by moves, so every exact balance stays exact.
 
+* **Start.** By default the page uses every recipe that needs no
+  hand-gathered items (246), leaving out Unpackage recipes and the Packager
+  recipes other than Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel.
+  `tools/moves_start.py` finds the fewest whole machines that make one exact
+  Phase 5 batch with that set (integer program, verified exactly): 48,023
+  machines in 92 recipes (the linear-programming bound is 47,825), written to
+  `data/moves_start.json` and embedded in the page. Power is not part of the
+  problem (the start has no generators; the summary shows the shortfall).
 * **Phase 5 batches.** With whole machines at 100 % and the exact ratio, Phase
-  5 only comes in whole batches (the smallest exact set of machine counts).
-  With the optimizer plan's recipes one batch is 192 AI Expansion Servers per
-  minute, a 534,765-machine factory. The factory is sized to the number of
+  5 only comes in whole batches (the smallest exact set of machine counts):
+  192 AI Expansion Servers per minute, both with all recipes and with the
+  optimizer plan's (whose ratios give a 534,765-machine batch; "Load optimizer
+  plan" still loads them). The factory is sized to the number of
   batches chosen: the imported plan's recipe ratios are scaled to that output
   and snapped to the nearest valid factory (Babai rounding plus a greedy
   repair). Unticking the ratio box keeps the current output as minimums.

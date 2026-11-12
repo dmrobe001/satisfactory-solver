@@ -18,7 +18,8 @@
     <button class="btn" type="button" id="btnExport" hidden>Export</button>
     <label class="btn" for="fileState" title="Load a plan exported from the production sheet, the optimizer, the recipe matrix or this page">Import</label>
     <input type="file" id="fileState" accept=".json,application/json" hidden>
-    <button class="btn" type="button" id="btnDefault">Load optimizer plan</button>
+    <button class="btn" type="button" id="btnStart" title="Every recipe that needs no hand-gathered items (no Unpackage recipes; packaging only for Fuel, Turbofuel, Rocket Fuel and Ionized Fuel), starting from the fewest whole machines for one Phase 5 batch">Load all-recipe start</button>
+    <button class="btn" type="button" id="btnDefault" title="The optimizer's recipes and ratios">Load optimizer plan</button>
     <span class="count" id="ioMsg" role="status"></span>
   </div>
 </header>
@@ -85,6 +86,7 @@
       <p>A move can still make something go negative: a machine count, a building material that is used faster than it is made, or a raw resource that would be produced instead of drawn. Such moves are greyed out. Raw resources and power are not limited here.</p>
       <h3>Phase 5 batches</h3>
       <p>With whole machines at 100 % and the exact Phase 5 ratio, Phase 5 can only be made in whole batches: the smallest set of machine counts that balances every intermediate exactly. The batch depends on the recipes in use (and on the valves). The factory is sized to the number of batches you pick: the plan's recipe ratios are scaled to that output and snapped to the nearest valid whole-machine factory. Untick the ratio box to treat the Phase 5 parts like other surplus items, with minimums you set on the Items tab.</p>
+      <p>The default start uses every recipe that needs no hand-gathered items, except Unpackage recipes and the Packager recipes other than Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel. Its counts are the fewest whole machines that make one exact Phase 5 batch (an integer program solved offline, <code>tools/moves_start.py</code>); more batches multiply them.</p>
       <h3>Reading the numbers</h3>
       <ul>
         <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different recipe usually shrinks it.</li>

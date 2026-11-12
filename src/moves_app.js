@@ -1,4 +1,4 @@
-/* Machine moves page.  Expects GAME, MOVES_PLAN and SatMoves. */
+/* Machine moves page.  Expects GAME, MOVES_PLAN, MOVES_START and SatMoves. */
 (function () {
   "use strict";
   const G = window.GAME, Moves = window.SatMoves;
@@ -75,8 +75,14 @@
     p5pins();
     nArr = E.R.map((r) => st.n[r.id] || 0);
     let msg = "";
-    if (force || !nArr.some((x) => x) || !E.balanced(nArr) || !E.valid(nArr, pins)) {
-      const res = E.snap(target(), pins);
+    let startK = null; // the start's whole counts times the batches are exact, when the recipes still allow it
+    if (force && st.startN) {
+      const c = E.R.map((r) => (st.startN[r.id] || 0) * st.batches);
+      if (c.some((x) => x) && E.balanced(c) && E.valid(c, pins)) startK = c;
+    }
+    if (startK) { nArr = startK; msg = why || ""; }
+    else if (force || !nArr.some((x) => x) || !E.balanced(nArr) || !E.valid(nArr, pins)) {
+      const res = E.snapSupport(target(), pins);
       nArr = res.n;
       msg = (why ? why + " " : "") + (res.ok ? "Snapped to the nearest valid factory." :
         "Snapped, but " + res.left.length + " condition" + (res.left.length > 1 ? "s are" : " is") + " still broken (see Status).");
@@ -338,7 +344,7 @@
   });
   $("#btnSnap").addEventListener("click", () => {
     push();
-    const res = E.snap(target(), pins);
+    const res = E.snapSupport(target(), pins);
     nArr = res.n; syncN(); netArr = E.netOf(nArr); preview = null; lastShrink = null;
     banner(res.ok ? "Snapped; everything holds." : "Snapped, but " + res.left.length + " condition(s) still broken.");
     render();
@@ -402,6 +408,12 @@
     e.target.value = "";
   });
   $("#btnDefault").addEventListener("click", () => { st && push(); st = null; loadObject({ sheet: window.MOVES_PLAN }, "Loaded the optimizer plan."); });
+  function startState() {
+    const S = window.MOVES_START;
+    return { app: "satisfactory-machine-moves", state: { recipes: S.recipes.slice(), base: Object.assign({}, S.base),
+      n: Object.assign({}, S.n || {}), startN: S.n ? Object.assign({}, S.n) : null, batches: 1, valves: {}, pins: {}, lockP5: true } };
+  }
+  $("#btnStart").addEventListener("click", () => { st && push(); st = null; loadObject(startState(), "Loaded the all-recipe start."); });
   let downloads = null;
   if (window.claude && window.claude.use) {
     window.claude.use("downloads").then((d) => { downloads = d; $("#btnExport").hidden = !d; }).catch(() => {});
@@ -421,5 +433,5 @@
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { saved = null; }
   if (saved && saved.recipes && saved.recipes.length && saved.base) { st = Object.assign({ valves: {}, pins: {}, lockP5: true, batches: 1 }, saved); $("#lockP5").checked = st.lockP5; rebuild(""); }
-  else loadObject({ sheet: window.MOVES_PLAN }, "");
+  else loadObject(startState(), "");
 })();
