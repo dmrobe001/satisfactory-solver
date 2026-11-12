@@ -66,6 +66,11 @@
       nArr = res.n;
       msg = (why ? why + " " : "") + (res.ok ? "Snapped to the nearest valid factory." :
         "Snapped, but " + res.left.length + " condition" + (res.left.length > 1 ? "s are" : " is") + " still broken (see Status).");
+      const ai = E.iIdx.SpaceElevatorPart_12;
+      if (!res.ok && ai !== undefined && res.left.some((v) => v.kind === "pin" && Moves.PHASE5[E.items[v.i]])) {
+        const s = E.itemStep(ai);
+        if (s) msg += " At these clocks Phase 5 only comes in batches of " + fmt(Number(s[0]) / Number(s[1])) + " AI Expansion Servers per minute.";
+      }
     }
     syncN();
     netArr = E.netOf(nArr);
