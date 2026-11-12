@@ -90,6 +90,7 @@
       <h3>Reading the numbers</h3>
       <ul>
         <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different recipe usually shrinks it.</li>
+        <li><b>Chain moves</b> are built the way you would by hand: the selected recipe plus a supplier for each must-balance input it uses (and a consumer for each must-balance output it makes), recipes already running first, until everything balances, scaled to whole machines. Several alternatives are tried; each chain is exact. The <b>lattice moves</b> below them are the reduced basis: every exact change is a combination of them, but on its own a basis move often touches a recipe at 0 machines and is blocked.</li>
         <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Phase 5 output and the minimums on the Items tab are kept.</li>
         <li>Changing a valve, the recipe list or the number of batches rebuilds the moves and snaps to the nearest valid factory.</li>
       </ul>

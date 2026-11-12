@@ -28,6 +28,7 @@
   /* ---- state ---- */
   let st = null;          // {recipes, n, base, batches, valves, pins, lockP5}; every machine at 100 %
   let E = null, nArr = [], netArr = null, pins = new Map();
+  let chains = [];
   let selected = null, preview = null, sortKey = "n", sortDir = -1, lastShrink = null;
   const history = [];
 
@@ -172,11 +173,11 @@
     return shown.map((j) => `<span class="chip ${d[j] > 0 ? "up" : "down"} ${j === j0 ? "self" : ""}">${d[j] > 0 ? "+" : "−"}${Math.abs(d[j])} ${esc(E.R[j].name)}</span>`).join("") +
       (idx.length > shown.length ? `<span class="chip">and ${idx.length - shown.length} more</span>` : "");
   }
-  function effectsText(coefs) {
-    const dn = new Float64Array(E.items.length);
-    for (const [i, c] of coefs) { const m = E.moveNet[i]; for (let x = 0; x < m.length; x++) dn[x] += c * m[x]; }
-    const parts = [];
-    const sur = [], raw = [];
+  function effectsText(coefs) { return effectsOf(deltaOf(coefs)); }
+  /* Effects of a change d in machine counts: surplus, raw draw, power. */
+  function effectsOf(d) {
+    const dn = E.netOf(d);
+    const parts = [], sur = [], raw = [];
     dn.forEach((v, i) => {
       if (Math.abs(v) < 1e-9) return;
       if (E.cls[i] === "surplus") sur.push([i, v]);
@@ -186,10 +187,22 @@
     if (sur.length) parts.push("surplus " + sur.slice(0, 4).map(([i, v]) => iname(E.items[i]) + " " + fmt(v, true)).join(", ") + (sur.length > 4 ? ", …" : ""));
     if (raw.length) parts.push("raw " + raw.slice(0, 3).map(([i, v]) => iname(E.items[i]) + " " + fmt(v, true)).join(", ") + (raw.length > 3 ? ", …" : ""));
     let dp = 0;
-    const d = deltaOf(coefs);
     d.forEach((x, j) => (dp -= x * E.power[j]));
     if (Math.abs(dp) > 1e-9) parts.push("power " + fmt(dp, true) + " MW");
     return parts.join(" · ");
+  }
+  /* Why adding c * vec (a change in machine counts) is not allowed, or "". */
+  function whyVec(vec, c) {
+    const n2 = nArr.map((x, j) => x + c * vec[j]);
+    const net2 = E.netOf(n2);
+    if (n2.every((x) => x >= 0) && E.badness(n2, net2, pins) <= E.badness(nArr, netArr, pins) + 1e-9) return "";
+    const v = E.violations(n2, net2, pins);
+    if (!v.length) return "";
+    const x = v[0];
+    if (x.kind === "count") return E.R[x.j].name + " would go below 0 machines";
+    if (x.kind === "short") return iname(E.items[x.i]) + " would run short by " + fmt(x.amount) + "/min";
+    if (x.kind === "raw") return iname(E.items[x.i]) + " would be produced instead of drawn";
+    return iname(E.items[x.i]) + " would drop below its minimum";
   }
   function why(coefs) {
     const n2 = E.apply(nArr, coefs);
@@ -211,6 +224,18 @@
     const mv = E.movesFor(j);
     let html = `<div class="side-head"><h2>${esc(r.name)}</h2><div class="meta">${esc(mname(r))} · ${nArr[j].toLocaleString("en-US")} machines · ${s ? "step " + s : "fixed by the exact balances"} · ${mv.length} move${mv.length === 1 ? "" : "s"}</div></div>`;
     html += `<div class="shrink"><div class="row1"><button class="btn primary" type="button" id="btnShrink" ${nArr[j] > 0 && mv.length ? "" : "disabled"}>Shrink this</button><span class="count">searches combinations of up to 3 moves</span>${nArr[j] === 0 ? ` <button class="btn danger" type="button" id="btnRemove">Remove recipe</button>` : ""}</div><div class="res" id="shrinkRes">${shrinkHtml(j)}</div></div>`;
+    chains = nArr ? E.chainMoves(nArr, j, pins) : [];
+    if (chains.length) {
+      html += `<h3 class="sec">Chain moves <span class="count">this recipe plus the suppliers and consumers it needs</span></h3>`;
+      html += chains.map((c, ci) => {
+        const self = c.vec[j];
+        const wp = whyVec(c.vec, 1), wm = whyVec(c.vec, -1);
+        return `<div class="move chain" data-ch="${ci}"><div class="mh"><span class="mt">Chain · ${self} machine${self === 1 ? "" : "s"} of this</span>
+          <span class="btns"><button class="btn" type="button" data-c="-1" ${wm ? `disabled title="${esc(wm)}"` : `title="Apply: ${self} fewer of this"`}>−</button><button class="btn" type="button" data-c="1" ${wp ? `disabled title="${esc(wp)}"` : `title="Apply: ${self} more of this"`}>+</button></span></div>
+          <div class="chips">${chipsFor(c.vec, j)}</div><div class="eff">${esc(effectsOf(c.vec))} <i>(for +; − is the reverse)</i></div>${wm ? `<div class="why">− blocked: ${esc(wm)}.</div>` : ""}${wp ? `<div class="why">+ blocked: ${esc(wp)}.</div>` : ""}</div>`;
+      }).join("");
+      html += `<h3 class="sec">Lattice moves <span class="count">the reduced basis; every exact change is a combination of these</span></h3>`;
+    }
     html += mv.length ? mv.map((i) => {
       const self = E.K[i][j];
       const plus = [[i, self > 0 ? 1 : -1]], minus = [[i, self > 0 ? -1 : 1]]; // "+" raises this recipe
@@ -266,6 +291,16 @@
       rebuild("Recipe removed.");
       return;
     }
+    const chEl = b.closest(".move.chain");
+    if (chEl && b.dataset.c) {
+      const vec = chains[+chEl.dataset.ch].vec, c = +b.dataset.c;
+      push();
+      nArr = nArr.map((x, j) => x + c * vec[j]);
+      netArr = E.netOf(nArr); syncN(); preview = null; lastShrink = null;
+      banner("Applied a chain move.");
+      render();
+      return;
+    }
     const mvEl = b.closest(".move");
     if (mvEl && b.dataset.c) {
       const i = +mvEl.dataset.i, c = +b.dataset.c * +mvEl.dataset.s;
@@ -275,11 +310,11 @@
   let hoverKey = null;
   $("#side").addEventListener("mouseover", (e) => {
     const m = e.target.closest(".move");
-    const key = m ? m.dataset.i : null;
+    const key = m ? (m.dataset.ch !== undefined ? "c" + m.dataset.ch : m.dataset.i) : null;
     if (key === hoverKey) return;
     hoverKey = key;
     if (!m) return;
-    preview = deltaOf([[+m.dataset.i, +m.dataset.s]]);
+    preview = m.dataset.ch !== undefined ? chains[+m.dataset.ch].vec.slice() : deltaOf([[+m.dataset.i, +m.dataset.s]]);
     renderTable();
   });
   $("#side").addEventListener("mouseleave", () => {

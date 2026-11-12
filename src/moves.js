@@ -495,6 +495,75 @@
     return String(+best.toFixed(4));
   };
 
+  /* Chain moves for recipe j: short, readable moves built the way one would by
+   * hand.  Start from {j}; while some must-balance item touched by the chosen
+   * recipes lacks a producer (or a consumer), add one (recipes already running
+   * first), branching over the alternatives; whenever the chosen recipes admit a
+   * balanced combination that changes j (the lattice of that small set), record
+   * it.  Returns [{vec, size, plus, minus}] (vec over this.R; plus/minus: valid
+   * from n in that direction), shortest first. */
+  Moves.prototype.chainMoves = function (n, j, pins, opts) {
+    opts = opts || {};
+    const maxSet = opts.maxSet || 9, maxNodes = opts.maxNodes || 400, want = opts.want || 6;
+    const M = this.R.length, found = new Map();
+    const prod = new Map(), cons = new Map(); // balance item index -> recipe indices
+    this.items.forEach((k, i) => {
+      if (this.cls[i] !== "balance") return;
+      const p = [], c = [];
+      for (const [r, a] of this.rate[i]) (a > 0 ? p : c).push(r);
+      const order = (list) => list.sort((x, y) => (n[y] > 0) - (n[x] > 0) || x - y);
+      prod.set(i, order(p)); cons.set(i, order(c));
+    });
+    const lockRows = this.lockP5;
+    let nodes = 0;
+    const net0 = this.netOf(n);
+    const record = (vec) => {
+      let big = 0, size = 0;
+      for (const x of vec) { size += Math.abs(x); big = Math.max(big, Math.abs(x)); }
+      if (!vec[j] || big > 1e6) return;
+      if (vec[j] < 0) vec = vec.map((x) => -x);
+      const key = vec.join(",");
+      if (found.has(key)) return;
+      const test = (c) => {
+        const n2 = n.slice(), net2 = Float64Array.from(net0);
+        for (let x = 0; x < M; x++) if (vec[x]) n2[x] += c * vec[x];
+        this.rate.forEach((m, i) => { let d = 0; for (const [r, a] of m) if (vec[r]) d += a * vec[r]; net2[i] += c * d; });
+        return this.badness(n2, net2, pins) <= this.badness(n, net0, pins) + 1e-9 && n2.every((x) => x >= 0);
+      };
+      found.set(key, { vec, size, plus: test(1), minus: test(-1) });
+    };
+    const seen = new Set();
+    const visit = (set) => {
+      if (nodes++ > maxNodes || found.size >= want * 3) return;
+      const key = set.slice().sort((a, b) => a - b).join(",");
+      if (seen.has(key)) return;
+      seen.add(key);
+      // the balanced combinations of just these recipes
+      const sub = new Moves(this.game, Object.assign({}, this.opts, { recipes: set.map((r) => this.R[r].id), lockP5: lockRows }));
+      for (const b of sub.K) {
+        const vec = new Array(M).fill(0);
+        sub.R.forEach((r, x) => (vec[this.rIdx[r.id]] = b[x]));
+        if (vec[j]) record(vec);
+      }
+      if (set.length >= maxSet) return;
+      // the first must-balance item the set cannot balance on its own: add a producer or consumer
+      const inSet = new Set(set);
+      for (const r of set) {
+        for (const [k] of this.R[r].ins.concat(this.R[r].outs)) {
+          const i = this.iIdx[k];
+          if (i === undefined || this.cls[i] !== "balance") continue;
+          const p = prod.get(i).filter((x) => inSet.has(x)), c = cons.get(i).filter((x) => inSet.has(x));
+          if (p.length && c.length) continue;
+          const cand = (p.length ? cons.get(i) : prod.get(i)).filter((x) => !inSet.has(x)).slice(0, 4);
+          for (const x of cand) visit(set.concat([x]));
+          return;
+        }
+      }
+    };
+    visit([j]);
+    return [...found.values()].sort((a, b) => (b.plus || b.minus) - (a.plus || a.minus) || a.size - b.size).slice(0, want);
+  };
+
   Moves.PHASE5 = PHASE5;
   Moves.clockFrac = clockFrac;
   if (typeof module !== "undefined" && module.exports) module.exports = Moves;

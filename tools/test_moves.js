@@ -40,6 +40,12 @@ truthy("toy: shrink result exact and valid", r && E.balanced(r.n) && E.valid(r.n
 // item step: screws come in steps of 3 machines x 40 = 120/min
 const st = E.itemStep(E.iIdx.Screw);
 eq("toy: screw net step", st && Number(st[0]) / Number(st[1]), 120);
+// chain moves: Screw needs rods (must balance) -> rods need ingots -> smelters
+{
+  const ch = E.chainMoves(big.n, E.rIdx.Screw, new Map());
+  truthy("toy: chain moves for screws exist and are exact", ch.length > 0 && ch.every((c) => E.balanced(c.vec)));
+  truthy("toy: a screw chain includes rods and smelting", ch.some((c) => c.vec[E.rIdx.Rod] && c.vec[E.rIdx.Smelt]));
+}
 // valve: let rods pile up -> rod no longer constrains, steps drop to 1
 E = new Moves(toy, { recipes: ["Smelt", "Rod", "Plate", "Screw"], lockP5: false, valves: { Rod: "surplus" } });
 eq("toy: with a rod valve, ingots alone balance: 3 moves", E.dim, 3);
@@ -70,6 +76,20 @@ const pn = E.netOf(n);
 for (const k of Object.keys(Moves.PHASE5)) if (E.iIdx[k] !== undefined) p5.set(E.iIdx[k], pn[E.iIdx[k]] - 1e-9);
 const sh = E.shrink(n, top, p5);
 truthy("plan: shrink of the largest recipe stays exact and keeps Phase 5", !sh || (E.balanced(sh.n) && E.valid(sh.n, p5)));
+
+// all-recipe start: chain moves for Iron Wire include "+12 Iron Wire, +5 Iron Ingot"
+{
+  const S = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/moves_start.json")));
+  const A = new Moves(G, { recipes: S.recipes });
+  const n0 = A.R.map((r) => S.n[r.id] || 0);
+  const pins0 = new Map();
+  for (const k of Object.keys(Moves.PHASE5)) pins0.set(A.iIdx[k], 192 * Moves.PHASE5[k] / 256 - 1e-9);
+  truthy("start: exact and valid", A.balanced(n0) && A.valid(n0, pins0));
+  const w = A.R.findIndex((r) => r.id === "Alternate_Wire_1" || r.name === "Alternate: Iron Wire");
+  const ch = A.chainMoves(n0, w, pins0);
+  truthy("start: Iron Wire chains are exact", ch.every((c) => A.balanced(c.vec)));
+  truthy("start: +12 Iron Wire, +5 Iron Ingot is among them and allowed", ch.some((c) => c.vec[w] === 12 && c.vec[A.rIdx.IngotIron] === 5 && c.plus));
+}
 
 console.log(fails ? fails + " FAILED" : "all passed");
 process.exit(fails ? 1 : 0);

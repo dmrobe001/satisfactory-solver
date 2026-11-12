@@ -42,3 +42,6 @@
 #itab td.cls { color: var(--muted); font-size: 0.85rem; }
 .prose { max-width: 70ch; }
 .prose li { margin-bottom: 4px; }
+.mv-side h3.sec { font-size: 1rem; margin: 10px 0 6px; }
+.mv-side h3.sec .count { font-family: var(--font-body); font-weight: 400; margin-left: 6px; }
+.move.chain { border-left: 3px solid var(--accent); }
