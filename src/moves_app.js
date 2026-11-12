@@ -326,6 +326,14 @@
 
   /* ---- toolbar ---- */
   $("#lockP5").addEventListener("change", (e) => { push(); const eff = effMap(); st.lockP5 = e.target.checked; rebuild(eff, st.lockP5 ? "Phase 5 held in exact proportion." : "Phase 5 ratio released."); });
+  $("#btnSnap").addEventListener("click", () => {
+    push();
+    const t = E.R.map((r, j) => nArr[j]);
+    const res = E.snap(t, pins);
+    nArr = res.n; syncN(); netArr = E.netOf(nArr); preview = null; lastShrink = null;
+    banner(res.ok ? "Snapped; everything holds." : "Snapped, but " + res.left.length + " condition(s) still broken.");
+    render();
+  });
   $("#btnClean").addEventListener("click", () => { push(); const eff = effMap(); E.R.forEach((r, j) => (st.clocks[r.id] = Moves.cleanClock(E.clockPct[j]))); rebuild(eff, "Every clock rounded to a clean value."); });
   $("#btnAll100").addEventListener("click", () => { push(); const eff = effMap(); st.recipes.forEach((id) => (st.clocks[id] = "100")); rebuild(eff, "Every clock set to 100 %."); });
   const addList = $("#addlist");

@@ -27,6 +27,9 @@ capability, so the button only appears on claude.ai.
 | `src/matrix_app.js`, `src/matrix.css`, `src/matrix.html` | The third page, recipe matrix. |
 | `tools/optimize.py` | Optimizer: the fastest self-building factory for Phase 5 (needs `pip install numpy highspy`). Writes `data/optimized_plan.json`. |
 | `tools/check_plan.js` | Re-checks an optimizer plan with the production sheet's own solver and bill-of-materials code. |
+| `src/moves.js`, `src/moves_app.js`, `src/moves.css`, `src/moves.html` | The fourth page, machine moves (engine, page script, styles, page). |
+| `tools/test_moves.js` | Command-line checks of the machine-moves engine. |
+| `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
 ## Rebuild
@@ -37,6 +40,7 @@ node tools/import_plan.js             # re-derive the default sheet
 python3 tools/build.py
 node tools/test_solver.js
 node tools/test_lattice.js
+node tools/test_moves.js
 ```
 
 ## Update rules
@@ -240,7 +244,7 @@ sheet's default plan and imports production-sheet exports as well as its own.
 materials in the least time T, and writes `data/optimized_plan.json`, a
 production-sheet export (import it into the sheet or the matrix; the sheet's
 rebuild time is set to T). `node tools/check_plan.js` re-checks that file with
-the pages' own code. A run from scratch takes roughly half an hour;
+the pages' own code. (The Phase 5 amounts were swapped, 256 Ballistic Warp Drives and 200 AI Expansion Servers, until the fix in the commit that added `tools/clean_clocks.py`; the plan and the results below are from after the fix.) A run from scratch takes roughly half an hour;
 `--cache FILE` keeps the continuous result for re-runs of the integer stages.
 
 **What is made.** The bill of materials is
@@ -299,16 +303,49 @@ the pages' own code. A run from scratch takes roughly half an hour;
      the rounded point, then tries to improve it (a plain integer search stalls
      or runs out of memory here).
 
-**Current result** (standard Aluminum Ingot and Caterium Wire left out by
-choice, `--exclude`, for a smaller factory with fewer recipes; leaving them in
-gave 68.2 min with 12,162 machines). T = 69.9 min: 66.6 min continuous, 67.8 min
-with whole machines, and 68.2 min is the continuous bound for the exact-clock
-stage. The plan has 112 recipes on 10,644 machines plus 997 sources and
-504,709 buildings in all. Power is 382 GW, from 1,524 rocket-fuel generators
-and the 9 pure geysers. Every bauxite, coal and nitrogen node is used, and
-all but 3 impure crude oil nodes, so those are what bind (with standard
-Aluminum Ingot left out, bauxite goes further only through scrap). Quartz and
-SAM are no longer all used; iron uses 34 of its 46 pure nodes and nothing
-worse, because each miner costs 151 MW and its buildings. These are good
-solutions, not proven optima: the integer stages fix choices made by the stage
-before them.
+**Current result** (with the Phase 5 fix; standard Aluminum Ingot and Caterium
+Wire left out by choice, `--exclude`, for a smaller factory with fewer
+recipes). T = 68.2 min: 65.7 min continuous, 67.4 min with whole machines. The
+plan has 111 recipes on 10,621 machines plus 1,051 sources and 503,791
+buildings in all. Power is 380 GW, from 1,510 rocket-fuel generators and 7 of
+the 9 pure geysers. Every bauxite and nitrogen node, every crude oil node and
+oil well, and every pure coal node is used, so those are what bind; quartz,
+SAM and iron are not all used, because each miner costs 151 MW and its
+buildings. These are good solutions, not proven optima: the integer stages fix
+choices made by the stage before them. (Results before the fix, with the
+swapped Phase 5 mix, were 68.2 min with all recipes and 69.9 min with the two
+left out.)
+
+## Machine moves (fourth page)
+
+`dist/machine-moves.html` works with whole machines. Every recipe runs a whole
+number of machines, all at one clock per recipe (by default the optimizer
+plan's). Fluids and unusable products must net exactly 0, and the Phase 5
+parts can be held in exact proportion; building materials, equipment and
+Phase 5 parts may pile up, raw resources may only be drawn. The machine counts
+that satisfy the exact equations form an integer lattice; its reduced basis
+(big-integer column reduction, with Lenstra-Lenstra-Lovasz reduction along the
+way) is a list of **moves**, and the page changes the factory only by moves, so
+every exact balance stays exact.
+
+* Select a recipe to list the moves that change it, with their effect on every
+  recipe, on surplus and raw draw, and on power; a move that would push a count
+  or a surplus below zero is greyed out with the reason.
+* **Shrink this** searches combinations of up to three moves (each used once or
+  twice) for the one that lowers the selected recipe most, then uses the fewest
+  machines in all. Minimums on the Items tab (Phase 5 parts start at the plan's
+  rate) keep it from shrinking what you want to keep.
+* **Step** is the smallest change in a recipe's count (or an item's net) any
+  combination of moves can make. A large step is a chain of exact ratios that
+  only works in big batches. The Items tab can turn a solid into a valve
+  (surplus allowed) or back, which usually shrinks steps.
+* Clocks are per recipe. Changing a clock, a valve or the recipe list rebuilds
+  the moves and snaps to the nearest valid factory (Babai rounding plus a
+  greedy repair). Clocks must fit together: at the optimizer's clocks the plan
+  is exact but many moves are large; with every clock at 100 % moves are small
+  but Phase 5 only comes in batches of 192 AI Expansion Servers per minute
+  (about 50 times the plan's rate), and rounding each clock on its own to a
+  clean value is worse still. The Phase 5 step in the summary shows this.
+* Import takes production-sheet exports, optimizer plans and recipe-matrix
+  exports; export writes a production-sheet file (with this page's valves and
+  minimums).
