@@ -36,6 +36,7 @@ def main():
     ap.add_argument("--levels", type=int, default=40)
     ap.add_argument("--no-p5", action="store_true", help="do not require the Phase 5 parts")
     ap.add_argument("--out", default="separate")
+    ap.add_argument("--force", default="", help="recipe ids that must be chosen (comma separated)")
     ap.add_argument("--skip", default="", help="usable items not required (comma separated)")
     a = ap.parse_args()
     recs = B.pool("all", B.RAW, p5=True, generators=True)
@@ -99,6 +100,9 @@ def main():
         for j in makers[k]:
             d = {idx[("y", c)]: 1 for c in cons}; d[idx[("y", j)]] = d.get(idx[("y", j)], 0) - 1
             rows.append((d, 0, None))                                        # a consumer if made
+    for fid in [x for x in a.force.split(",") if x]:
+        j = next(j for j in range(M) if recs[j]["id"] == fid)
+        rows.append(({idx[("y", j)]: 1}, 1, None))
     print(f"{M} recipes, {len(targets)} targets, {nv} variables, {len(rows)} rows", flush=True)
     import time
     t0 = time.time()

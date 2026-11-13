@@ -1,0 +1,635 @@
+{
+ "raw30": false,
+ "group": [
+  "AluminumIngot",
+  "AluminumScrap",
+  "CircuitBoard",
+  "CopperDust",
+  "CopperIngot",
+  "DarkEnergy",
+  "DarkMatter",
+  "Diamond",
+  "ElectromagneticControlRod",
+  "Fabric",
+  "Ficsonium",
+  "FluidCanister",
+  "GasTank",
+  "Gunpowder",
+  "GunpowderMK2",
+  "HeavyOilResidue",
+  "IonizedFuel",
+  "LiquidFuel",
+  "LiquidTurboFuel",
+  "NitricAcid",
+  "NonFissibleUranium",
+  "NuclearWaste",
+  "PlutoniumCell",
+  "PlutoniumWaste",
+  "PolymerResin",
+  "PressureConversionCube",
+  "QuantumEnergy",
+  "RocketFuel",
+  "SingularityCell",
+  "SpaceElevatorPart_1",
+  "SpaceElevatorPart_10",
+  "SpaceElevatorPart_11",
+  "SpaceElevatorPart_12",
+  "SpaceElevatorPart_2",
+  "SpaceElevatorPart_3",
+  "SpaceElevatorPart_4",
+  "SpaceElevatorPart_5",
+  "SpaceElevatorPart_6",
+  "SpaceElevatorPart_7",
+  "SpaceElevatorPart_8",
+  "SpaceElevatorPart_9",
+  "SulfuricAcid",
+  "UraniumCell"
+ ],
+ "recipes": [
+  "Alternate_RocketFuel_Nitro",
+  "PackagedRocketFuel",
+  "Alternate_IonizedFuel_Dark",
+  "QuantumEnergy",
+  "DarkMatter",
+  "SuperpositionOscillator",
+  "TemporalProcessor",
+  "SpaceElevatorPart_12",
+  "PackagedIonizedFuel",
+  "TimeCrystal",
+  "SpaceElevatorPart_10",
+  "Alternate_Turbofuel",
+  "PackagedTurboFuel",
+  "LiquidFuel",
+  "PetroleumCoke",
+  "Plastic",
+  "Alternate_Diamond_Cloudy",
+  "Alternate_DarkMatter_Trap",
+  "Alternate_DarkMatter_Crystallization",
+  "Fuel",
+  "Alternate_SteamedCopperSheet",
+  "Alternate_RecycledRubber",
+  "PureAluminumIngot",
+  "AluminumCasing",
+  "AluminumSheet",
+  "Alternate_PlasticSmartPlating",
+  "Alternate_HighSpeedWiring",
+  "SpaceElevatorPart_4",
+  "SpaceElevatorPart_5",
+  "Alternate_FlexibleFramework",
+  "Alternate_CoatedIronCanister",
+  "Alternate_CoatedCable",
+  "PressureConversionCube",
+  "NitricAcid",
+  "NonFissileUranium",
+  "CopperDust",
+  "SpaceElevatorPart_9",
+  "SulfuricAcid",
+  "SpaceElevatorPart_7",
+  "NuclearFuelRod",
+  "SpaceElevatorPart_6",
+  "Alternate_PlutoniumFuelUnit",
+  "GasTank",
+  "Alternate_InstantScrap",
+  "Alternate_InstantPlutoniumCell",
+  "Alternate_ElectricMotor",
+  "Alternate_SteelBeam_Aluminum",
+  "Alternate_UraniumCell_1",
+  "SpaceElevatorPart_8",
+  "Alternate_HighSpeedConnector",
+  "Alternate_ElectromagneticControlRod_1",
+  "Alternate_Computer_1",
+  "Alternate_CircuitBoard_1",
+  "Ficsonium",
+  "FicsoniumFuelRod",
+  "SingularityCell",
+  "SpaceElevatorPart_11",
+  "Gunpowder",
+  "FilterGasMask",
+  "Alternate_PolyesterFabric",
+  "SyntheticPowerShard",
+  "CartridgeChaos",
+  "NobeliskNuke",
+  "Cartridge",
+  "Rebar_Explosive",
+  "NobeliskCluster",
+  "Nobelisk",
+  "GunpowderMK2",
+  "IngotCopper",
+  "Burn_NuclearFuelRod_GeneratorNuclear",
+  "Burn_PlutoniumFuelRod_GeneratorNuclear",
+  "Phase5Sink"
+ ],
+ "forced": [
+  "Alternate_RocketFuel_Nitro",
+  "Alternate_IonizedFuel_Dark",
+  "QuantumEnergy",
+  "SpaceElevatorPart_12",
+  "SpaceElevatorPart_10",
+  "Alternate_Turbofuel",
+  "LiquidFuel",
+  "Plastic",
+  "Alternate_Diamond_Cloudy",
+  "PureAluminumIngot",
+  "Alternate_PlasticSmartPlating",
+  "Alternate_HighSpeedWiring",
+  "SpaceElevatorPart_4",
+  "SpaceElevatorPart_5",
+  "Alternate_FlexibleFramework",
+  "Alternate_CoatedIronCanister",
+  "PressureConversionCube",
+  "NitricAcid",
+  "NonFissileUranium",
+  "CopperDust",
+  "SpaceElevatorPart_9",
+  "SulfuricAcid",
+  "SpaceElevatorPart_7",
+  "SpaceElevatorPart_6",
+  "GasTank",
+  "Alternate_InstantScrap",
+  "Alternate_InstantPlutoniumCell",
+  "Alternate_UraniumCell_1",
+  "SpaceElevatorPart_8",
+  "Alternate_ElectromagneticControlRod_1",
+  "Alternate_CircuitBoard_1",
+  "Ficsonium",
+  "SingularityCell",
+  "SpaceElevatorPart_11",
+  "Gunpowder",
+  "Alternate_PolyesterFabric",
+  "GunpowderMK2",
+  "IngotCopper",
+  "Burn_NuclearFuelRod_GeneratorNuclear",
+  "Burn_PlutoniumFuelRod_GeneratorNuclear"
+ ],
+ "outputs": [
+  "PackagedRocketFuel",
+  "DarkMatter",
+  "SuperpositionOscillator",
+  "TemporalProcessor",
+  "PackagedIonizedFuel",
+  "TimeCrystal",
+  "PackagedTurboFuel",
+  "PetroleumCoke",
+  "Alternate_DarkMatter_Trap",
+  "Alternate_DarkMatter_Crystallization",
+  "Fuel",
+  "Alternate_SteamedCopperSheet",
+  "Alternate_RecycledRubber",
+  "AluminumCasing",
+  "AluminumSheet",
+  "Alternate_CoatedCable",
+  "NuclearFuelRod",
+  "Alternate_PlutoniumFuelUnit",
+  "Alternate_ElectricMotor",
+  "Alternate_SteelBeam_Aluminum",
+  "Alternate_HighSpeedConnector",
+  "Alternate_Computer_1",
+  "FicsoniumFuelRod",
+  "FilterGasMask",
+  "SyntheticPowerShard",
+  "CartridgeChaos",
+  "NobeliskNuke",
+  "Cartridge",
+  "Rebar_Explosive",
+  "NobeliskCluster",
+  "Nobelisk",
+  "Phase5Sink"
+ ],
+ "index": 11943936000000,
+ "invariant_factors": [
+  2,
+  2,
+  2,
+  2,
+  12,
+  60,
+  60,
+  60,
+  120,
+  2400
+ ],
+ "congruences": [
+  {
+   "mod": 2,
+   "terms": {
+    "Alternate: Dark Matter Trap": 1,
+    "Alternate: Aluminum Beam": 1
+   }
+  },
+  {
+   "mod": 2,
+   "terms": {
+    "Superposition Oscillator": 1,
+    "Neural-Quantum Processor": 1,
+    "Alternate: Coated Cable": 1,
+    "Alternate: Electric Motor": 1,
+    "Ficsonium Fuel Rod": 1,
+    "Nuke Nobelisk": 1
+   }
+  },
+  {
+   "mod": 2,
+   "terms": {
+    "Dark Matter Crystal": 1,
+    "Alternate: Steamed Copper Sheet": 1,
+    "Alternate: Coated Cable": 1,
+    "Alternate: Aluminum Beam": 1,
+    "Gas Filter": 1
+   }
+  },
+  {
+   "mod": 2,
+   "terms": {
+    "Alternate: Plutonium Fuel Unit": 1,
+    "Gas Filter": 1,
+    "Nuke Nobelisk": 1
+   }
+  },
+  {
+   "mod": 12,
+   "terms": {
+    "Packaged Rocket Fuel": 8,
+    "Dark Matter Crystal": 3,
+    "Superposition Oscillator": 11,
+    "Neural-Quantum Processor": 9,
+    "Packaged Ionized Fuel": 8,
+    "Alternate: Dark Matter Trap": 3,
+    "Alternate: Dark Matter Crystallization": 4,
+    "Packaged Fuel": 8,
+    "Alternate: Steamed Copper Sheet": 9,
+    "Alternate: Plutonium Fuel Unit": 9,
+    "Ficsonium Fuel Rod": 4,
+    "Gas Filter": 10,
+    "Nuke Nobelisk": 4,
+    "Rifle Ammo": 8,
+    "Explosive Rebar": 8,
+    "Cluster Nobelisk": 8,
+    "Nobelisk": 4
+   }
+  },
+  {
+   "mod": 60,
+   "terms": {
+    "Dark Matter Crystal": 30,
+    "Superposition Oscillator": 55,
+    "Packaged Ionized Fuel": 4,
+    "Time Crystal": 24,
+    "Packaged Turbofuel": 56,
+    "Alternate: Dark Matter Trap": 15,
+    "Alternate: Dark Matter Crystallization": 30,
+    "Packaged Fuel": 40,
+    "Alternate: Steamed Copper Sheet": 30,
+    "Alternate: Recycled Rubber": 15,
+    "Alternate: Plutonium Fuel Unit": 33,
+    "Alternate: Silicon High-Speed Connector": 24,
+    "Ficsonium Fuel Rod": 45,
+    "Synthetic Power Shard": 1,
+    "Turbo Rifle Ammo": 57,
+    "Nuke Nobelisk": 15,
+    "Rifle Ammo": 30,
+    "Explosive Rebar": 30,
+    "Cluster Nobelisk": 30,
+    "Phase 5 (250 : 250 : 64 : 50 /min)": 10
+   }
+  },
+  {
+   "mod": 60,
+   "terms": {
+    "Packaged Rocket Fuel": 36,
+    "Dark Matter Crystal": 15,
+    "Superposition Oscillator": 45,
+    "Neural-Quantum Processor": 45,
+    "Packaged Ionized Fuel": 52,
+    "Time Crystal": 36,
+    "Alternate: Dark Matter Trap": 45,
+    "Alternate: Steamed Copper Sheet": 30,
+    "Alternate: Recycled Rubber": 30,
+    "Aluminum Casing": 24,
+    "Alclad Aluminum Sheet": 28,
+    "Alternate: Plutonium Fuel Unit": 45,
+    "Alternate: Electric Motor": 30,
+    "Alternate: Aluminum Beam": 21,
+    "Alternate: Silicon High-Speed Connector": 12,
+    "Ficsonium Fuel Rod": 30,
+    "Gas Filter": 30,
+    "Synthetic Power Shard": 30,
+    "Turbo Rifle Ammo": 30,
+    "Nuke Nobelisk": 30,
+    "Phase 5 (250 : 250 : 64 : 50 /min)": 40
+   }
+  },
+  {
+   "mod": 60,
+   "terms": {
+    "Dark Matter Crystal": 45,
+    "Superposition Oscillator": 40,
+    "Packaged Ionized Fuel": 20,
+    "Time Crystal": 48,
+    "Packaged Turbofuel": 40,
+    "Alternate: Dark Matter Trap": 45,
+    "Alternate: Dark Matter Crystallization": 40,
+    "Packaged Fuel": 20,
+    "Alternate: Silicon High-Speed Connector": 48,
+    "Ficsonium Fuel Rod": 40,
+    "Synthetic Power Shard": 20,
+    "Nuke Nobelisk": 40,
+    "Rifle Ammo": 20,
+    "Explosive Rebar": 20,
+    "Cluster Nobelisk": 20,
+    "Nobelisk": 40,
+    "Phase 5 (250 : 250 : 64 : 50 /min)": 40
+   }
+  },
+  {
+   "mod": 120,
+   "terms": {
+    "Packaged Rocket Fuel": 16,
+    "Dark Matter Crystal": 45,
+    "Superposition Oscillator": 15,
+    "Neural-Quantum Processor": 60,
+    "Packaged Ionized Fuel": 32,
+    "Time Crystal": 24,
+    "Packaged Turbofuel": 44,
+    "Alternate: Dark Matter Trap": 90,
+    "Alternate: Dark Matter Crystallization": 110,
+    "Packaged Fuel": 20,
+    "Alternate: Steamed Copper Sheet": 90,
+    "Alternate: Recycled Rubber": 15,
+    "Alclad Aluminum Sheet": 40,
+    "Alternate: Plutonium Fuel Unit": 63,
+    "Alternate: Electric Motor": 30,
+    "Ficsonium Fuel Rod": 5,
+    "Gas Filter": 110,
+    "Synthetic Power Shard": 113,
+    "Turbo Rifle Ammo": 33,
+    "Nuke Nobelisk": 100,
+    "Rifle Ammo": 80,
+    "Explosive Rebar": 80,
+    "Cluster Nobelisk": 80,
+    "Nobelisk": 40,
+    "Phase 5 (250 : 250 : 64 : 50 /min)": 50
+   }
+  },
+  {
+   "mod": 2400,
+   "terms": {
+    "Packaged Rocket Fuel": 640,
+    "Dark Matter Crystal": 525,
+    "Superposition Oscillator": 1405,
+    "Neural-Quantum Processor": 1410,
+    "Packaged Ionized Fuel": 2032,
+    "Time Crystal": 480,
+    "Packaged Turbofuel": 1760,
+    "Alternate: Dark Matter Trap": 1470,
+    "Alternate: Dark Matter Crystallization": 870,
+    "Packaged Fuel": 800,
+    "Alternate: Steamed Copper Sheet": 600,
+    "Alternate: Recycled Rubber": 600,
+    "Aluminum Casing": 1440,
+    "Alclad Aluminum Sheet": 2080,
+    "Uranium Fuel Rod": 600,
+    "Alternate: Plutonium Fuel Unit": 360,
+    "Alternate: Electric Motor": 2025,
+    "Alternate: Aluminum Beam": 360,
+    "Alternate: Silicon High-Speed Connector": 1344,
+    "Alternate: Caterium Computer": 1920,
+    "Ficsonium Fuel Rod": 645,
+    "Gas Filter": 2000,
+    "Synthetic Power Shard": 1933,
+    "Turbo Rifle Ammo": 1320,
+    "Nuke Nobelisk": 1600,
+    "Rifle Ammo": 800,
+    "Explosive Rebar": 800,
+    "Cluster Nobelisk": 800,
+    "Nobelisk": 1600,
+    "Phase 5 (250 : 250 : 64 : 50 /min)": 130
+   }
+  }
+ ],
+ "equations": [
+  {
+   "Dark Matter Crystal": -240,
+   "Superposition Oscillator": 215,
+   "Neural-Quantum Processor": 75,
+   "Packaged Ionized Fuel": 96,
+   "Alternate: Dark Matter Trap": -330,
+   "Alternate: Dark Matter Crystallization": -260,
+   "Ficsonium Fuel Rod": -20,
+   "Synthetic Power Shard": 90,
+   "Phase 5 (250 : 250 : 64 : 50 /min)": 9100
+  },
+  {
+   "Dark Matter Crystal": -45,
+   "Superposition Oscillator": 40,
+   "Neural-Quantum Processor": 15,
+   "Packaged Ionized Fuel": 16,
+   "Alternate: Dark Matter Trap": -60,
+   "Alternate: Dark Matter Crystallization": -50,
+   "Ficsonium Fuel Rod": -5,
+   "Synthetic Power Shard": 17,
+   "Phase 5 (250 : 250 : 64 : 50 /min)": 1570
+  },
+  {
+   "Packaged Rocket Fuel": 40,
+   "Packaged Turbofuel": 12,
+   "Packaged Fuel": 20,
+   "Alternate: Recycled Rubber": 15,
+   "Gas Filter": -10,
+   "Turbo Rifle Ammo": 9
+  }
+ ],
+ "steps": [
+  {
+   "recipe": "Alternate: Plutonium Fuel Unit",
+   "id": "Alternate_PlutoniumFuelUnit",
+   "solo": 40,
+   "free": 40
+  },
+  {
+   "recipe": "Alternate: Electric Motor",
+   "id": "Alternate_ElectricMotor",
+   "solo": 32,
+   "free": 8
+  },
+  {
+   "recipe": "Alternate: Silicon High-Speed Connector",
+   "id": "Alternate_HighSpeedConnector",
+   "solo": 25,
+   "free": 5
+  },
+  {
+   "recipe": "Alternate: Aluminum Beam",
+   "id": "Alternate_SteelBeam_Aluminum",
+   "solo": 20,
+   "free": 4
+  },
+  {
+   "recipe": "Alclad Aluminum Sheet",
+   "id": "AluminumSheet",
+   "solo": 15,
+   "free": 3
+  },
+  {
+   "recipe": "Nuke Nobelisk",
+   "id": "NobeliskNuke",
+   "solo": 12,
+   "free": 2
+  },
+  {
+   "recipe": "Rifle Ammo",
+   "id": "Cartridge",
+   "solo": 6,
+   "free": 1
+  },
+  {
+   "recipe": "Explosive Rebar",
+   "id": "Rebar_Explosive",
+   "solo": 6,
+   "free": 1
+  },
+  {
+   "recipe": "Cluster Nobelisk",
+   "id": "NobeliskCluster",
+   "solo": 6,
+   "free": 1
+  },
+  {
+   "recipe": "Time Crystal",
+   "id": "TimeCrystal",
+   "solo": 5,
+   "free": 5
+  },
+  {
+   "recipe": "Aluminum Casing",
+   "id": "AluminumCasing",
+   "solo": 5,
+   "free": 1
+  },
+  {
+   "recipe": "Alternate: Caterium Computer",
+   "id": "Alternate_Computer_1",
+   "solo": 5,
+   "free": 1
+  },
+  {
+   "recipe": "Alternate: Steamed Copper Sheet",
+   "id": "Alternate_SteamedCopperSheet",
+   "solo": 4,
+   "free": 4
+  },
+  {
+   "recipe": "Uranium Fuel Rod",
+   "id": "NuclearFuelRod",
+   "solo": 4,
+   "free": 1
+  },
+  {
+   "recipe": "Nobelisk",
+   "id": "Nobelisk",
+   "solo": 3,
+   "free": 1
+  },
+  {
+   "recipe": "Alternate: Coated Cable",
+   "id": "Alternate_CoatedCable",
+   "solo": 2,
+   "free": 2
+  },
+  {
+   "recipe": "Petroleum Coke",
+   "id": "PetroleumCoke",
+   "solo": 1,
+   "free": 1
+  },
+  {
+   "recipe": "Packaged Rocket Fuel",
+   "id": "PackagedRocketFuel",
+   "solo": 0,
+   "free": 5
+  },
+  {
+   "recipe": "Dark Matter Crystal",
+   "id": "DarkMatter",
+   "solo": 0,
+   "free": 2
+  },
+  {
+   "recipe": "Superposition Oscillator",
+   "id": "SuperpositionOscillator",
+   "solo": 0,
+   "free": 1
+  },
+  {
+   "recipe": "Neural-Quantum Processor",
+   "id": "TemporalProcessor",
+   "solo": 0,
+   "free": 1
+  },
+  {
+   "recipe": "Packaged Ionized Fuel",
+   "id": "PackagedIonizedFuel",
+   "solo": 0,
+   "free": 15
+  },
+  {
+   "recipe": "Packaged Turbofuel",
+   "id": "PackagedTurboFuel",
+   "solo": 0,
+   "free": 3
+  },
+  {
+   "recipe": "Alternate: Dark Matter Trap",
+   "id": "Alternate_DarkMatter_Trap",
+   "solo": 0,
+   "free": 2
+  },
+  {
+   "recipe": "Alternate: Dark Matter Crystallization",
+   "id": "Alternate_DarkMatter_Crystallization",
+   "solo": 0,
+   "free": 1
+  },
+  {
+   "recipe": "Packaged Fuel",
+   "id": "Fuel",
+   "solo": 0,
+   "free": 3
+  },
+  {
+   "recipe": "Alternate: Recycled Rubber",
+   "id": "Alternate_RecycledRubber",
+   "solo": 0,
+   "free": 1
+  },
+  {
+   "recipe": "Ficsonium Fuel Rod",
+   "id": "FicsoniumFuelRod",
+   "solo": 0,
+   "free": 2
+  },
+  {
+   "recipe": "Gas Filter",
+   "id": "FilterGasMask",
+   "solo": 0,
+   "free": 2
+  },
+  {
+   "recipe": "Synthetic Power Shard",
+   "id": "SyntheticPowerShard",
+   "solo": 0,
+   "free": 5
+  },
+  {
+   "recipe": "Turbo Rifle Ammo",
+   "id": "CartridgeChaos",
+   "solo": 0,
+   "free": 1
+  },
+  {
+   "recipe": "Phase 5 (250 : 250 : 64 : 50 /min)",
+   "id": "Phase5Sink",
+   "solo": 0,
+   "free": 3
+  }
+ ]
+}

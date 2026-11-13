@@ -1,0 +1,465 @@
+{
+ "recipes": [
+  "IronRod",
+  "IngotIron",
+  "Alternate_RocketFuel_Nitro",
+  "PackagedRocketFuel",
+  "Alternate_IonizedFuel_Dark",
+  "QuantumEnergy",
+  "DarkMatter",
+  "SuperpositionOscillator",
+  "TemporalProcessor",
+  "SpaceElevatorPart_12",
+  "PackagedIonizedFuel",
+  "SAMFluctuator",
+  "FicsiteMesh",
+  "TimeCrystal",
+  "IngotSAM",
+  "SpaceElevatorPart_10",
+  "FicsiteIngot_CAT",
+  "Alternate_Turbofuel",
+  "PackagedTurboFuel",
+  "LiquidFuel",
+  "PetroleumCoke",
+  "Plastic",
+  "Alternate_Diamond_Cloudy",
+  "Alternate_DarkMatter_Trap",
+  "Alternate_DarkMatter_Crystallization",
+  "Alternate_WetConcrete",
+  "Fuel",
+  "Alternate_SteamedCopperSheet",
+  "Alternate_RecycledRubber",
+  "PureAluminumIngot",
+  "AluminumCasing",
+  "AluminumSheet",
+  "Alternate_PlasticSmartPlating",
+  "Alternate_HighSpeedWiring",
+  "EncasedIndustrialBeam",
+  "AILimiter",
+  "Alternate_HeavyFlexibleFrame",
+  "SpaceElevatorPart_4",
+  "SpaceElevatorPart_5",
+  "Alternate_FlexibleFramework",
+  "Alternate_CopperRotor",
+  "ModularFrame",
+  "Alternate_CoatedIronPlate",
+  "Alternate_CoatedIronCanister",
+  "Alternate_CoatedCable",
+  "PressureConversionCube",
+  "NitricAcid",
+  "NonFissileUranium",
+  "CopperDust",
+  "SpaceElevatorPart_9",
+  "CoolingSystem",
+  "RadioControlUnit",
+  "SulfuricAcid",
+  "SpaceElevatorPart_7",
+  "NuclearFuelRod",
+  "SpaceElevatorPart_6",
+  "Alternate_PlutoniumFuelUnit",
+  "Alternate_OCSupercomputer",
+  "FusedModularFrame",
+  "GasTank",
+  "Alternate_InstantScrap",
+  "Alternate_InstantPlutoniumCell",
+  "Alternate_ElectricMotor",
+  "Alternate_ClassicBattery",
+  "Alternate_AutomatedMiner",
+  "Alternate_SteelPipe_Iron",
+  "Alternate_SteelBeam_Aluminum",
+  "Alternate_Quartz_Fused",
+  "Alternate_Wire_2",
+  "Alternate_UraniumCell_1",
+  "IngotCaterium",
+  "MotorTurbo",
+  "SpaceElevatorPart_8",
+  "Alternate_Stator",
+  "Alternate_Silica",
+  "Alternate_Screw",
+  "Alternate_ReinforcedIronPlate_2",
+  "Alternate_HighSpeedConnector",
+  "Alternate_HeatSink_1",
+  "Alternate_ElectromagneticControlRod_1",
+  "Alternate_CrystalOscillator",
+  "Alternate_Computer_1",
+  "Alternate_CircuitBoard_1",
+  "Ficsonium",
+  "FicsoniumFuelRod",
+  "SingularityCell",
+  "SpaceElevatorPart_11",
+  "FilterHazmat",
+  "Quickwire",
+  "Gunpowder",
+  "SpikedRebar",
+  "CartridgeSmart",
+  "Rebar_Stunshot",
+  "FilterGasMask",
+  "Alternate_PolyesterFabric",
+  "SyntheticPowerShard",
+  "NobeliskShockwave",
+  "Rebar_Spreadshot",
+  "CartridgeChaos",
+  "NobeliskNuke",
+  "Cartridge",
+  "Rebar_Explosive",
+  "NobeliskCluster",
+  "Nobelisk",
+  "GunpowderMK2",
+  "IngotCopper",
+  "Burn_NuclearFuelRod_GeneratorNuclear",
+  "Burn_PlutoniumFuelRod_GeneratorNuclear",
+  "Phase5Sink"
+ ],
+ "names": {
+  "IronRod": "Iron Rod",
+  "IngotIron": "Iron Ingot",
+  "Alternate_RocketFuel_Nitro": "Alternate: Nitro Rocket Fuel",
+  "PackagedRocketFuel": "Packaged Rocket Fuel",
+  "Alternate_IonizedFuel_Dark": "Alternate: Dark-Ion Fuel",
+  "QuantumEnergy": "Excited Photonic Matter",
+  "DarkMatter": "Dark Matter Crystal",
+  "SuperpositionOscillator": "Superposition Oscillator",
+  "TemporalProcessor": "Neural-Quantum Processor",
+  "SpaceElevatorPart_12": "AI Expansion Server",
+  "PackagedIonizedFuel": "Packaged Ionized Fuel",
+  "SAMFluctuator": "SAM Fluctuator",
+  "FicsiteMesh": "Ficsite Trigon",
+  "TimeCrystal": "Time Crystal",
+  "IngotSAM": "Reanimated SAM",
+  "SpaceElevatorPart_10": "Biochemical Sculptor",
+  "FicsiteIngot_CAT": "Ficsite Ingot (Caterium)",
+  "Alternate_Turbofuel": "Turbofuel",
+  "PackagedTurboFuel": "Packaged Turbofuel",
+  "LiquidFuel": "Fuel",
+  "PetroleumCoke": "Petroleum Coke",
+  "Plastic": "Plastic",
+  "Alternate_Diamond_Cloudy": "Alternate: Cloudy Diamonds",
+  "Alternate_DarkMatter_Trap": "Alternate: Dark Matter Trap",
+  "Alternate_DarkMatter_Crystallization": "Alternate: Dark Matter Crystallization",
+  "Alternate_WetConcrete": "Alternate: Wet Concrete",
+  "Fuel": "Packaged Fuel",
+  "Alternate_SteamedCopperSheet": "Alternate: Steamed Copper Sheet",
+  "Alternate_RecycledRubber": "Alternate: Recycled Rubber",
+  "PureAluminumIngot": "Alternate: Pure Aluminum Ingot",
+  "AluminumCasing": "Aluminum Casing",
+  "AluminumSheet": "Alclad Aluminum Sheet",
+  "Alternate_PlasticSmartPlating": "Alternate: Plastic Smart Plating",
+  "Alternate_HighSpeedWiring": "Alternate: Automated Speed Wiring",
+  "EncasedIndustrialBeam": "Encased Industrial Beam",
+  "AILimiter": "AI Limiter",
+  "Alternate_HeavyFlexibleFrame": "Alternate: Heavy Flexible Frame",
+  "SpaceElevatorPart_4": "Modular Engine",
+  "SpaceElevatorPart_5": "Adaptive Control Unit",
+  "Alternate_FlexibleFramework": "Alternate: Flexible Framework",
+  "Alternate_CopperRotor": "Alternate: Copper Rotor",
+  "ModularFrame": "Modular Frame",
+  "Alternate_CoatedIronPlate": "Alternate: Coated Iron Plate",
+  "Alternate_CoatedIronCanister": "Alternate: Coated Iron Canister",
+  "Alternate_CoatedCable": "Alternate: Coated Cable",
+  "PressureConversionCube": "Pressure Conversion Cube",
+  "NitricAcid": "Nitric Acid",
+  "NonFissileUranium": "Non-Fissile Uranium",
+  "CopperDust": "Copper Powder",
+  "SpaceElevatorPart_9": "Nuclear Pasta",
+  "CoolingSystem": "Cooling System",
+  "RadioControlUnit": "Radio Control Unit",
+  "SulfuricAcid": "Sulfuric Acid",
+  "SpaceElevatorPart_7": "Assembly Director System",
+  "NuclearFuelRod": "Uranium Fuel Rod",
+  "SpaceElevatorPart_6": "Magnetic Field Generator",
+  "Alternate_PlutoniumFuelUnit": "Alternate: Plutonium Fuel Unit",
+  "Alternate_OCSupercomputer": "Alternate: OC Supercomputer",
+  "FusedModularFrame": "Fused Modular Frame",
+  "GasTank": "Empty Fluid Tank",
+  "Alternate_InstantScrap": "Alternate: Instant Scrap",
+  "Alternate_InstantPlutoniumCell": "Alternate: Instant Plutonium Cell",
+  "Alternate_ElectricMotor": "Alternate: Electric Motor",
+  "Alternate_ClassicBattery": "Alternate: Classic Battery",
+  "Alternate_AutomatedMiner": "Alternate: Automated Miner",
+  "Alternate_SteelPipe_Iron": "Alternate: Iron Pipe",
+  "Alternate_SteelBeam_Aluminum": "Alternate: Aluminum Beam",
+  "Alternate_Quartz_Fused": "Alternate: Fused Quartz Crystal",
+  "Alternate_Wire_2": "Alternate: Caterium Wire",
+  "Alternate_UraniumCell_1": "Alternate: Infused Uranium Cell",
+  "IngotCaterium": "Caterium Ingot",
+  "MotorTurbo": "Turbo Motor",
+  "SpaceElevatorPart_8": "Thermal Propulsion Rocket",
+  "Alternate_Stator": "Alternate: Quickwire Stator",
+  "Alternate_Silica": "Alternate: Cheap Silica",
+  "Alternate_Screw": "Alternate: Cast Screw",
+  "Alternate_ReinforcedIronPlate_2": "Alternate: Stitched Iron Plate",
+  "Alternate_HighSpeedConnector": "Alternate: Silicon High-Speed Connector",
+  "Alternate_HeatSink_1": "Alternate: Heat Exchanger",
+  "Alternate_ElectromagneticControlRod_1": "Alternate: Electromagnetic Connection Rod",
+  "Alternate_CrystalOscillator": "Alternate: Insulated Crystal Oscillator",
+  "Alternate_Computer_1": "Alternate: Caterium Computer",
+  "Alternate_CircuitBoard_1": "Alternate: Silicon Circuit Board",
+  "Ficsonium": "Ficsonium",
+  "FicsoniumFuelRod": "Ficsonium Fuel Rod",
+  "SingularityCell": "Singularity Cell",
+  "SpaceElevatorPart_11": "Ballistic Warp Drive",
+  "FilterHazmat": "Iodine-Infused Filter",
+  "Quickwire": "Quickwire",
+  "Gunpowder": "Black Powder",
+  "SpikedRebar": "Iron Rebar",
+  "CartridgeSmart": "Homing Rifle Ammo",
+  "Rebar_Stunshot": "Stun Rebar",
+  "FilterGasMask": "Gas Filter",
+  "Alternate_PolyesterFabric": "Alternate: Polyester Fabric",
+  "SyntheticPowerShard": "Synthetic Power Shard",
+  "NobeliskShockwave": "Pulse Nobelisk",
+  "Rebar_Spreadshot": "Shatter Rebar",
+  "CartridgeChaos": "Turbo Rifle Ammo",
+  "NobeliskNuke": "Nuke Nobelisk",
+  "Cartridge": "Rifle Ammo",
+  "Rebar_Explosive": "Explosive Rebar",
+  "NobeliskCluster": "Cluster Nobelisk",
+  "Nobelisk": "Nobelisk",
+  "GunpowderMK2": "Smokeless Powder",
+  "IngotCopper": "Copper Ingot",
+  "Burn_NuclearFuelRod_GeneratorNuclear": "Uranium Fuel Rod (Burning)",
+  "Burn_PlutoniumFuelRod_GeneratorNuclear": "Plutonium Fuel Rod (Burning)",
+  "Phase5Sink": "Phase 5 (250 : 250 : 64 : 50 /min)"
+ },
+ "bridges": {
+  "Alternate_RocketFuel_Nitro": [
+   "LiquidFuel",
+   "RocketFuel"
+  ],
+  "PackagedRocketFuel": [
+   "GasTank",
+   "RocketFuel"
+  ],
+  "Alternate_IonizedFuel_Dark": [
+   "DarkMatter",
+   "IonizedFuel"
+  ],
+  "DarkMatter": [
+   "DarkEnergy",
+   "DarkMatter",
+   "Diamond"
+  ],
+  "SuperpositionOscillator": [
+   "DarkEnergy",
+   "DarkMatter",
+   "QuantumEnergy"
+  ],
+  "TemporalProcessor": [
+   "DarkEnergy",
+   "QuantumEnergy"
+  ],
+  "SpaceElevatorPart_12": [
+   "DarkEnergy",
+   "QuantumEnergy",
+   "SpaceElevatorPart_12",
+   "SpaceElevatorPart_6"
+  ],
+  "PackagedIonizedFuel": [
+   "GasTank",
+   "IonizedFuel"
+  ],
+  "SpaceElevatorPart_10": [
+   "SpaceElevatorPart_10",
+   "SpaceElevatorPart_7"
+  ],
+  "FicsiteIngot_CAT": [
+   "FicsiteIngot",
+   "GoldIngot"
+  ],
+  "Alternate_Turbofuel": [
+   "LiquidFuel",
+   "LiquidTurboFuel"
+  ],
+  "PackagedTurboFuel": [
+   "FluidCanister",
+   "LiquidTurboFuel"
+  ],
+  "LiquidFuel": [
+   "LiquidFuel",
+   "PolymerResin"
+  ],
+  "Alternate_DarkMatter_Trap": [
+   "DarkEnergy",
+   "DarkMatter"
+  ],
+  "Alternate_DarkMatter_Crystallization": [
+   "DarkEnergy",
+   "DarkMatter"
+  ],
+  "Fuel": [
+   "FluidCanister",
+   "LiquidFuel"
+  ],
+  "PureAluminumIngot": [
+   "AluminumIngot",
+   "AluminumScrap"
+  ],
+  "AluminumSheet": [
+   "AluminumIngot",
+   "CopperIngot"
+  ],
+  "SpaceElevatorPart_4": [
+   "SpaceElevatorPart_1",
+   "SpaceElevatorPart_4"
+  ],
+  "SpaceElevatorPart_5": [
+   "CircuitBoard",
+   "SpaceElevatorPart_3",
+   "SpaceElevatorPart_5"
+  ],
+  "NonFissileUranium": [
+   "NitricAcid",
+   "NonFissibleUranium",
+   "NuclearWaste",
+   "SulfuricAcid"
+  ],
+  "CopperDust": [
+   "CopperDust",
+   "CopperIngot"
+  ],
+  "SpaceElevatorPart_9": [
+   "CopperDust",
+   "PressureConversionCube",
+   "SpaceElevatorPart_9"
+  ],
+  "SpaceElevatorPart_7": [
+   "SpaceElevatorPart_5",
+   "SpaceElevatorPart_7"
+  ],
+  "NuclearFuelRod": [
+   "ElectromagneticControlRod",
+   "UraniumCell"
+  ],
+  "SpaceElevatorPart_6": [
+   "ElectromagneticControlRod",
+   "SpaceElevatorPart_2",
+   "SpaceElevatorPart_6"
+  ],
+  "Alternate_PlutoniumFuelUnit": [
+   "PlutoniumCell",
+   "PressureConversionCube"
+  ],
+  "GasTank": [
+   "AluminumIngot",
+   "GasTank"
+  ],
+  "Alternate_InstantScrap": [
+   "AluminumScrap",
+   "SulfuricAcid"
+  ],
+  "Alternate_InstantPlutoniumCell": [
+   "NonFissibleUranium",
+   "PlutoniumCell"
+  ],
+  "SpaceElevatorPart_8": [
+   "SpaceElevatorPart_4",
+   "SpaceElevatorPart_8"
+  ],
+  "Ficsonium": [
+   "DarkEnergy",
+   "Ficsonium",
+   "PlutoniumWaste",
+   "SingularityCell"
+  ],
+  "FicsoniumFuelRod": [
+   "DarkEnergy",
+   "ElectromagneticControlRod",
+   "Ficsonium",
+   "QuantumEnergy"
+  ],
+  "SingularityCell": [
+   "DarkMatter",
+   "SingularityCell",
+   "SpaceElevatorPart_9"
+  ],
+  "SpaceElevatorPart_11": [
+   "DarkMatter",
+   "SingularityCell",
+   "SpaceElevatorPart_11",
+   "SpaceElevatorPart_8"
+  ],
+  "Alternate_PolyesterFabric": [
+   "Fabric",
+   "PolymerResin"
+  ],
+  "SyntheticPowerShard": [
+   "DarkEnergy",
+   "DarkMatter",
+   "QuantumEnergy"
+  ],
+  "NobeliskNuke": [
+   "GunpowderMK2",
+   "UraniumCell"
+  ],
+  "GunpowderMK2": [
+   "Gunpowder",
+   "GunpowderMK2",
+   "HeavyOilResidue"
+  ],
+  "Phase5Sink": [
+   "SpaceElevatorPart_10",
+   "SpaceElevatorPart_11",
+   "SpaceElevatorPart_12",
+   "SpaceElevatorPart_9"
+  ]
+ },
+ "groups": [
+  [
+   "AluminumIngot",
+   "AluminumScrap",
+   "CircuitBoard",
+   "CopperDust",
+   "CopperIngot",
+   "DarkEnergy",
+   "DarkMatter",
+   "Diamond",
+   "ElectromagneticControlRod",
+   "Fabric",
+   "Ficsonium",
+   "FluidCanister",
+   "GasTank",
+   "Gunpowder",
+   "GunpowderMK2",
+   "HeavyOilResidue",
+   "IonizedFuel",
+   "LiquidFuel",
+   "LiquidTurboFuel",
+   "NitricAcid",
+   "NonFissibleUranium",
+   "NuclearWaste",
+   "PlutoniumCell",
+   "PlutoniumWaste",
+   "PolymerResin",
+   "PressureConversionCube",
+   "QuantumEnergy",
+   "RocketFuel",
+   "SingularityCell",
+   "SpaceElevatorPart_1",
+   "SpaceElevatorPart_10",
+   "SpaceElevatorPart_11",
+   "SpaceElevatorPart_12",
+   "SpaceElevatorPart_2",
+   "SpaceElevatorPart_3",
+   "SpaceElevatorPart_4",
+   "SpaceElevatorPart_5",
+   "SpaceElevatorPart_6",
+   "SpaceElevatorPart_7",
+   "SpaceElevatorPart_8",
+   "SpaceElevatorPart_9",
+   "SulfuricAcid",
+   "UraniumCell"
+  ],
+  [
+   "FicsiteIngot",
+   "GoldIngot"
+  ],
+  [
+   "IronIngot"
+  ],
+  [
+   "AluminumPlateReinforced"
+  ]
+ ],
+ "merges": 60,
+ "lp_ok": true
+}

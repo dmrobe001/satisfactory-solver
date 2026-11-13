@@ -218,7 +218,7 @@ def main():
     out = {"raw30": a.raw30, "group": sorted(g), "recipes": [r["id"] for r in sub],
            "forced": [sub[x]["id"] for x in forced], "outputs": [sub[x]["id"] for x in F],
            "index": index, "invariant_factors": inv, "congruences": congr, "equations": equal, "steps": steps}
-    name = "output_lattice" + ("_raw30" if a.raw30 else "")
+    name = "output_lattice" + ("" if a.src == "separate" else "_" + a.src) + ("_raw30" if a.raw30 else "")
     (ROOT / "data" / f"{name}.json").write_text(json.dumps(out, indent=1))
     print("wrote data/%s.json" % name)
 
