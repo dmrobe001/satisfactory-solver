@@ -120,7 +120,7 @@
 "Wire": "pile"
 },
 "seconds": {
-"rays": 0.02,
+"rays": 0.01,
 "hilbert": 0.0
 },
 "rays": [

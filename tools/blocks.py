@@ -22,7 +22,8 @@ those recipes.  So pools can grow one recipe at a time.
 
 Recipe pools: "standard" means no hard-drive alternates (Compacted Coal,
 Polyester Fabric and Turbofuel are MAM unlocks, so standard, although the data
-calls them alternates).  Production recipes reachable from the allowed raw resources
+calls them alternates; the Automated Miner, the only machine recipe for the
+Portable Miner, is counted as standard too, by choice).  Production recipes reachable from the allowed raw resources
 without hand-gathered items; no Unpackage recipes; Packager recipes only for
 Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel.  Generators are left
 out (power is not modeled), except the nuclear plant burning uranium and
@@ -57,7 +58,8 @@ KEEP_BURN = {"Burn_NuclearFuelRod_GeneratorNuclear", "Burn_PlutoniumFuelRod_Gene
 EXTRA = {"MainPortal", "Augmenter30"}
 # Flagged "alternate" in the data (their class names start with Alternate_) but
 # unlocked by MAM research, not by hard drives: standard recipes in 1.0.
-MAM_NOT_ALT = {"Alternate_EnrichedCoal", "Alternate_PolyesterFabric", "Alternate_Turbofuel"}
+MAM_NOT_ALT = {"Alternate_EnrichedCoal", "Alternate_PolyesterFabric", "Alternate_Turbofuel",
+               "Alternate_AutomatedMiner"}  # the Portable Miner's only machine recipe: counted as standard by choice
 EXPENDABLE = {"CartridgeStandard", "CartridgeSmartProjectile", "CartridgeChaos", "SpikedRebar",
               "Rebar_Stunshot", "Rebar_Spreadshot", "Rebar_Explosive", "NobeliskExplosive", "NobeliskGas",
               "NobeliskShockwave", "NobeliskCluster", "NobeliskNuke", "Filter", "HazmatFilter",

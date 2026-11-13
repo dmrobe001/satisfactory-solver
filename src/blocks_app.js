@@ -48,14 +48,14 @@
   }
   function render() {
     const L = list(), mk = $("#fMake").value;
-    const shown = L;
+    const shown = L.slice(0, 1000);
     $("#bbody").innerHTML = shown.map((b) => `<tr data-id="${b.id}" class="${b.id === sel ? "sel" : ""}">
       <td class="n">${b.id}${b.mode ? '<span class="badge">mode</span>' : ""}</td>
       <td class="n">${b.machines.toLocaleString("en-US")}</td>
       <td class="n">${b.k}</td>
       <td><div class="chips">${b.makes.map(([k, v]) => `<span class="chip make ${k === mk ? "hit" : ""}">${esc(iname(k))} ${fmt(v)}</span>`).join("")}</div></td>
       <td><div class="chips">${b.draws.map(([k, v]) => `<span class="chip draw">${esc(iname(k))} ${fmt(v)}</span>`).join("")}</div></td></tr>`).join("");
-    $("#rowCount").textContent = L.length.toLocaleString("en-US") + " blocks" + (L.length > shown.length ? " (first " + shown.length + " shown; filter to narrow)" : "");
+    $("#rowCount").textContent = L.length.toLocaleString("en-US") + " blocks" + (L.length > shown.length ? " (first " + shown.length + " shown; filter or sort to see others)" : "");
     document.querySelectorAll("#btab th.sortable").forEach((th) => th.setAttribute("aria-sort", th.dataset.sort === sortKey ? (sortDir < 0 ? "descending" : "ascending") : "none"));
     side();
   }
