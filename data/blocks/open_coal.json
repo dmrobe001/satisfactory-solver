@@ -1,0 +1,677 @@
+{
+"open": true,
+"pool": "standard",
+"raw": [
+"OreIron",
+"OreCopper",
+"Stone",
+"Coal"
+],
+"add": "",
+"drop": "",
+"p5": false,
+"info": {
+"recipes": 28,
+"items": 33,
+"balance": 9,
+"pile": 20,
+"raw": 4,
+"dim": 19
+},
+"recipes": [
+{
+"id": "IronPlate",
+"name": "Iron Plate",
+"m": "ConstructorMk1"
+},
+{
+"id": "IronRod",
+"name": "Iron Rod",
+"m": "ConstructorMk1"
+},
+{
+"id": "IngotIron",
+"name": "Iron Ingot",
+"m": "SmelterMk1"
+},
+{
+"id": "QuantumEnergy",
+"name": "Excited Photonic Matter",
+"m": "Converter"
+},
+{
+"id": "TimeCrystal",
+"name": "Time Crystal",
+"m": "Converter"
+},
+{
+"id": "Diamond",
+"name": "Diamonds",
+"m": "HadronCollider"
+},
+{
+"id": "SteelBeam",
+"name": "Steel Beam",
+"m": "ConstructorMk1"
+},
+{
+"id": "SteelPipe",
+"name": "Steel Pipe",
+"m": "ConstructorMk1"
+},
+{
+"id": "IngotSteel",
+"name": "Steel Ingot",
+"m": "FoundryMk1"
+},
+{
+"id": "SpaceElevatorPart_2",
+"name": "Versatile Framework",
+"m": "AssemblerMk1"
+},
+{
+"id": "EncasedIndustrialBeam",
+"name": "Encased Industrial Beam",
+"m": "AssemblerMk1"
+},
+{
+"id": "Motor",
+"name": "Motor",
+"m": "AssemblerMk1"
+},
+{
+"id": "Stator",
+"name": "Stator",
+"m": "AssemblerMk1"
+},
+{
+"id": "SpaceElevatorPart_3",
+"name": "Automated Wiring",
+"m": "AssemblerMk1"
+},
+{
+"id": "ModularFrameHeavy",
+"name": "Heavy Modular Frame",
+"m": "ManufacturerMk1"
+},
+{
+"id": "ModularFrame",
+"name": "Modular Frame",
+"m": "AssemblerMk1"
+},
+{
+"id": "Rotor",
+"name": "Rotor",
+"m": "AssemblerMk1"
+},
+{
+"id": "CopperSheet",
+"name": "Copper Sheet",
+"m": "ConstructorMk1"
+},
+{
+"id": "SpaceElevatorPart_1",
+"name": "Smart Plating",
+"m": "AssemblerMk1"
+},
+{
+"id": "CopperDust",
+"name": "Copper Powder",
+"m": "ConstructorMk1"
+},
+{
+"id": "Alternate_AutomatedMiner",
+"name": "Alternate: Automated Miner",
+"m": "AssemblerMk1"
+},
+{
+"id": "SpikedRebar",
+"name": "Iron Rebar",
+"m": "ConstructorMk1"
+},
+{
+"id": "IronPlateReinforced",
+"name": "Reinforced Iron Plate",
+"m": "AssemblerMk1"
+},
+{
+"id": "Concrete",
+"name": "Concrete",
+"m": "ConstructorMk1"
+},
+{
+"id": "Screw",
+"name": "Screw",
+"m": "ConstructorMk1"
+},
+{
+"id": "Cable",
+"name": "Cable",
+"m": "ConstructorMk1"
+},
+{
+"id": "Wire",
+"name": "Wire",
+"m": "ConstructorMk1"
+},
+{
+"id": "IngotCopper",
+"name": "Copper Ingot",
+"m": "SmelterMk1"
+}
+],
+"classes": {
+"Cable": "free",
+"Cement": "free",
+"Coal": "raw",
+"CopperDust": "balance",
+"CopperIngot": "balance",
+"CopperSheet": "free",
+"Diamond": "balance",
+"IronIngot": "balance",
+"IronPlate": "free",
+"IronPlateReinforced": "free",
+"IronRod": "free",
+"IronScrew": "free",
+"ItemDescriptorPortableMiner": "free",
+"ModularFrame": "free",
+"ModularFrameHeavy": "free",
+"Motor": "free",
+"OreCopper": "raw",
+"OreIron": "raw",
+"Power": "free",
+"QuantumEnergy": "balance",
+"Rotor": "free",
+"SpaceElevatorPart_1": "balance",
+"SpaceElevatorPart_2": "balance",
+"SpaceElevatorPart_3": "balance",
+"SpikedRebar": "free",
+"Stator": "free",
+"SteelIngot": "balance",
+"SteelPipe": "free",
+"SteelPlate": "free",
+"SteelPlateReinforced": "free",
+"Stone": "raw",
+"TimeCrystal": "free",
+"Wire": "free"
+},
+"seconds": {
+"rays": 0.02,
+"hilbert": 0.01
+},
+"rays": [
+{
+"n": {
+"Cable": 1
+},
+"machines": 1,
+"net": {
+"Wire": -60.0,
+"Cable": 30.0,
+"Power": -4.0
+}
+},
+{
+"n": {
+"Screw": 1
+},
+"machines": 1,
+"net": {
+"IronRod": -10.0,
+"IronScrew": 40.0,
+"Power": -4.0
+}
+},
+{
+"n": {
+"IronPlateReinforced": 1
+},
+"machines": 1,
+"net": {
+"IronPlate": -30.0,
+"IronScrew": -60.0,
+"IronPlateReinforced": 5.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"SpikedRebar": 1
+},
+"machines": 1,
+"net": {
+"IronRod": -15.0,
+"SpikedRebar": 15.0,
+"Power": -4.0
+}
+},
+{
+"n": {
+"Alternate_AutomatedMiner": 1
+},
+"machines": 1,
+"net": {
+"SteelPipe": -4.0,
+"IronPlate": -4.0,
+"ItemDescriptorPortableMiner": 1.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"Rotor": 1
+},
+"machines": 1,
+"net": {
+"IronRod": -20.0,
+"IronScrew": -100.0,
+"Rotor": 4.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"ModularFrame": 1
+},
+"machines": 1,
+"net": {
+"IronPlateReinforced": -3.0,
+"IronRod": -12.0,
+"ModularFrame": 2.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"ModularFrameHeavy": 1
+},
+"machines": 1,
+"net": {
+"ModularFrame": -10.0,
+"SteelPipe": -40.0,
+"SteelPlateReinforced": -10.0,
+"IronScrew": -240.0,
+"ModularFrameHeavy": 2.0,
+"Power": -55.0
+}
+},
+{
+"n": {
+"Stator": 1
+},
+"machines": 1,
+"net": {
+"SteelPipe": -15.0,
+"Wire": -40.0,
+"Stator": 5.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"Motor": 1
+},
+"machines": 1,
+"net": {
+"Rotor": -10.0,
+"Stator": -10.0,
+"Motor": 5.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"EncasedIndustrialBeam": 1
+},
+"machines": 1,
+"net": {
+"SteelPlate": -18.0,
+"Cement": -36.0,
+"SteelPlateReinforced": 6.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"Concrete": 2
+},
+"machines": 2,
+"net": {
+"Stone": -90.0,
+"Cement": 30.0,
+"Power": -8.0
+}
+},
+{
+"n": {
+"IronPlate": 1,
+"IngotIron": 1
+},
+"machines": 2,
+"net": {
+"IronPlate": 20.0,
+"Power": -8.0,
+"OreIron": -30.0
+}
+},
+{
+"n": {
+"Wire": 2,
+"IngotCopper": 1
+},
+"machines": 3,
+"net": {
+"Wire": 60.0,
+"Power": -12.0,
+"OreCopper": -30.0
+}
+},
+{
+"n": {
+"IronRod": 2,
+"IngotIron": 1
+},
+"machines": 3,
+"net": {
+"IronRod": 30.0,
+"Power": -12.0,
+"OreIron": -30.0
+}
+},
+{
+"n": {
+"CopperSheet": 3,
+"IngotCopper": 2
+},
+"machines": 5,
+"net": {
+"CopperSheet": 30.0,
+"Power": -20.0,
+"OreCopper": -60.0
+}
+},
+{
+"n": {
+"SteelPipe": 3,
+"IngotSteel": 2
+},
+"machines": 5,
+"net": {
+"SteelPipe": 60.0,
+"Power": -44.0,
+"OreIron": -90.0,
+"Coal": -90.0
+}
+},
+{
+"n": {
+"SteelBeam": 3,
+"IngotSteel": 4
+},
+"machines": 7,
+"net": {
+"SteelPlate": 45.0,
+"Power": -76.0,
+"OreIron": -180.0,
+"Coal": -180.0
+}
+},
+{
+"n": {
+"TimeCrystal": 5,
+"Diamond": 2
+},
+"machines": 7,
+"net": {
+"TimeCrystal": 30.0,
+"Power": -2250.0,
+"Coal": -1200.0
+}
+}
+],
+"blocks": [
+{
+"n": {
+"Cable": 1
+},
+"machines": 1,
+"net": {
+"Wire": -60.0,
+"Cable": 30.0,
+"Power": -4.0
+}
+},
+{
+"n": {
+"Screw": 1
+},
+"machines": 1,
+"net": {
+"IronRod": -10.0,
+"IronScrew": 40.0,
+"Power": -4.0
+}
+},
+{
+"n": {
+"IronPlateReinforced": 1
+},
+"machines": 1,
+"net": {
+"IronPlate": -30.0,
+"IronScrew": -60.0,
+"IronPlateReinforced": 5.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"SpikedRebar": 1
+},
+"machines": 1,
+"net": {
+"IronRod": -15.0,
+"SpikedRebar": 15.0,
+"Power": -4.0
+}
+},
+{
+"n": {
+"Alternate_AutomatedMiner": 1
+},
+"machines": 1,
+"net": {
+"SteelPipe": -4.0,
+"IronPlate": -4.0,
+"ItemDescriptorPortableMiner": 1.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"Rotor": 1
+},
+"machines": 1,
+"net": {
+"IronRod": -20.0,
+"IronScrew": -100.0,
+"Rotor": 4.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"ModularFrame": 1
+},
+"machines": 1,
+"net": {
+"IronPlateReinforced": -3.0,
+"IronRod": -12.0,
+"ModularFrame": 2.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"ModularFrameHeavy": 1
+},
+"machines": 1,
+"net": {
+"ModularFrame": -10.0,
+"SteelPipe": -40.0,
+"SteelPlateReinforced": -10.0,
+"IronScrew": -240.0,
+"ModularFrameHeavy": 2.0,
+"Power": -55.0
+}
+},
+{
+"n": {
+"Stator": 1
+},
+"machines": 1,
+"net": {
+"SteelPipe": -15.0,
+"Wire": -40.0,
+"Stator": 5.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"Motor": 1
+},
+"machines": 1,
+"net": {
+"Rotor": -10.0,
+"Stator": -10.0,
+"Motor": 5.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"EncasedIndustrialBeam": 1
+},
+"machines": 1,
+"net": {
+"SteelPlate": -18.0,
+"Cement": -36.0,
+"SteelPlateReinforced": 6.0,
+"Power": -15.0
+}
+},
+{
+"n": {
+"Concrete": 2
+},
+"machines": 2,
+"net": {
+"Stone": -90.0,
+"Cement": 30.0,
+"Power": -8.0
+}
+},
+{
+"n": {
+"IronPlate": 1,
+"IngotIron": 1
+},
+"machines": 2,
+"net": {
+"IronPlate": 20.0,
+"Power": -8.0,
+"OreIron": -30.0
+}
+},
+{
+"n": {
+"Wire": 2,
+"IngotCopper": 1
+},
+"machines": 3,
+"net": {
+"Wire": 60.0,
+"Power": -12.0,
+"OreCopper": -30.0
+}
+},
+{
+"n": {
+"IronRod": 2,
+"IngotIron": 1
+},
+"machines": 3,
+"net": {
+"IronRod": 30.0,
+"Power": -12.0,
+"OreIron": -30.0
+}
+},
+{
+"n": {
+"SteelBeam": 1,
+"SteelPipe": 1,
+"IngotSteel": 2
+},
+"machines": 4,
+"net": {
+"SteelPlate": 15.0,
+"Power": -40.0,
+"SteelPipe": 20.0,
+"OreIron": -90.0,
+"Coal": -90.0
+}
+},
+{
+"n": {
+"CopperSheet": 3,
+"IngotCopper": 2
+},
+"machines": 5,
+"net": {
+"CopperSheet": 30.0,
+"Power": -20.0,
+"OreCopper": -60.0
+}
+},
+{
+"n": {
+"SteelPipe": 3,
+"IngotSteel": 2
+},
+"machines": 5,
+"net": {
+"SteelPipe": 60.0,
+"Power": -44.0,
+"OreIron": -90.0,
+"Coal": -90.0
+}
+},
+{
+"n": {
+"SteelBeam": 3,
+"IngotSteel": 4
+},
+"machines": 7,
+"net": {
+"SteelPlate": 45.0,
+"Power": -76.0,
+"OreIron": -180.0,
+"Coal": -180.0
+}
+},
+{
+"n": {
+"TimeCrystal": 5,
+"Diamond": 2
+},
+"machines": 7,
+"net": {
+"TimeCrystal": 30.0,
+"Power": -2250.0,
+"Coal": -1200.0
+}
+}
+]
+}

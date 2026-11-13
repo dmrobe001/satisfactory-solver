@@ -22,3 +22,4 @@
 .prose { max-width: 75ch; margin-top: 10px; }
 .tools .chk { color: var(--ink); }
 .pos { color: var(--good); } .neg { color: var(--ora-edge); }
+.chip.take { border-color: var(--accent); border-style: dashed; }

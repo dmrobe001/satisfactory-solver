@@ -69,7 +69,8 @@ out.write_text(page)
 print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
 
 # building blocks: the block libraries in data/blocks/
-POOLS = [("std_t0", "Iron, copper, limestone"), ("std_coal", "+ coal")]
+POOLS = [("open_t0", "Iron, copper, limestone"), ("open_coal", "+ coal"), ("open_t3", "+ caterium, quartz, sulfur, water"),
+         ("open_oil", "+ oil"), ("std_t0", "Closed: iron, copper, limestone"), ("std_coal", "Closed: + coal")]
 items, mach = {}, {}
 pools = []
 for name, title in POOLS:

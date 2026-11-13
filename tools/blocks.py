@@ -84,14 +84,15 @@ def pile_items():
     return {k for k in acc if not ITEMS.get(k, {}).get("f")}
 
 
-def pool(kind, raw_ok, extra_ids=(), drop_ids=(), p5=False):
+def pool(kind, raw_ok, extra_ids=(), drop_ids=(), p5=False, generators=False):
     """Recipes reachable from raw_ok; kind 'standard' (no alternates) or 'all'."""
     cand = []
     for r in RECIPES:
         if r.get("xmas"):
             continue
         ok = (r["kind"] == "machine" and not (r["m"] == "Packager" and r["id"] not in KEEP_PACKAGER)
-              and not r["id"].startswith("Unpackage")) or r["id"] in KEEP_BURN or r["id"] in EXTRA
+              and not r["id"].startswith("Unpackage")) or r["id"] in KEEP_BURN or r["id"] in EXTRA \
+            or (generators and r["kind"] == "burn")
         if not ok or r["id"] in drop_ids:
             continue
         if kind == "standard" and r.get("alt") and r["id"] not in MAM_NOT_ALT and r["id"] not in extra_ids:
@@ -114,16 +115,20 @@ def pool(kind, raw_ok, extra_ids=(), drop_ids=(), p5=False):
     return recs
 
 
-def model(recs):
-    """Integer rows: equations, inequalities (>= 0), congruences (== 0 mod m)."""
+def model(recs, open_usable=False):
+    """Integer rows: equations, inequalities (>= 0), congruences (== 0 mod m).
+    open_usable: usable items (and power) are free, like inputs and outputs that
+    cross block boundaries; only net-0 items and raw draws constrain."""
     pile = pile_items()
     nets = []
     for r in recs:
         d = {}
+        power = -r.get("p", 0) if open_usable and r.get("kind") != "sink" else 0
         for k, v in r["ins"]:
             if k != "Power": d[k] = d.get(k, 0) - frac(v)
         for k, v in r["outs"]:
             if k != "Power": d[k] = d.get(k, 0) + frac(v)
+        if power: d["Power"] = frac(power)   # MW, + = produced (machines draw, generators make)
         nets.append(d)
     items = sorted({k for d in nets for k in d})
     M = len(recs)
@@ -137,9 +142,12 @@ def model(recs):
             cls[k] = "raw"
             ineqs.append([-x for x in row])
             congs.append(row + [RAW_STEP * L])
+        elif k == "Power":
+            cls[k] = "free"
         elif k in pile:
-            cls[k] = "pile"
-            ineqs.append(row)
+            cls[k] = "free" if open_usable else "pile"
+            if not open_usable:
+                ineqs.append(row)
         else:
             cls[k] = "balance"
             eqs.append(row)
@@ -152,7 +160,7 @@ def describe(recs, items, cls, eqs):
     import numpy as np
     rank = np.linalg.matrix_rank(np.array(eqs, dtype=float)) if eqs else 0
     return {"recipes": len(recs), "items": len(items), "balance": sum(v == "balance" for v in cls.values()),
-            "pile": sum(v == "pile" for v in cls.values()), "raw": sum(v == "raw" for v in cls.values()),
+            "pile": sum(v in ("pile", "free") for v in cls.values()), "raw": sum(v == "raw" for v in cls.values()),
             "dim": len(recs) - int(rank)}
 
 
@@ -168,11 +176,14 @@ def main():
     ap.add_argument("--rays", action="store_true", help="only the extreme rays (elementary modes)")
     ap.add_argument("--dual", action="store_true", help="Normaliz's dual algorithm (cost grows with the answer)")
     ap.add_argument("--product", default="", help="only blocks whose sole usable output is this item (a face of the cone)")
+    ap.add_argument("--open", action="store_true",
+                    help="usable items and power are free (inputs or outputs across blocks); all generators included")
     ap.add_argument("--no-step", action="store_true", help="drop the multiples-of-30 rule (for comparison)")
     a = ap.parse_args()
     raw_ok = [x for x in a.raw.split(",") if x]
-    recs = pool(a.pool, raw_ok, [x for x in a.add.split(",") if x], [x for x in a.drop.split(",") if x], a.p5)
-    items, nets, cls, eqs, ineqs, congs = model(recs)
+    recs = pool(a.pool, raw_ok, [x for x in a.add.split(",") if x], [x for x in a.drop.split(",") if x], a.p5,
+                generators=a.open)
+    items, nets, cls, eqs, ineqs, congs = model(recs, open_usable=a.open)
     if a.product:
         # every other usable item nets exactly 0: move its inequality to the equations
         keep = []
@@ -213,7 +224,7 @@ def main():
                 for k, c in nets[j].items(): net[k] = net.get(k, 0) + c * int(x)
         return {"n": n, "machines": int(sum(v)), "net": {k: float(c) for k, c in net.items() if c}}
 
-    out = {"pool": a.pool, "raw": raw_ok, "add": a.add, "drop": a.drop, "p5": a.p5, "info": info,
+    out = {"open": a.open, "pool": a.pool, "raw": raw_ok, "add": a.add, "drop": a.drop, "p5": a.p5, "info": info,
            "recipes": [{"id": r["id"], "name": r["name"], "m": r["m"]} for r in recs],
            "classes": cls, "seconds": {"rays": round(t1 - t0, 2), "hilbert": round(t2 - t1, 2)},
            "rays": sorted((block(v) for v in rays), key=lambda b: b["machines"]),
