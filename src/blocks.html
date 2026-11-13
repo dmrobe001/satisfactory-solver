@@ -11,7 +11,7 @@
 <header class="top">
   <div>
     <h1>Satisfactory Building Blocks</h1>
-    <div class="sub">Satisfactory 1.2. Every whole-machine factory (all machines at 100 %) that balances exactly and cannot be split into two smaller ones: the Hilbert basis. Every valid factory of these recipes is a sum of these blocks.</div>
+    <div class="sub">Satisfactory 1.2. Every whole-machine module (all machines at 100 %) that balances its intermediates exactly and cannot be split into two smaller ones: the Hilbert basis. Every valid factory of these recipes is a sum of these blocks.</div>
   </div>
 </header>
 
@@ -45,9 +45,9 @@
   <section class="panel prose">
     <h3>What a block is</h3>
     <p>A factory here is a whole number of machines per recipe, every machine at 100 %. A block is a factory that cannot be split into two smaller ones that each obey the rules. Because machine counts cannot be negative, the set of blocks is finite and unique, and every valid factory of the pool's recipes is a sum of blocks (often in more than one way). Computed exactly with Normaliz (<code>tools/blocks.py</code>).</p>
-    <p><b>Open pools</b> (the first four tabs): every fluid and every unusable item nets exactly 0 inside the block; raw resources are only drawn, in whole multiples of 30 per minute; <b>usable items</b> (anything the build gun uses, ammunition, filters, fuels, power shards) and power are free: a block may take them as inputs from other blocks or make them as outputs. So a block is a minimal module closed over its intermediates and fluids, joined to others by belts of usable items. Putting blocks together only needs every usable item's total to be 0 or more, since usable items may pile up. Every generator is included; power is shown, not limited.</p>
-    <p><b>Closed pools</b> (the last two tabs, for comparison): usable items must net 0 or more inside each block, so blocks are self-sufficient chains from raw resources; most of them mix several products whose fractional machines complement each other.</p>
-    <p><b>Elementary modes</b> (marked “mode”) are the blocks that are also extreme rays of the cone. Restricting the recipes never changes a block, it only removes blocks: each smaller pool's library is exactly the part of the bigger one that uses only its recipes. Pools: standard recipes (no hard-drive alternates; Compacted Coal, Polyester Fabric, Turbofuel and the Automated Miner count as standard), reachable from the listed raw resources without hand-gathered items.</p>
+    <p>Every fluid and every unusable item nets exactly 0 inside the block; raw resources are only drawn, in whole multiples of 30 per minute; <b>usable items</b> (anything the build gun uses, ammunition, filters, fuels, power shards) and power are free: a block may take them as inputs from other blocks or make them as outputs. So a block is a minimal module closed over its intermediates and fluids, joined to others by belts of usable items. Putting blocks together only needs every usable item's total to be 0 or more, since usable items may pile up. Every generator is included; power is shown, not limited.</p>
+    <p><b>Modes</b> (elementary modes, marked “mode”): a set of recipes that can run balanced in only one proportion, and no smaller set of which can run at all; the block is the fewest whole machines in that proportion with raw draws in multiples of 30. Every other block mixes two or more modes in fractions that only come out whole together: two steel foundries feeding one beam and one pipe constructor is a third of the beam mode (4 foundries, 3 beam constructors) plus a third of the pipe mode (2 foundries, 3 pipe constructors). </p>
+    <p>Restricting the recipes never changes a block, it only removes blocks: each smaller pool's library is exactly the part of the bigger one that uses only its recipes. Pools: standard recipes (no hard-drive alternates; Compacted Coal, Polyester Fabric, Turbofuel and the Automated Miner count as standard), reachable from the listed raw resources without hand-gathered items.</p>
   </section>
 </main>
 
