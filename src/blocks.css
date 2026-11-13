@@ -1,0 +1,24 @@
+.bl-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 10px; align-items: start; }
+@media (max-width: 900px) { .bl-grid { grid-template-columns: minmax(0, 1fr); } .bl-side { position: static; } }
+.bl-list .scroll { max-height: calc(100vh - 230px); }
+#btab tbody tr { cursor: pointer; }
+#btab tbody tr:hover { background: var(--surface-2); }
+#btab tbody tr.sel { background: var(--surface-2); box-shadow: inset 4px 0 0 var(--accent); }
+#btab td { vertical-align: top; }
+.chips { display: flex; flex-wrap: wrap; gap: 3px 5px; font-size: 0.8rem; }
+.chip { border-radius: 10px; padding: 0 7px; background: var(--surface-2); border: 1px solid var(--line); white-space: nowrap; }
+.chip.make { border-color: var(--good); }
+.chip.draw { border-color: var(--ora-edge); }
+.chip.hit { background: color-mix(in srgb, var(--good) 18%, var(--surface)); }
+.badge { font-size: 0.7rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; padding: 0 5px; margin-left: 4px; }
+.bl-side { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px; position: sticky; top: 8px; max-height: calc(100vh - 24px); overflow: auto; }
+.side-empty { color: var(--muted); padding: 12px 4px; }
+.bl-side h2 { font-size: 1.2rem; }
+.bl-side .meta { color: var(--muted); font-size: 0.85rem; margin: 2px 0 8px; }
+.bl-side table { width: 100%; font-size: 0.88rem; }
+.bl-side td.n { font-family: var(--font-mono); text-align: right; }
+.bl-side h3 { font-size: 1rem; margin: 10px 0 4px; }
+.bl-side .rm { color: var(--muted); font-size: 0.75rem; display: block; }
+.prose { max-width: 75ch; margin-top: 10px; }
+.tools .chk { color: var(--ink); }
+.pos { color: var(--good); } .neg { color: var(--ora-edge); }

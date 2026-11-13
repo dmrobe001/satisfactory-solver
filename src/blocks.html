@@ -1,0 +1,58 @@
+<title>Satisfactory Building Blocks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+/*__BCSS__*/
+</style>
+
+<header class="top">
+  <div>
+    <h1>Satisfactory Building Blocks</h1>
+    <div class="sub">Satisfactory 1.2. Every whole-machine factory (all machines at 100 %) that balances exactly and cannot be split into two smaller ones: the Hilbert basis. Every valid factory of these recipes is a sum of these blocks.</div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" id="pools"></nav>
+
+<section class="summary" aria-label="Summary" id="stats"></section>
+
+<main>
+  <section class="panel">
+    <div class="tools">
+      <label>Makes <select id="fMake"><option value="">any product</option></select></label>
+      <label>Uses <select id="fRec"><option value="">any recipe</option></select></label>
+      <label>Products per block ≤ <input class="cell-in" type="number" id="fK" min="1" step="1" style="width:4.5em"></label>
+      <label class="chk"><input type="checkbox" id="fModes"> elementary modes only</label>
+      <span class="count" id="rowCount"></span>
+    </div>
+    <div class="bl-grid">
+      <div class="bl-list"><div class="scroll"><table id="btab">
+        <thead><tr>
+          <th class="n sortable" data-sort="id">#</th>
+          <th class="n sortable" data-sort="machines" aria-sort="ascending">Machines</th>
+          <th class="n sortable" data-sort="k" title="Number of usable products it makes">Products</th>
+          <th>Makes /min</th>
+          <th>Draws /min</th>
+        </tr></thead>
+        <tbody id="bbody"></tbody>
+      </table></div></div>
+      <aside class="bl-side" id="side" aria-live="polite"><div class="side-empty">Select a block to see its machines.</div></aside>
+    </div>
+  </section>
+  <section class="panel prose">
+    <h3>What a block is</h3>
+    <p>A factory here is a whole number of machines per recipe, every machine at 100 %. It is <b>valid</b> when every fluid and every unusable item nets exactly 0, every usable item (anything the build gun uses, ammunition, filters, fuels, power shards) nets 0 or more, and every raw resource is only drawn, in whole multiples of 30 per minute. Valid factories add up to valid factories. A <b>block</b> is a valid factory that cannot be split into two smaller valid factories. Because machine counts cannot be negative, the set of blocks is finite and unique, and every valid factory of the pool's recipes is a sum of blocks (often in more than one way). Computed exactly with Normaliz (<code>tools/blocks.py</code>).</p>
+    <p><b>Elementary modes</b> (marked “mode”) are the blocks that are also extreme rays of the cone: with these standard recipes, one per usable product, the smallest whole-machine chain that makes only that product. The other blocks mix several products whose fractional machines complement each other: for example two steel foundries can feed one beam and one pipe constructor exactly, though neither product alone balances with so few machines.</p>
+    <p>Restricting the recipes never changes a block, it only removes blocks: the iron–copper–limestone library is exactly the part of the coal library that uses no coal. Pools: standard recipes only (no hard-drive alternates), reachable from the listed raw resources without hand-gathered items.</p>
+  </section>
+</main>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__BAPP__*/
+</script>

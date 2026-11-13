@@ -30,6 +30,7 @@ capability, so the button only appears on claude.ai.
 | `src/moves.js`, `src/moves_app.js`, `src/moves.css`, `src/moves.html` | The fourth page, machine moves (engine, page script, styles, page). |
 | `tools/test_moves.js` | Command-line checks of the machine-moves engine. |
 | `tools/moves_start.py` | The machine-moves page's item rules and default start: fewest whole machines (all at 100 %) for one exact Phase 5 batch, raw draws in multiples of 30. Writes `data/moves_start.json`. |
+| `tools/blocks.py`, `src/blocks*.{html,css,js}` | Building blocks: the Hilbert basis of whole-machine factories for a recipe pool (PyNormaliz), written to `data/blocks/`, and the page that browses them (`dist/building-blocks.html`). |
 | `tools/tiers.py` | Unlock tier of every recipe and item (for sorting). Writes `data/tiers.json`. |
 | `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |

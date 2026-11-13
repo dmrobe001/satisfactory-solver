@@ -67,3 +67,30 @@ for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
 out = ROOT / "dist" / "machine-moves.html"
 out.write_text(page)
 print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
+
+# building blocks: the block libraries in data/blocks/
+POOLS = [("std_t0", "Iron, copper, limestone"), ("std_coal", "+ coal")]
+items, mach = {}, {}
+pools = []
+for name, title in POOLS:
+    f = ROOT / "data" / "blocks" / f"{name}.json"
+    if not f.exists():
+        continue
+    p = json.loads(f.read_text())
+    p["name"], p["title"] = name, title
+    pools.append(p)
+    for k in p["classes"]:
+        items[k] = game["items"].get(k, {}).get("n", k)
+    for r in p["recipes"]:
+        mach[r["m"]] = game["buildings"].get(r["m"], {}).get("n", r["m"])
+bdata = "window.BLOCKS = " + json.dumps({"pools": pools, "items": items, "machines": mach}, separators=(",", ":")) + ";"
+page = (src / "blocks.html").read_text()
+for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
+                     ("/*__BCSS__*/", (src / "blocks.css").read_text()),
+                     ("/*__DATA__*/", bdata),
+                     ("/*__BAPP__*/", (src / "blocks_app.js").read_text())]:
+    assert marker in page, marker
+    page = page.replace(marker, text)
+out = ROOT / "dist" / "building-blocks.html"
+out.write_text(page)
+print(f"wrote {out} ({out.stat().st_size // 1024} KB)")

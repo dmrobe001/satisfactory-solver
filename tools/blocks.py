@@ -165,11 +165,23 @@ def main():
     ap.add_argument("--dry", action="store_true", help="only describe the pool")
     ap.add_argument("--rays", action="store_true", help="only the extreme rays (elementary modes)")
     ap.add_argument("--dual", action="store_true", help="Normaliz's dual algorithm (cost grows with the answer)")
+    ap.add_argument("--product", default="", help="only blocks whose sole usable output is this item (a face of the cone)")
     ap.add_argument("--no-step", action="store_true", help="drop the multiples-of-30 rule (for comparison)")
     a = ap.parse_args()
     raw_ok = [x for x in a.raw.split(",") if x]
     recs = pool(a.pool, raw_ok, [x for x in a.add.split(",") if x], [x for x in a.drop.split(",") if x], a.p5)
     items, nets, cls, eqs, ineqs, congs = model(recs)
+    if a.product:
+        # every other usable item nets exactly 0: move its inequality to the equations
+        keep = []
+        for k in items:
+            if cls[k] == "pile" and k != a.product:
+                col = [nets[j].get(k, Fraction(0)) for j in range(len(recs))]
+                L = 1
+                for c in col: L = L * c.denominator // math.gcd(L, c.denominator)
+                row = [int(c * L) for c in col]
+                eqs.append(row)
+                if row in ineqs: ineqs.remove(row)
     info = describe(recs, items, cls, eqs)
     print(json.dumps(info))
     if a.dry:
