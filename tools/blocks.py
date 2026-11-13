@@ -115,7 +115,7 @@ def pool(kind, raw_ok, extra_ids=(), drop_ids=(), p5=False, generators=False):
     return recs
 
 
-def model(recs, open_usable=False):
+def model(recs, open_usable=False, cut=()):
     """Integer rows: equations, inequalities (>= 0), congruences (== 0 mod m).
     open_usable: usable items (and power) are free, like inputs and outputs that
     cross block boundaries; only net-0 items and raw draws constrain."""
@@ -142,7 +142,7 @@ def model(recs, open_usable=False):
             cls[k] = "raw"
             ineqs.append([-x for x in row])
             congs.append(row + [RAW_STEP * L])
-        elif k == "Power":
+        elif k == "Power" or k in cut:
             cls[k] = "free"
         elif k in pile:
             cls[k] = "free" if open_usable else "pile"
@@ -178,12 +178,13 @@ def main():
     ap.add_argument("--product", default="", help="only blocks whose sole usable output is this item (a face of the cone)")
     ap.add_argument("--open", action="store_true",
                     help="usable items and power are free (inputs or outputs across blocks); all generators included")
+    ap.add_argument("--cut", default="", help="intermediates to cut open: free across blocks, like usable items")
     ap.add_argument("--no-step", action="store_true", help="drop the multiples-of-30 rule (for comparison)")
     a = ap.parse_args()
     raw_ok = [x for x in a.raw.split(",") if x]
     recs = pool(a.pool, raw_ok, [x for x in a.add.split(",") if x], [x for x in a.drop.split(",") if x], a.p5,
                 generators=a.open)
-    items, nets, cls, eqs, ineqs, congs = model(recs, open_usable=a.open)
+    items, nets, cls, eqs, ineqs, congs = model(recs, open_usable=a.open, cut=set(x for x in a.cut.split(",") if x))
     if a.product:
         # every other usable item nets exactly 0: move its inequality to the equations
         keep = []
