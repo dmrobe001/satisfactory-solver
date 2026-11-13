@@ -6,16 +6,22 @@ hand-gathered items, leaving out all Unpackage recipes and every Packager
 recipe except Packaged Fuel, Packaged Turbofuel, Packaged Rocket Fuel and
 Packaged Ionized Fuel.  Every machine at 100 %.
 
-A linear program finds the fewest machines (fractional) that make one exact
-Phase 5 batch (AI Expansion Servers at BATCH per minute, the others in
-proportion), with the page's item rules: fluids that are not raw and products
-that are not building materials, equipment or Phase 5 parts net exactly 0;
-building materials, equipment and Phase 5 parts net >= 0; raw resources are
-only drawn.  Building materials and equipment may pile up but have no minimum
-(no bill of materials): only the Phase 5 parts have a target.  With --closed
-they must balance exactly too (the Phase 5 batch then grows to 960 AI
-Expansion Servers per minute, and no whole-machine start was found in 5
-minutes).
+Item rules (the page reads them from the output, so they live here only):
+  accumulate  net >= 0, no minimum: everything the build gun uses (any
+              building cost), ammunition, filters, and fuels (solid generator
+              fuels, packaged fuels and batteries; not nuclear fuel rods),
+              plus the Phase 5 parts
+  raw         mined or extracted: only drawn, in whole multiples of 30/min
+  balance     everything else (all other fluids and intermediates): net 0
+
+The Phase 5 recipes run at one exact batch: the fewest whole machines that
+make the four parts in proportion (1000 : 1000 : 256 : 200) and that the rest
+of the factory can feed exactly; that is 192 AI Expansion Servers per minute
+(the lattice step of the page's engine; 3x the 64/min the Phase 5 machines
+alone would allow, because of the balances upstream).
+
+A linear program finds the fewest machines (fractional), then an integer
+program the fewest whole machines, with the raw draws as whole multiples of 30.
 
 Usage: python3 tools/moves_start.py [--batch 192]   ->  data/moves_start.json
 """
@@ -50,16 +56,28 @@ def recipe_set():
     return [r for r in cand if all(k in have for k, _ in r["ins"])], raw
 
 
+FUEL_SOLIDS = {"CompactedCoal", "PetroleumCoke"}   # solid generator fuels beyond the expendables list
+RODS = {"NuclearFuelRod", "PlutoniumFuelRod", "FicsoniumFuelRod"}
+RAW_STEP = 30
+
+
+def rules(raw):
+    acc = set(EXPENDABLE) | FUEL_SOLIDS | set(O.PHASE5)
+    acc |= {it for b in O.BLD.values() if not b.get("xmas") for it, _ in b["cost"]}
+    for r in O.R_ALL:  # any solid a generator burns
+        if r["kind"] == "burn":
+            acc |= {k for k, _ in r["ins"] if not O.ITEMS.get(k, {}).get("f")}
+    acc -= RODS | raw
+    return {it for it in acc if not O.ITEMS.get(it, {}).get("f")}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--batch", type=float, default=192.0)
-    ap.add_argument("--time", type=float, default=300)
-    ap.add_argument("--closed", action="store_true",
-                    help="make building materials and equipment balance exactly too (default: they may pile up, "
-                         "with no minimum; only the Phase 5 parts have a target)")
+    ap.add_argument("--time", type=float, default=600)
     a = ap.parse_args()
     recs, raw = recipe_set()
-    bm = EXPENDABLE | set(O.PHASE5) | {it for b in O.BLD.values() if not b.get("xmas") for it, _ in b["cost"]}
+    acc = rules(raw)
     rates = []
     for r in recs:
         d = {}
@@ -69,53 +87,48 @@ def main():
             if k != "Power": d[k] = d.get(k, 0) + v
         rates.append(d)
     items = sorted({k for d in rates for k in d})
-    rows = []
-    for k in items:
-        coef = {j: d[k] for j, d in enumerate(rates) if d.get(k)}
-        fluid = O.ITEMS[k]["f"]
-        if k in O.PHASE5:
-            v = a.batch * O.PHASE5[k] / 256
-            rows.append((coef, v, v))
-        elif k in raw:
-            rows.append((coef, None, 0.0))
-        elif not a.closed and k in bm and not fluid:
-            rows.append((coef, 0.0, None))
-        else:
-            rows.append((coef, 0.0, 0.0))
     n = len(recs)
-    ok, x, obj = O.solve(n, [1.0] * n, rows, [0.0] * n, [None] * n)
+    raw_used = [k for k in items if k in raw]
+    aux = {k: n + t for t, k in enumerate(raw_used)}   # raw draw = 30 * aux
+    nv = n + len(aux)
+    rows, irows = [], []
+    for k in items:
+        fr = {j: O.frac(d[k]) for j, d in enumerate(rates) if d.get(k)}
+        rhs = Fraction(a.batch) * O.PHASE5[k] / 256 if k in O.PHASE5 else Fraction(0)
+        L = rhs.denominator
+        for c in fr.values(): L = L * c.denominator // math.gcd(L, c.denominator)
+        ic = {j: int(c * L) for j, c in fr.items()}
+        r = int(rhs * L)
+        if k in O.PHASE5: lo, hi = r, r
+        elif k in raw: ic[aux[k]] = RAW_STEP * L; lo, hi = 0, 0
+        elif k in acc: lo, hi = 0, None
+        else: lo, hi = 0, 0
+        irows.append((ic, lo, hi))
+        rows.append(({j: float(c) for j, c in ic.items()}, None if lo is None else float(lo), None if hi is None else float(hi)))
+    cost = [1.0] * n + [0.0] * len(aux)
+    ok, x, obj = O.solve(nv, cost, rows, [0.0] * nv, [None] * nv)
     if not ok:
         print("infeasible"); return 1
     base = {recs[j]["id"]: round(x[j], 6) for j in range(n) if x[j] > 1e-7}
     print("linear program: %.1f machines (fractional)" % obj, flush=True)
-    # whole machines: the same rows with exact integer coefficients, integer counts
-    irows = []
-    for (coef, lo, hi), k in zip(rows, items):
-        fr = {j: O.frac(c) for j, c in coef.items()}
-        rhs = Fraction(a.batch) * O.PHASE5[k] / 256 if k in O.PHASE5 else Fraction(0)
-        L = rhs.denominator
-        for c in fr.values(): L = L * c.denominator // math.gcd(L, c.denominator)
-        irows.append(({j: int(c * L) for j, c in fr.items()}, lo, hi, int(rhs * L)))
-    hrows = [({j: float(c) for j, c in ic.items()}, None if lo is None else float(r), None if hi is None else float(r))
-             for ic, lo, hi, r in irows]
-    ok, xi, obj2 = O.solve(n, [1.0] * n, hrows, [0.0] * n, [None] * n, integer=[1] * n, time_limit=a.time)
+    ok, xi, obj2 = O.solve(nv, cost, rows, [0.0] * nv, [None] * nv, integer=[1] * nv, time_limit=a.time)
     whole = None
     if ok and xi is not None:
         N = [int(round(v)) for v in xi]
-        good = all((lo is None or sum(c * N[j] for j, c in ic.items()) >= r) and
-                   (hi is None or sum(c * N[j] for j, c in ic.items()) <= r) for ic, lo, hi, r in irows)
+        good = all((lo is None or sum(c * N[j] for j, c in ic.items()) >= lo) and
+                   (hi is None or sum(c * N[j] for j, c in ic.items()) <= hi) for ic, lo, hi in irows)
         if good:
             whole = {recs[j]["id"]: N[j] for j in range(n) if N[j]}
-            print("integer program: %d whole machines, verified exactly" % sum(N))
+            print("integer program: %d whole machines, verified exactly" % sum(N[:n]))
         else:
             print("integer program: rounding broke a balance; not used")
     else:
         print("integer program: nothing found in the time limit")
-    closed = sorted(k for k in items if k in bm and k not in O.PHASE5 and not O.ITEMS[k]["f"]) if a.closed else []
+    p5rec = [r["id"] for r in recs if any(k in O.PHASE5 for k, _ in r["outs"])]
     out = {"recipes": [r["id"] for r in recs], "base": base, "n": whole, "batch": a.batch,
-           "valves": {k: "balance" for k in closed},
+           "rules": {"accumulate": sorted(acc), "raw": sorted(raw), "rawStep": RAW_STEP, "fixed": p5rec},
            "note": "base: fewest machines (fractional, all at 100 %) for one exact Phase 5 batch; "
-                   "n: fewest whole machines for the same (integer program), when found"}
+                   "n: fewest whole machines for the same, raw draws in multiples of 30/min (integer program)"}
     (ROOT / "data" / "moves_start.json").write_text(json.dumps(out, indent=1))
     print("%d recipes in the set, %d used, %.1f machines for %g AI Expansion Servers/min"
           % (n, len(base), obj, a.batch))

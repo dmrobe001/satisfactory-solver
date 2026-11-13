@@ -77,21 +77,33 @@ for (const k of Object.keys(Moves.PHASE5)) if (E.iIdx[k] !== undefined) p5.set(E
 const sh = E.shrink(n, top, p5);
 truthy("plan: shrink of the largest recipe stays exact and keeps Phase 5", !sh || (E.balanced(sh.n) && E.valid(sh.n, p5)));
 
-// all-recipe start: chain moves for Iron Wire include "+12 Iron Wire, +5 Iron Ingot"
+// raw steps: ore drawn in multiples of 60 -> smelters (30 ore each) come in even numbers
+E = new Moves(toy, { recipes: ["Smelt", "Rod", "Plate", "Screw"], lockP5: false, rawStep: 60 });
+truthy("toy: with a raw step of 60, every move keeps ore a multiple of 60", E.basis.every((b) => Number(b[E.rIdx.Smelt]) % 2 === 0) && E.dim === 2);
+truthy("toy: balanced() checks the raw step", E.balanced([2, 0, 2, 0]) && !E.balanced([1, 0, 1, 0]));
+// fixed recipes: no move changes them
+E = new Moves(toy, { recipes: ["Smelt", "Rod", "Plate", "Screw"], lockP5: false, fixed: ["Plate"] });
+truthy("toy: a fixed recipe is 0 in every move, one move fewer", E.dim === 1 && E.basis.every((b) => !b[E.rIdx.Plate]) && E.basis.every((b) => E.isMove(b.map(Number))));
+
+// the start: Phase 5 fixed at one batch, raw draws in multiples of 30, every rule holds
 {
   const S = JSON.parse(fs.readFileSync(path.join(__dirname, "../data/moves_start.json")));
-  const A = new Moves(G, { recipes: S.recipes });
+  const t1 = Date.now();
+  const A = new Moves(G, { recipes: S.recipes, accumulate: S.rules.accumulate, rawStep: S.rules.rawStep, fixed: S.rules.fixed });
+  truthy("start: engine built in under 3 s (" + (Date.now() - t1) + " ms, " + A.dim + " moves)", Date.now() - t1 < 3000);
   const n0 = A.R.map((r) => S.n[r.id] || 0);
-  const pins0 = new Map();
-  for (const k of Object.keys(Moves.PHASE5)) pins0.set(A.iIdx[k], 192 * Moves.PHASE5[k] / 256 - 1e-9);
-  truthy("start: exact and valid", A.balanced(n0) && A.valid(n0, pins0));
-  const w = A.R.findIndex((r) => r.id === "Alternate_Wire_1" || r.name === "Alternate: Iron Wire");
-  const ch = A.chainMoves(n0, w, pins0);
-  truthy("start: Iron Wire chains are exact", ch.every((c) => A.balanced(c.vec)));
-  truthy("start: +12 Iron Wire, +5 Iron Ingot is among them and allowed", ch.some((c) => c.vec[w] === 12 && c.vec[A.rIdx.IngotIron] === 5 && c.plus));
+  truthy("start: exact (net-0 items and raw multiples of 30) and valid", A.balanced(n0) && A.valid(n0, null));
+  const net0 = A.netOf(n0);
+  truthy("start: every raw draw is a multiple of 30", A.items.every((k, i) => A.cls[i] !== "raw" || Math.abs(net0[i] / 30 - Math.round(net0[i] / 30)) < 1e-6));
+  eq("start: 192 AI Expansion Servers/min", Math.round(net0[A.iIdx.SpaceElevatorPart_12] * 1e6) / 1e6, 192);
+  truthy("start: every move leaves the Phase 5 recipes alone", A.basis.every((b) => S.rules.fixed.every((id) => !b[A.rIdx[id]])));
+  truthy("start: packaged fuel and batteries pile up, nuclear rods balance", A.cls[A.iIdx.Fuel] === "surplus" && A.cls[A.iIdx.Battery] === "surplus" &&
+    (A.iIdx.NuclearFuelRod === undefined || A.cls[A.iIdx.NuclearFuelRod] === "balance"));
+  const w = A.R.findIndex((r) => r.id === "Alternate_Wire_1");
+  const ch = A.chainMoves(n0, w, null);
+  truthy("start: Iron Wire chains are exact moves", ch.length > 0 && ch.every((c) => A.isMove(c.vec)));
   const wire = A.productChains(A.iIdx.Wire, n0);
-  truthy("start: product chains for Wire are exact and raise Wire", wire.length > 0 && wire.every((c) => A.balanced(c.vec) && c.gain > 0));
-  truthy("start: one of them runs through the plain Iron Ingot smelter", wire.some((c) => c.vec[A.rIdx.IngotIron] > 0));
+  truthy("start: product chains for Wire are exact and raise Wire", wire.length > 0 && wire.every((c) => A.isMove(c.vec) && c.gain > 0));
 }
 
 console.log(fails ? fails + " FAILED" : "all passed");

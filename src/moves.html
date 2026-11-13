@@ -11,15 +11,14 @@
 <header class="top">
   <div>
     <h1>Satisfactory Machine Moves</h1>
-    <div class="sub">Satisfactory 1.2. Whole machines, all at 100 %, exact balances. Change the factory only by moves that keep every fluid and unusable product at exactly zero.</div>
+    <div class="sub">Satisfactory 1.2. Whole machines, all at 100 %, one exact Phase 5 batch. Change the factory only by moves that keep every intermediate at exactly zero and every raw draw a multiple of 30/min.</div>
   </div>
   <div class="io-top">
     <button class="btn" type="button" id="btnUndo" disabled title="Undo the last change">Undo</button>
     <button class="btn" type="button" id="btnExport" hidden>Export</button>
     <label class="btn" for="fileState" title="Load a plan exported from the production sheet, the optimizer, the recipe matrix or this page">Import</label>
     <input type="file" id="fileState" accept=".json,application/json" hidden>
-    <button class="btn" type="button" id="btnStart" title="Every recipe that needs no hand-gathered items (no Unpackage recipes; packaging only for Fuel, Turbofuel, Rocket Fuel and Ionized Fuel), starting from the fewest whole machines for one Phase 5 batch">Load all-recipe start</button>
-    <button class="btn" type="button" id="btnDefault" title="The optimizer's recipes and ratios">Load optimizer plan</button>
+    <button class="btn" type="button" id="btnStart" title="Every recipe that needs no hand-gathered items (no Unpackage recipes; packaging only for Fuel, Turbofuel, Rocket Fuel and Ionized Fuel), at the fewest whole machines for one Phase 5 batch">Reset to start</button>
     <span class="count" id="ioMsg" role="status"></span>
   </div>
 </header>
@@ -36,19 +35,39 @@
 <div class="banner" id="msgBanner" hidden><span id="msgText"></span><button class="btn" type="button" id="msgClose">Dismiss</button></div>
 
 <nav class="tabs" role="tablist" id="tabs">
-  <button role="tab" type="button" data-tab="recipes" aria-selected="true">Recipes &amp; moves</button>
-  <button role="tab" type="button" data-tab="items" aria-selected="false">Items</button>
+  <button role="tab" type="button" data-tab="products" aria-selected="true">Products</button>
+  <button role="tab" type="button" data-tab="recipes" aria-selected="false">Recipes &amp; moves</button>
   <button role="tab" type="button" data-tab="notes" aria-selected="false">How it works</button>
 </nav>
 
 <main>
-  <section class="panel" id="tab-recipes" role="tabpanel">
+  <section class="panel" id="tab-products" role="tabpanel">
+    <div class="tools">
+      <label>Search <input type="search" id="pq" placeholder="product"></label>
+      <span class="count" id="pCount"></span>
+      <span class="legend"><span class="sw sw-zero"></span>net 0 <span class="sw sw-pile"></span>piles up <span class="sw sw-raw"></span>raw</span>
+      <span class="count" id="sheetStatus"></span>
+    </div>
+    <div class="pv-grid">
+      <div class="pv-list">
+        <div class="scroll"><table id="ptab">
+          <thead><tr>
+            <th class="sortable" data-sort="name">Product</th>
+            <th class="n sortable" data-sort="tier" aria-sort="ascending" title="Unlock tier: the milestone tier of the recipe that makes it; for MAM and alternate unlocks, the highest tier among what it takes to unlock and make it">Tier</th>
+            <th class="sortable" data-sort="rule">Rule</th>
+            <th class="n sortable" data-sort="net" title="Net production per minute (raw resources: negative, drawn)">Net /min</th>
+            <th class="n sortable" data-sort="bom" title="Items it takes to build every machine now in the factory">Build cost</th>
+          </tr></thead>
+          <tbody id="pbody"></tbody>
+        </table></div>
+      </div>
+      <div class="pv-sheet" id="sheet" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-recipes" role="tabpanel" hidden>
     <div class="tools">
       <label>Search <input type="search" id="q" placeholder="recipe or machine"></label>
-      <label class="chk"><input type="checkbox" id="lockP5" checked> Phase 5 in exact proportion</label>
-      <label title="With the Phase 5 ratio locked, Phase 5 only comes in whole batches; the factory is sized to this many">Phase 5 batches <input class="cell-in" type="number" id="batches" min="1" step="1" value="1" style="width:5em"></label>
-      <span class="count" id="batchInfo"></span>
-      <button class="btn" type="button" id="btnSnap" title="Go back to the plan's recipe ratios at the current size and snap to the nearest valid factory">Snap to plan ratios</button>
       <label>Add recipe <input type="search" id="addq" placeholder="type to find a recipe" autocomplete="off" list="addlist"></label>
       <datalist id="addlist"></datalist>
       <span class="count" id="rowCount"></span>
@@ -72,31 +91,30 @@
     </div>
   </section>
 
-  <section class="panel" id="tab-items" role="tabpanel" hidden>
-    <div class="tools"><span class="note">Fluids and unusable products must balance exactly. Building materials, equipment and Phase 5 parts may pile up; switch any solid to "must balance" (or back) here. A minimum keeps an item from dropping below that rate when you apply moves.</span></div>
-    <div class="scroll"><table id="itab">
-      <thead><tr><th>Item</th><th>Rule</th><th class="n">Net /min</th><th class="n" title="Smallest change in this item's net that moves can make">Step /min</th><th class="n">Keep at least /min</th></tr></thead>
-      <tbody id="ibody"></tbody>
-    </table></div>
-  </section>
-
   <section class="panel" id="tab-notes" role="tabpanel" hidden>
     <div class="prose">
       <h3>The idea</h3>
-      <p>Every machine runs at 100 %; only the number of machines of each recipe changes. Fluids and unusable products must come out exactly even, and the Phase 5 parts in exact proportion if that box is ticked. The machine counts that satisfy those equations form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact balance exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
-      <p>A move can still make something go negative: a machine count, a building material that is used faster than it is made, or a raw resource that would be produced instead of drawn. Such moves are greyed out. Raw resources and power are not limited here.</p>
-      <h3>Phase 5 batches</h3>
-      <p>With whole machines at 100 % and the exact Phase 5 ratio, Phase 5 can only be made in whole batches: the smallest set of machine counts that balances every intermediate exactly. The batch depends on the recipes in use (and on the valves). The factory is sized to the number of batches you pick: the plan's recipe ratios are scaled to that output and snapped to the nearest valid whole-machine factory. Untick the ratio box to treat the Phase 5 parts like other surplus items, with minimums you set on the Items tab.</p>
-      <p>The default start uses every recipe that needs no hand-gathered items, except Unpackage recipes and the Packager recipes other than Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel. Its counts are the fewest whole machines that make one exact Phase 5 batch (an integer program solved offline, <code>tools/moves_start.py</code>); more batches multiply them.</p>
-      <h3>Reading the numbers</h3>
+      <p>Every machine runs at 100 %; only the number of machines of each recipe changes. The machine counts that satisfy the exact rules below form an integer <i>lattice</i>. Its reduced basis is a set of <b>moves</b>: bundles such as “+2 of this, −1 of that” that keep every exact rule exact. The page only ever changes the factory by moves, so it cannot become unbalanced.</p>
+      <h3>The rules</h3>
       <ul>
-        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a valve (Items tab) or a different recipe usually shrinks it.</li>
-        <li><b>Chain moves</b> are built the way you would by hand: the selected recipe plus a supplier for each must-balance input it uses (and a consumer for each must-balance output it makes), recipes already running first, until everything balances, scaled to whole machines. Several alternatives are tried; each chain is exact. The <b>lattice moves</b> below them are the reduced basis: every exact change is a combination of them, but on its own a basis move often touches a recipe at 0 machines and is blocked.</li>
-        <li><b>Product chains</b>: for every product that may pile up, the chains that make more of it (one per recipe that makes it, and a few supplier choices) are found in the background and indexed by every recipe they use. Selecting a recipe lists the product chains that pass through it, so a smelter shows “more Wire via Iron Wire” and the like.</li>
-        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid, preferring fewer machines in all. Phase 5 output and the minimums on the Items tab are kept.</li>
-        <li>Changing a valve, the recipe list or the number of batches rebuilds the moves and snaps to the nearest valid factory.</li>
+        <li><b>Phase 5</b>: the four Phase 5 recipes are fixed at one batch, the fewest whole machines that make the parts in exact proportion (1000 : 1000 : 256 : 200) and that whole machines upstream can feed exactly: 192 AI Expansion Servers per minute. (The Phase 5 machines alone would allow 64/min; the balances upstream force three times that.) No move changes these four counts.</li>
+        <li><b>Net 0</b> (tinted rows): every fluid and every intermediate that is not one of the items below.</li>
+        <li><b>Piles up</b>: anything the build gun uses (any building cost), all ammunition, filters, and fuels (solid generator fuels, packaged fuels and batteries; nuclear fuel rods must balance). Net ≥ 0 with no minimum.</li>
+        <li><b>Raw</b>: what comes out of miners and extractors is only drawn, in whole multiples of 30/min. Node and well limits are not modeled, nor is power.</li>
       </ul>
-      <p class="note">The lattice is exact (big-integer column reduction, then Lenstra–Lenstra–Lovász reduction). Recipe data is the production sheet's. Import takes production-sheet exports, optimizer plans and recipe-matrix exports; export gives a production-sheet file.</p>
+      <p>The start uses every recipe that needs no hand-gathered items, except Unpackage recipes and the Packager recipes other than Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel, at the fewest whole machines that satisfy the rules (an integer program solved offline, <code>tools/moves_start.py</code>).</p>
+      <h3>Products</h3>
+      <p>The list shows every product with its net per minute and its <b>build cost</b>: the items it takes to construct every machine now in the factory (the machines only, not belts, power or the miners and extractors). <b>Tier</b> is the milestone tier of the recipe that makes the item; for items first made by a MAM or hard-drive unlock, the highest tier among what it takes to unlock and make it (research cost, prerequisites, ingredients, machine). Hover a tier for the unlock it comes from.</p>
+      <p>Selecting a product opens its <b>move sheet</b>: each column is one unblocked move that changes the product's net or the machines that make or use it, each row a recipe that some column changes, with its machine count now. The columns come from the product's own chains (“make more of it”), the chain moves of each recipe that makes or uses it, and the lattice basis, each tried in both directions; only those that break nothing from the current factory are shown.</p>
+      <h3>Reading the recipe tab</h3>
+      <ul>
+        <li><b>Step</b> is the smallest change in a recipe's machine count that any combination of moves can make. A big step is a chain of exact ratios that only works in large batches; a different recipe usually shrinks it.</li>
+        <li><b>Chain moves</b> are built the way you would by hand: the selected recipe plus a supplier for each net-0 input it uses (and a consumer for each net-0 output it makes), recipes already running first, until everything balances, scaled to whole machines. The <b>lattice moves</b> below them are the reduced basis: every exact change is a combination of them, but on its own a basis move often touches a recipe at 0 machines and is blocked.</li>
+        <li><b>Product chains</b> through a recipe are the “make more of X” chains that use it, found in the background.</li>
+        <li><b>Shrink this</b> searches combinations of up to three moves (each used once or twice) for the one that lowers the selected recipe the most and keeps everything valid.</li>
+        <li>Adding a recipe starts it at 0 machines; a recipe can be removed once it is at 0.</li>
+      </ul>
+      <p class="note">The lattice is exact (big-integer column reduction, then Lenstra–Lenstra–Lovász reduction). Recipe data is the production sheet's. Import takes this page's exports and production-sheet files with every machine at 100 % that satisfy the rules; export gives a production-sheet file.</p>
     </div>
   </section>
 </main>

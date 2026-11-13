@@ -29,7 +29,8 @@ capability, so the button only appears on claude.ai.
 | `tools/check_plan.js` | Re-checks an optimizer plan with the production sheet's own solver and bill-of-materials code. |
 | `src/moves.js`, `src/moves_app.js`, `src/moves.css`, `src/moves.html` | The fourth page, machine moves (engine, page script, styles, page). |
 | `tools/test_moves.js` | Command-line checks of the machine-moves engine. |
-| `tools/moves_start.py` | The machine-moves page's default start: fewest whole machines (all at 100 %) for one exact Phase 5 batch. Writes `data/moves_start.json`. |
+| `tools/moves_start.py` | The machine-moves page's item rules and default start: fewest whole machines (all at 100 %) for one exact Phase 5 batch, raw draws in multiples of 30. Writes `data/moves_start.json`. |
+| `tools/tiers.py` | Unlock tier of every recipe and item (for sorting). Writes `data/tiers.json`. |
 | `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
@@ -320,44 +321,49 @@ left out.)
 ## Machine moves (fourth page)
 
 `dist/machine-moves.html` works with whole machines, every one at 100 %: only
-the number of machines of each recipe changes. Fluids and unusable products
-must net exactly 0, and the Phase 5 parts can be held in exact proportion;
-building materials, equipment and Phase 5 parts may pile up, raw resources may
-only be drawn. The machine counts that satisfy the exact equations form an
-integer lattice; its reduced basis (big-integer column reduction, with
-Lenstra-Lenstra-Lovasz reduction along the way) is a list of **moves**, and the
-page changes the factory only by moves, so every exact balance stays exact.
+the number of machines of each recipe changes. The rules:
 
-* **Start.** By default the page uses every recipe that needs no
-  hand-gathered items (246), leaving out Unpackage recipes and the Packager
-  recipes other than Packaged Fuel, Turbofuel, Rocket Fuel and Ionized Fuel.
-  `tools/moves_start.py` finds the fewest whole machines that make one exact
-  Phase 5 batch with that set (integer program, verified exactly): 48,023
-  machines in 92 recipes (the linear-programming bound is 47,825), written to
-  `data/moves_start.json` and embedded in the page. Power is not part of the
-  problem (the start has no generators; the summary shows the shortfall).
-* **Phase 5 batches.** With whole machines at 100 % and the exact ratio, Phase
-  5 only comes in whole batches (the smallest exact set of machine counts):
-  192 AI Expansion Servers per minute, both with all recipes and with the
-  optimizer plan's (whose ratios give a 534,765-machine batch; "Load optimizer
-  plan" still loads them). The factory is sized to the number of
-  batches chosen: the imported plan's recipe ratios are scaled to that output
-  and snapped to the nearest valid factory (Babai rounding plus a greedy
-  repair). Unticking the ratio box keeps the current output as minimums.
-* Select a recipe to list the moves that change it, with their effect on every
-  recipe, on surplus and raw draw, and on power; a move that would push a count
-  or a surplus below zero is greyed out with the reason.
-* **Shrink this** searches combinations of up to three moves (each used once or
-  twice) for the one that lowers the selected recipe most, then uses the fewest
-  machines in all, keeping Phase 5 output and the minimums on the Items tab.
-* **Step** is the smallest change in a recipe's count (or an item's net) any
-  combination of moves can make. A large step is a chain of exact ratios that
-  only works in big batches. The Items tab can turn a solid into a valve
-  (surplus allowed) or back, which usually shrinks steps; adding or removing a
-  recipe changes them too.
-* Import takes production-sheet exports, optimizer plans and recipe-matrix
-  exports (their recipe ratios; clocks are ignored); export writes a
-  production-sheet file with every clock at 100 %.
+* the four Phase 5 recipes are fixed at one exact batch (192 AI Expansion
+  Servers per minute: the fewest whole machines that make the parts in
+  proportion *and* that whole machines upstream can feed exactly; the Phase 5
+  machines alone would allow 64/min);
+* every fluid and intermediate nets exactly 0, except what the build gun uses
+  (any building cost), ammunition, filters and fuels (solid generator fuels,
+  packaged fuels, batteries; not nuclear fuel rods), which may pile up with no
+  minimum;
+* raw resources are only drawn, in whole multiples of 30/min.
+
+The machine counts that satisfy the exact rules form an integer lattice (a raw
+draw that must be a multiple of 30 becomes an equation with one extra integer
+unknown). Its reduced basis (big-integer column reduction, with
+Lenstra-Lenstra-Lovasz reduction along the way) is a list of **moves**, and the
+page changes the factory only by moves, so every exact rule stays exact. The
+item rules live in `tools/moves_start.py`, which writes them into
+`data/moves_start.json` for the page.
+
+* **Start.** Every recipe that needs no hand-gathered items (246), leaving out
+  Unpackage recipes and the Packager recipes other than Packaged Fuel,
+  Turbofuel, Rocket Fuel and Ionized Fuel, at the fewest whole machines that
+  satisfy the rules (`tools/moves_start.py`, an integer program verified
+  exactly): __START__. Power is not part of the problem.
+* **Products tab.** Every product with its unlock tier, rule, net per minute
+  and build cost (the items it takes to construct every machine now in the
+  factory). Net-0 rows are tinted. Tiers come from `tools/tiers.py`
+  (`data/tiers.json`): the milestone tier of the recipe that makes the item;
+  for MAM and hard-drive unlocks, the highest tier among what it takes to
+  unlock and make it (research cost, prerequisites, ingredients, machine).
+* Selecting a product opens its **move sheet**: one column per unblocked move
+  that changes the product's net or the machines that make or use it, one row
+  per recipe a column changes, with its current count. Candidates are the
+  product's own chains, the chain moves of each recipe that makes or uses it,
+  and the lattice basis, each in both directions.
+* **Recipes tab.** Select a recipe for its chain moves (the recipe plus the
+  suppliers and consumers it needs), the product chains through it, and the
+  lattice moves; **Shrink this** searches combinations of up to three moves for
+  the one that lowers it most. **Step** is the smallest change in a recipe's
+  count any combination of moves can make.
+* Import takes this page's exports (production-sheet files with every clock at
+  100 %) that satisfy the rules.
 
 The engine in `src/moves.js` also accepts per-recipe clocks (used by the tests),
 but the page keeps every machine at 100 %.

@@ -73,11 +73,15 @@
       return (c && clockFrac(c)) || [1n, 1n];
     });
     this.clockPct = this.R.map((r, j) => Number(this.clock[j][0]) / Number(this.clock[j][1]) * 100);
-    this.lockP5 = opts.lockP5 !== false;
+    // fixed: recipe ids whose machine counts no move may change (the Phase 5 recipes)
+    this.fixed = new Set((opts.fixed || []).filter((id) => this.rIdx[id] !== undefined).map((id) => this.rIdx[id]));
+    this.lockP5 = opts.lockP5 !== false && !this.fixed.size;
+    // rawStep: every raw resource is drawn in whole multiples of this (per minute)
+    this.rawStep = opts.rawStep || 0;
     // item classes
-    const raw = new Set(), bm = new Set(EXPENDABLE.concat(Object.keys(PHASE5)));
+    const raw = new Set(), bm = new Set(opts.accumulate || EXPENDABLE.concat(Object.keys(PHASE5)));
     for (const r of game.recipes) if (EXTRACT[r.kind]) for (const [k] of r.outs) raw.add(k);
-    for (const b of Object.values(game.buildings)) if (!b.xmas) for (const [k] of b.cost) bm.add(k);
+    if (!opts.accumulate) for (const b of Object.values(game.buildings)) if (!b.xmas) for (const [k] of b.cost) bm.add(k);
     const used = new Set();
     this.R.forEach((r) => r.ins.concat(r.outs).forEach(([k]) => k !== "Power" && used.add(k)));
     this.items = [...used].sort();
@@ -132,7 +136,20 @@
       for (const [j, [p, q]] of m) if (p) out.set(j, (p * L) / q);
       return out;
     };
-    this.items.forEach((k, i) => { if (this.cls[i] === "balance" && this.exact[i].size) rows.push({ item: i, coef: scale(this.exact[i]) }); });
+    this.items.forEach((k, i) => {
+      if (!this.exact[i].size) return;
+      if (this.cls[i] === "balance") rows.push({ item: i, coef: scale(this.exact[i]) });
+      else if (this.cls[i] === "raw" && this.rawStep) {
+        // net = rawStep * (whole number): coef . n = mod * m for an integer m
+        let L = 1n;
+        for (const [, [, q]] of this.exact[i]) L = (L * q) / bgcd(L, q);
+        const [sp, sq] = frac(this.rawStep);
+        const coef = new Map();
+        for (const [j, [p, q]] of this.exact[i]) if (p) coef.set(j, (p * L * sq) / q);
+        rows.push({ item: i, coef, mod: sp * L });
+      }
+    });
+    for (const j of this.fixed) rows.push({ item: -2, coef: new Map([[j, 1n]]), fix: true });
     if (this.lockP5) {
       const p5 = Object.keys(PHASE5).filter((k) => this.iIdx[k] !== undefined);
       for (let a = 0; a + 1 < p5.length; a++) {
@@ -155,12 +172,17 @@
   Moves.prototype._build = function () {
     const M = this.R.length;
     this.rows = this._rows();
-    // column reduction: basis of {n in Z^M : row . n = 0 for all rows}
+    // column reduction: basis of {n in Z^M : row . n = 0 for all rows}; a row
+    // with a modulus gets an extra integer column a (row . n - mod * a = 0),
+    // dropped at the end (a is fixed by n, so the projection stays a basis)
+    let A = 0;
+    for (const row of this.rows) if (row.mod) row.aux = M + A++;
+    const W = M + A;
     let basis = [];
-    for (let j = 0; j < M; j++) { const b = new Array(M).fill(0n); b[j] = 1n; basis.push(b); }
+    for (let j = 0; j < W; j++) { const b = new Array(W).fill(0n); b[j] = 1n; basis.push(b); }
     const rows = this.rows.slice().sort((a, b) => a.coef.size - b.coef.size);
     for (const row of rows) {
-      const vals = basis.map((b) => { let s = 0n; for (const [j, c] of row.coef) if (b[j]) s += c * b[j]; return s; });
+      const vals = basis.map((b) => { let s = 0n; for (const [j, c] of row.coef) if (b[j]) s += c * b[j]; if (row.mod && b[row.aux]) s -= row.mod * b[row.aux]; return s; });
       let live = [];
       const zero = [];
       basis.forEach((b, i) => (vals[i] ? live.push([b, vals[i]]) : zero.push(b)));
@@ -173,7 +195,7 @@
           if (i === mi) continue;
           const [b, v] = live[i];
           const q = v / pv;
-          if (q) for (let t = 0; t < M; t++) if (pb[t]) b[t] -= q * pb[t];
+          if (q) for (let t = 0; t < W; t++) if (pb[t]) b[t] -= q * pb[t];
           const nv = v - q * pv;
           if (nv) next.push([b, nv]); else zero.push(b);
         }
@@ -184,7 +206,7 @@
       for (const b of basis) for (const x of b) { const a = babs(x); if (a > big) big = a; }
       if (big > 1n << 30n) basis = lll(basis); // keep the numbers small enough for floating Gram-Schmidt
     }
-    this.basis = lll(basis);
+    this.basis = lll(basis.map((b) => b.slice(0, M)));
     this.dim = this.basis.length;
     this.K = this.basis.map((b) => b.map(Number));
     // a move bigger than this many machines cannot be applied exactly in floating point
@@ -262,11 +284,17 @@
   /* Exact: does n satisfy every balance row (and the Phase 5 ratio)? */
   Moves.prototype.balanced = function (n) {
     for (const row of this.rows) {
+      if (row.fix) continue; // a fixed count constrains moves, not states
       let s = 0n;
       for (const [j, c] of row.coef) if (n[j]) s += c * BigInt(n[j]);
-      if (s !== 0n) return false;
+      if (row.mod ? s % row.mod !== 0n : s !== 0n) return false;
     }
     return true;
+  };
+  /* Is v a move: balanced and zero on every fixed recipe? */
+  Moves.prototype.isMove = function (v) {
+    for (const j of this.fixed) if (v[j]) return false;
+    return this.balanced(v);
   };
 
   const EPS = 1e-7;

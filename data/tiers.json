@@ -1,0 +1,2718 @@
+{
+"items": {
+"AlienDNACapsule": [
+1,
+"Bio-Organic Properties"
+],
+"AlienPowerBuilding": [
+6,
+"Power Augmenter"
+],
+"AlienPowerFuel": [
+9,
+"Alien Power Matrix"
+],
+"AlienProtein": [
+1,
+"Hatcher Research"
+],
+"AluminaSolution": [
+7,
+"Bauxite Refinement"
+],
+"AluminumCasing": [
+7,
+"Bauxite Refinement"
+],
+"AluminumIngot": [
+7,
+"Bauxite Refinement"
+],
+"AluminumPlate": [
+7,
+"Bauxite Refinement"
+],
+"AluminumPlateReinforced": [
+8,
+"Advanced Aluminum Production"
+],
+"AluminumScrap": [
+7,
+"Bauxite Refinement"
+],
+"AssemblerMk1": [
+2,
+"Part Assembly"
+],
+"Battery": [
+7,
+"Control System Development"
+],
+"Berry": [
+0,
+"gathered"
+],
+"Biofuel": [
+2,
+"Obstacle Clearing"
+],
+"Blender": [
+7,
+"Control System Development"
+],
+"BlueprintDesigner": [
+4,
+"FICSIT Blueprints"
+],
+"BlueprintDesigner_MK2": [
+6,
+"FICSIT Blueprints Mk.2"
+],
+"BlueprintDesigner_MK3": [
+9,
+"FICSIT Blueprints Mk.3"
+],
+"Cable": [
+0,
+"HUB Upgrade 2"
+],
+"CartridgeChaos": [
+7,
+"with its machine"
+],
+"CartridgeSmartProjectile": [
+6,
+"Bullet Guidance System"
+],
+"CartridgeStandard": [
+5,
+"The Rifle"
+],
+"Cement": [
+0,
+"HUB Upgrade 3"
+],
+"CentralStorage": [
+6,
+"Dimensional Depot"
+],
+"Chainsaw": [
+2,
+"Obstacle Clearing"
+],
+"CircuitBoard": [
+5,
+"Oil Processing"
+],
+"CircuitBoardHighSpeed": [
+2,
+"AI Limiter"
+],
+"Coal": [
+0,
+"extracted"
+],
+"CompactedCoal": [
+2,
+"Compacted Coal"
+],
+"Computer": [
+6,
+"Industrial Manufacturing"
+],
+"ComputerSuper": [
+7,
+"Control System Development"
+],
+"ConstructorMk1": [
+0,
+"HUB Upgrade 3"
+],
+"Converter": [
+9,
+"Matter Conversion"
+],
+"ConveyorAttachmentMerger": [
+1,
+"Logistics"
+],
+"ConveyorAttachmentSplitter": [
+1,
+"Logistics"
+],
+"ConveyorAttachmentSplitterProgrammable": [
+6,
+"Programmable Splitter"
+],
+"ConveyorAttachmentSplitterSmart": [
+2,
+"Smart Splitter"
+],
+"ConveyorBeltMk1": [
+0,
+"HUB Upgrade 4"
+],
+"ConveyorBeltMk2": [
+2,
+"Logistics Mk.2"
+],
+"ConveyorBeltMk3": [
+4,
+"Logistics Mk.3"
+],
+"ConveyorBeltMk4": [
+5,
+"Logistics Mk.4"
+],
+"ConveyorBeltMk5": [
+7,
+"Logistics Mk.5"
+],
+"ConveyorBeltMk6": [
+9,
+"Peak Efficiency"
+],
+"ConveyorLiftMk1": [
+1,
+"Logistics"
+],
+"ConveyorLiftMk2": [
+2,
+"Logistics Mk.2"
+],
+"ConveyorLiftMk3": [
+4,
+"Logistics Mk.3"
+],
+"ConveyorLiftMk4": [
+5,
+"Logistics Mk.4"
+],
+"ConveyorLiftMk5": [
+7,
+"Logistics Mk.5"
+],
+"ConveyorLiftMk6": [
+9,
+"Peak Efficiency"
+],
+"ConveyorPole": [
+0,
+"HUB Upgrade 4"
+],
+"ConveyorPoleStackable": [
+2,
+"Logistics Mk.2"
+],
+"CoolingSystem": [
+8,
+"Advanced Aluminum Production"
+],
+"CopperDust": [
+8,
+"Particle Enrichment"
+],
+"CopperIngot": [
+0,
+"HUB Upgrade 2"
+],
+"CopperSheet": [
+2,
+"Part Assembly"
+],
+"Crystal": [
+0,
+"gathered"
+],
+"CrystalOscillator": [
+6,
+"Crystal Oscillator"
+],
+"CrystalShard": [
+1,
+"Blue Power Slugs"
+],
+"Crystal_mk2": [
+0,
+"gathered"
+],
+"Crystal_mk3": [
+0,
+"gathered"
+],
+"DarkEnergy": [
+9,
+"Peak Efficiency"
+],
+"DarkMatter": [
+9,
+"Quantum Encoding"
+],
+"Diamond": [
+9,
+"Matter Conversion"
+],
+"DissolvedSilica": [
+8,
+"Alternate: Quartz Purification"
+],
+"DroneStation": [
+8,
+"Aeronautical Engineering"
+],
+"DroneTransport": [
+8,
+"Aeronautical Engineering"
+],
+"ElectromagneticControlRod": [
+8,
+"Nuclear Power"
+],
+"EquipmentDescriptorGasmask": [
+3,
+"Gas Mask"
+],
+"EquipmentDescriptorHazmatSuit": [
+7,
+"Hazmat Suit"
+],
+"EquipmentDescriptorHoverPack": [
+7,
+"Hoverpack"
+],
+"EquipmentDescriptorJetPack": [
+5,
+"Jetpack"
+],
+"EquipmentDescriptorJumpingStilts": [
+2,
+"Blade Runners"
+],
+"EquipmentDescriptorNobeliskDetonator": [
+3,
+"The Nobelisk Detonator"
+],
+"EquipmentDescriptorObjectScanner": [
+1,
+"Field Research"
+],
+"EquipmentDescriptorRifle": [
+5,
+"The Rifle"
+],
+"EquipmentDescriptorStunSpear": [
+3,
+"Enhanced Asset Security"
+],
+"Explorer": [
+6,
+"The Explorer"
+],
+"Fabric": [
+2,
+"Fabric"
+],
+"FicsiteIngot": [
+9,
+"Matter Conversion"
+],
+"FicsiteMesh": [
+9,
+"Matter Conversion"
+],
+"Ficsonium": [
+9,
+"Peak Efficiency"
+],
+"FicsoniumFuelRod": [
+9,
+"Peak Efficiency"
+],
+"Filter": [
+6,
+"Gas Mask"
+],
+"FluidCanister": [
+5,
+"Fluid Packaging"
+],
+"Foundation_8x1_01": [
+1,
+"Base Building"
+],
+"Foundation_8x2_01": [
+1,
+"Base Building"
+],
+"Foundation_8x4_01": [
+1,
+"Base Building"
+],
+"FoundryMk1": [
+3,
+"Basic Steel Production"
+],
+"FrackingExtractor": [
+8,
+"Advanced Aluminum Production"
+],
+"FrackingSmasher": [
+8,
+"Advanced Aluminum Production"
+],
+"FreightWagon": [
+6,
+"Monorail Train Technology"
+],
+"Fuel": [
+5,
+"Fluid Packaging"
+],
+"GasTank": [
+8,
+"Advanced Aluminum Production"
+],
+"GeneratorBiomass_Automated": [
+0,
+"HUB Upgrade 6"
+],
+"GeneratorCoal": [
+3,
+"Coal Power"
+],
+"GeneratorFuel": [
+5,
+"Petroleum Power"
+],
+"GeneratorGeoThermal": [
+6,
+"Geothermal Generator"
+],
+"GeneratorNuclear": [
+8,
+"Nuclear Power"
+],
+"GenericBiomass": [
+0,
+"HUB Upgrade 6"
+],
+"GoldIngot": [
+1,
+"Caterium Ingots"
+],
+"Gunpowder": [
+2,
+"Black Powder"
+],
+"GunpowderMK2": [
+5,
+"Smokeless Powder"
+],
+"HadronCollider": [
+8,
+"Particle Enrichment"
+],
+"HatcherParts": [
+0,
+"gathered"
+],
+"HazmatFilter": [
+7,
+"Hazmat Suit"
+],
+"HeavyOilResidue": [
+5,
+"Oil Processing"
+],
+"HighSpeedConnector": [
+6,
+"High-Speed Connector"
+],
+"HighSpeedWire": [
+1,
+"Quickwire"
+],
+"HogParts": [
+0,
+"gathered"
+],
+"HyperPoleStackable": [
+4,
+"Hypertubes"
+],
+"IndustrialTank": [
+5,
+"Petroleum Power"
+],
+"IonizedFuel": [
+8,
+"Ionized Fuel"
+],
+"IronIngot": [
+0,
+"with its machine"
+],
+"IronPlate": [
+0,
+"with its machine"
+],
+"IronPlateReinforced": [
+0,
+"HUB Upgrade 3"
+],
+"IronRod": [
+0,
+"with its machine"
+],
+"IronScrew": [
+0,
+"HUB Upgrade 3"
+],
+"ItemDescriptorPortableMiner": [
+0,
+"HUB Upgrade 1"
+],
+"JumpPadAdjustable": [
+2,
+"Jump Pads"
+],
+"LandingPad": [
+2,
+"Jump Pads"
+],
+"Leaves": [
+0,
+"gathered"
+],
+"LiquidBiofuel": [
+5,
+"Fluid Packaging"
+],
+"LiquidFuel": [
+5,
+"Oil Processing"
+],
+"LiquidOil": [
+5,
+"extracted"
+],
+"LiquidTurboFuel": [
+5,
+"Turbofuel"
+],
+"Locomotive": [
+6,
+"Monorail Train Technology"
+],
+"LookoutTower": [
+1,
+"Base Building"
+],
+"Mam": [
+1,
+"Field Research"
+],
+"ManufacturerMk1": [
+6,
+"Industrial Manufacturing"
+],
+"Medkit": [
+1,
+"Nutritional Inhaler"
+],
+"MinerMk1": [
+0,
+"HUB Upgrade 5"
+],
+"MinerMk2": [
+4,
+"Advanced Steel Production"
+],
+"MinerMk3": [
+8,
+"Leading-Edge Production"
+],
+"ModularFrame": [
+2,
+"Part Assembly"
+],
+"ModularFrameFused": [
+8,
+"Advanced Aluminum Production"
+],
+"ModularFrameHeavy": [
+6,
+"Industrial Manufacturing"
+],
+"ModularFrameLightweight": [
+7,
+"Control System Development"
+],
+"Motor": [
+4,
+"Advanced Steel Production"
+],
+"MotorLightweight": [
+8,
+"Leading-Edge Production"
+],
+"Mycelia": [
+0,
+"gathered"
+],
+"NitricAcid": [
+8,
+"Particle Enrichment"
+],
+"NitrogenGas": [
+8,
+"extracted"
+],
+"NobeliskCluster": [
+5,
+"Cluster Nobelisk"
+],
+"NobeliskExplosive": [
+3,
+"The Nobelisk Detonator"
+],
+"NobeliskGas": [
+3,
+"Toxic Cellular Modification"
+],
+"NobeliskNuke": [
+8,
+"Nuclear Deterrent Development"
+],
+"NobeliskShockwave": [
+6,
+"Explosive Resonance Application"
+],
+"NonFissibleUranium": [
+8,
+"Particle Enrichment"
+],
+"NuclearFuelRod": [
+8,
+"Nuclear Power"
+],
+"NuclearWaste": [
+0,
+"gathered"
+],
+"Nut": [
+0,
+"gathered"
+],
+"OilPump": [
+5,
+"Oil Processing"
+],
+"OilRefinery": [
+5,
+"Oil Processing"
+],
+"OreBauxite": [
+0,
+"extracted"
+],
+"OreCopper": [
+0,
+"extracted"
+],
+"OreGold": [
+0,
+"extracted"
+],
+"OreIron": [
+0,
+"extracted"
+],
+"OreUranium": [
+0,
+"extracted"
+],
+"PackagedAlumina": [
+7,
+"Bauxite Refinement"
+],
+"PackagedBiofuel": [
+5,
+"Fluid Packaging"
+],
+"PackagedIonizedFuel": [
+8,
+"Ionized Fuel"
+],
+"PackagedNitricAcid": [
+8,
+"Particle Enrichment"
+],
+"PackagedNitrogenGas": [
+8,
+"Advanced Aluminum Production"
+],
+"PackagedOil": [
+5,
+"Fluid Packaging"
+],
+"PackagedOilResidue": [
+5,
+"Fluid Packaging"
+],
+"PackagedRocketFuel": [
+8,
+"Rocket Fuel"
+],
+"PackagedSulfuricAcid": [
+7,
+"Control System Development"
+],
+"PackagedWater": [
+5,
+"Fluid Packaging"
+],
+"Packager": [
+5,
+"Fluid Packaging"
+],
+"Parachute": [
+2,
+"Parachute"
+],
+"PetroleumCoke": [
+5,
+"Oil Processing"
+],
+"PipeHyper": [
+4,
+"Hypertubes"
+],
+"PipeHyperStart": [
+4,
+"Hypertubes"
+],
+"PipeHyperSupport": [
+4,
+"Hypertubes"
+],
+"PipeStorageTank": [
+3,
+"Coal Power"
+],
+"PipeSupportStackable": [
+4,
+"Logistics Mk.3"
+],
+"Pipeline": [
+3,
+"Coal Power"
+],
+"PipelineJunction_Cross": [
+3,
+"Coal Power"
+],
+"PipelineMK2": [
+6,
+"Pipeline Engineering Mk.2"
+],
+"PipelinePump": [
+3,
+"Coal Power"
+],
+"PipelinePumpMk2": [
+6,
+"Pipeline Engineering Mk.2"
+],
+"PipelineSupport": [
+3,
+"Coal Power"
+],
+"Plastic": [
+5,
+"Oil Processing"
+],
+"PlutoniumCell": [
+8,
+"Particle Enrichment"
+],
+"PlutoniumFuelRod": [
+8,
+"Particle Enrichment"
+],
+"PlutoniumPellet": [
+8,
+"Particle Enrichment"
+],
+"PlutoniumWaste": [
+0,
+"gathered"
+],
+"PolymerResin": [
+5,
+"Oil Processing"
+],
+"Portal": [
+9,
+"Spatial Energy Regulation"
+],
+"PortalSatellite": [
+9,
+"Spatial Energy Regulation"
+],
+"PowerLine": [
+0,
+"HUB Upgrade 2"
+],
+"PowerPoleMk1": [
+0,
+"HUB Upgrade 3"
+],
+"PowerPoleMk2": [
+1,
+"Power Poles Mk.2"
+],
+"PowerPoleMk3": [
+6,
+"Power Poles Mk.3"
+],
+"PowerStorageMk1": [
+4,
+"Expanded Power Infrastructure"
+],
+"PowerSwitch": [
+3,
+"Power Switch"
+],
+"PowerTower": [
+4,
+"Expanded Power Infrastructure"
+],
+"PowerTowerPlatform": [
+4,
+"Expanded Power Infrastructure"
+],
+"PressureConversionCube": [
+8,
+"Particle Enrichment"
+],
+"PriorityPowerSwitch": [
+6,
+"Priority Power Switch"
+],
+"QuantumEncoder": [
+9,
+"Quantum Encoding"
+],
+"QuantumEnergy": [
+9,
+"Quantum Encoding"
+],
+"QuantumOscillator": [
+9,
+"Quantum Encoding"
+],
+"QuartzCrystal": [
+1,
+"Quartz Crystals"
+],
+"RadarTower": [
+6,
+"Radar Technology"
+],
+"RailroadBlockSignal": [
+6,
+"Railway Signalling"
+],
+"RailroadPathSignal": [
+6,
+"Railway Signalling"
+],
+"RailroadTrack": [
+6,
+"Monorail Train Technology"
+],
+"Ramp_8x1_01": [
+1,
+"Base Building"
+],
+"Ramp_8x2_01": [
+1,
+"Base Building"
+],
+"Ramp_8x4_01": [
+1,
+"Base Building"
+],
+"RawQuartz": [
+0,
+"extracted"
+],
+"RebarGunProjectile": [
+2,
+"The Rebar Gun"
+],
+"Rebar_Explosive": [
+6,
+"Explosive Rebar"
+],
+"Rebar_Spreadshot": [
+2,
+"Shatter Rebar"
+],
+"Rebar_Stunshot": [
+2,
+"Stun Rebar"
+],
+"ResourceSink": [
+2,
+"Resource Sink Bonus Program"
+],
+"ResourceSinkCoupon": [
+0,
+"gathered"
+],
+"ResourceSinkShop": [
+2,
+"Resource Sink Bonus Program"
+],
+"RocketFuel": [
+8,
+"Rocket Fuel"
+],
+"Rotor": [
+2,
+"Part Assembly"
+],
+"Rubber": [
+5,
+"Oil Processing"
+],
+"SAM": [
+0,
+"extracted"
+],
+"SAMFluctuator": [
+6,
+"SAM Fluctuator"
+],
+"SAMIngot": [
+1,
+"SAM Reanimation"
+],
+"Shroom": [
+0,
+"gathered"
+],
+"Silica": [
+1,
+"Silica"
+],
+"SingularityCell": [
+9,
+"Spatial Energy Regulation"
+],
+"SmelterMk1": [
+0,
+"HUB Upgrade 2"
+],
+"SpaceElevator": [
+0,
+"HUB Upgrade 6"
+],
+"SpaceElevatorPart_1": [
+2,
+"Part Assembly"
+],
+"SpaceElevatorPart_10": [
+9,
+"Matter Conversion"
+],
+"SpaceElevatorPart_11": [
+9,
+"Spatial Energy Regulation"
+],
+"SpaceElevatorPart_12": [
+9,
+"Quantum Encoding"
+],
+"SpaceElevatorPart_2": [
+3,
+"Basic Steel Production"
+],
+"SpaceElevatorPart_3": [
+4,
+"Advanced Steel Production"
+],
+"SpaceElevatorPart_4": [
+6,
+"Industrial Manufacturing"
+],
+"SpaceElevatorPart_5": [
+6,
+"Industrial Manufacturing"
+],
+"SpaceElevatorPart_6": [
+8,
+"Nuclear Power"
+],
+"SpaceElevatorPart_7": [
+7,
+"Control System Development"
+],
+"SpaceElevatorPart_8": [
+8,
+"Leading-Edge Production"
+],
+"SpaceElevatorPart_9": [
+8,
+"Particle Enrichment"
+],
+"SpikedRebar": [
+2,
+"The Rebar Gun"
+],
+"SpitterParts": [
+0,
+"gathered"
+],
+"Stator": [
+4,
+"Advanced Steel Production"
+],
+"SteelIngot": [
+3,
+"Basic Steel Production"
+],
+"SteelPipe": [
+3,
+"Basic Steel Production"
+],
+"SteelPlate": [
+3,
+"Basic Steel Production"
+],
+"SteelPlateReinforced": [
+4,
+"Advanced Steel Production"
+],
+"StingerParts": [
+0,
+"gathered"
+],
+"Stone": [
+0,
+"extracted"
+],
+"StorageContainerMk1": [
+0,
+"HUB Upgrade 5"
+],
+"StorageContainerMk2": [
+4,
+"Logistics Mk.3"
+],
+"StoragePlayer": [
+1,
+"Field Research"
+],
+"Sulfur": [
+0,
+"extracted"
+],
+"SulfuricAcid": [
+7,
+"Control System Development"
+],
+"TemporalProcessor": [
+9,
+"Quantum Encoding"
+],
+"TimeCrystal": [
+9,
+"Matter Conversion"
+],
+"Tractor": [
+3,
+"Vehicular Transport"
+],
+"TrainDockingStation": [
+6,
+"Monorail Train Technology"
+],
+"TrainDockingStationLiquid": [
+6,
+"Monorail Train Technology"
+],
+"TrainPlatformEmpty": [
+6,
+"Monorail Train Technology"
+],
+"TrainPlatformEmpty_02": [
+6,
+"Monorail Train Technology"
+],
+"TrainStation": [
+6,
+"Monorail Train Technology"
+],
+"Truck": [
+5,
+"Logistics Mk.4"
+],
+"TruckStation": [
+3,
+"Vehicular Transport"
+],
+"TurboFuel": [
+5,
+"Turbofuel"
+],
+"UraniumCell": [
+8,
+"Nuclear Power"
+],
+"Valve": [
+5,
+"Oil Processing"
+],
+"WAT1": [
+0,
+"gathered"
+],
+"WAT2": [
+0,
+"gathered"
+],
+"Wall_8x4_01": [
+1,
+"Base Building"
+],
+"Wall_Orange_8x1": [
+1,
+"Base Building"
+],
+"Water": [
+3,
+"extracted"
+],
+"WaterPump": [
+3,
+"Coal Power"
+],
+"Wire": [
+0,
+"HUB Upgrade 2"
+],
+"Wood": [
+0,
+"gathered"
+],
+"Workshop": [
+0,
+"HUB Upgrade 1"
+]
+},
+"recipes": {
+"AILimiter": [
+2,
+"AI Limiter"
+],
+"AlienDNACapsule": [
+1,
+"Bio-Organic Properties"
+],
+"AlienPowerBuilding": [
+6,
+"Power Augmenter"
+],
+"AlienPowerFuel": [
+9,
+"Alien Power Matrix"
+],
+"Alternate_AILimiter_Plastic": [
+5,
+"Alternate: Plastic AI Limiter"
+],
+"Alternate_AdheredIronPlate": [
+5,
+"Alternate: Adhered Iron Plate"
+],
+"Alternate_AlcladCasing": [
+7,
+"Alternate: Alclad Casing"
+],
+"Alternate_AluminumRod": [
+7,
+"Alternate: Aluminum Rod"
+],
+"Alternate_AutomatedMiner": [
+3,
+"Alternate: Automated Miner"
+],
+"Alternate_BoltedFrame": [
+2,
+"Alternate: Bolted Frame"
+],
+"Alternate_Cable_1": [
+5,
+"Alternate: Insulated Cable"
+],
+"Alternate_Cable_2": [
+5,
+"Alternate: Quickwire Cable"
+],
+"Alternate_CateriumIngot_Leached": [
+7,
+"Alternate: Leached Caterium Ingot"
+],
+"Alternate_CateriumIngot_Tempered": [
+5,
+"Alternate: Tempered Caterium Ingot"
+],
+"Alternate_CircuitBoard_1": [
+5,
+"Alternate: Silicon Circuit Board"
+],
+"Alternate_CircuitBoard_2": [
+5,
+"Alternate: Caterium Circuit Board"
+],
+"Alternate_ClassicBattery": [
+7,
+"Alternate: Classic Battery"
+],
+"Alternate_Coal_1": [
+3,
+"Alternate: Charcoal"
+],
+"Alternate_Coal_2": [
+3,
+"Alternate: Biocoal"
+],
+"Alternate_CoatedCable": [
+5,
+"Alternate: Coated Cable"
+],
+"Alternate_CoatedIronCanister": [
+5,
+"Alternate: Coated Iron Canister"
+],
+"Alternate_CoatedIronPlate": [
+5,
+"Alternate: Coated Iron Plate"
+],
+"Alternate_CokeSteelIngot": [
+5,
+"Alternate: Coke Steel Ingot"
+],
+"Alternate_Computer_1": [
+6,
+"Alternate: Caterium Computer"
+],
+"Alternate_Computer_2": [
+6,
+"Alternate: Crystal Computer"
+],
+"Alternate_Concrete": [
+2,
+"Alternate: Fine Concrete"
+],
+"Alternate_CoolingDevice": [
+8,
+"Alternate: Cooling Device"
+],
+"Alternate_CopperAlloyIngot": [
+3,
+"Alternate: Copper Alloy Ingot"
+],
+"Alternate_CopperIngot_Leached": [
+7,
+"Alternate: Leached Copper Ingot"
+],
+"Alternate_CopperIngot_Tempered": [
+5,
+"Alternate: Tempered Copper Ingot"
+],
+"Alternate_CopperRotor": [
+2,
+"Alternate: Copper Rotor"
+],
+"Alternate_CrystalOscillator": [
+6,
+"Alternate: Insulated Crystal Oscillator"
+],
+"Alternate_DarkMatter_Crystallization": [
+9,
+"Alternate: Dark Matter Crystallization"
+],
+"Alternate_DarkMatter_Trap": [
+9,
+"Alternate: Dark Matter Trap"
+],
+"Alternate_Diamond_Cloudy": [
+9,
+"Alternate: Cloudy Diamonds"
+],
+"Alternate_Diamond_OilBased": [
+9,
+"Alternate: Oil-Based Diamonds"
+],
+"Alternate_Diamond_Petroleum": [
+9,
+"Alternate: Petroleum Diamonds"
+],
+"Alternate_Diamond_Pink": [
+9,
+"Alternate: Pink Diamonds"
+],
+"Alternate_Diamond_Turbo": [
+9,
+"Alternate: Turbo Diamonds"
+],
+"Alternate_DilutedFuel": [
+7,
+"Alternate: Diluted Fuel"
+],
+"Alternate_DilutedPackagedFuel": [
+5,
+"Alternate: Diluted Packaged Fuel"
+],
+"Alternate_ElectricMotor": [
+8,
+"Alternate: Electric Motor"
+],
+"Alternate_ElectroAluminumScrap": [
+7,
+"Alternate: Electrode Aluminum Scrap"
+],
+"Alternate_ElectrodeCircuitBoard": [
+5,
+"Alternate: Electrode Circuit Board"
+],
+"Alternate_ElectromagneticControlRod_1": [
+8,
+"Alternate: Electromagnetic Connection Rod"
+],
+"Alternate_EncasedIndustrialBeam": [
+4,
+"Alternate: Encased Industrial Pipe"
+],
+"Alternate_EnrichedCoal": [
+2,
+"Compacted Coal"
+],
+"Alternate_FertileUranium": [
+8,
+"Alternate: Fertile Uranium"
+],
+"Alternate_FlexibleFramework": [
+6,
+"Alternate: Flexible Framework"
+],
+"Alternate_FusedWire": [
+2,
+"Alternate: Fused Wire"
+],
+"Alternate_Gunpowder_1": [
+2,
+"Alternate: Fine Black Powder"
+],
+"Alternate_HeatFusedFrame": [
+8,
+"Alternate: Heat-Fused Frame"
+],
+"Alternate_HeatSink_1": [
+8,
+"Alternate: Heat Exchanger"
+],
+"Alternate_HeavyFlexibleFrame": [
+6,
+"Alternate: Heavy Flexible Frame"
+],
+"Alternate_HeavyOilResidue": [
+5,
+"Alternate: Heavy Oil Residue"
+],
+"Alternate_HighSpeedConnector": [
+6,
+"Alternate: Silicon High-Speed Connector"
+],
+"Alternate_HighSpeedWiring": [
+6,
+"Alternate: Automated Speed Wiring"
+],
+"Alternate_IngotIron": [
+3,
+"Alternate: Iron Alloy Ingot"
+],
+"Alternate_IngotSteel_1": [
+3,
+"Alternate: Solid Steel Ingot"
+],
+"Alternate_IngotSteel_2": [
+3,
+"Alternate: Compacted Steel Ingot"
+],
+"Alternate_InstantPlutoniumCell": [
+8,
+"Alternate: Instant Plutonium Cell"
+],
+"Alternate_InstantScrap": [
+7,
+"Alternate: Instant Scrap"
+],
+"Alternate_IonizedFuel_Dark": [
+9,
+"Alternate: Dark-Ion Fuel"
+],
+"Alternate_IronIngot_Basic": [
+3,
+"Alternate: Basic Iron Ingot"
+],
+"Alternate_IronIngot_Leached": [
+7,
+"Alternate: Leached Iron ingot"
+],
+"Alternate_ModularFrame": [
+3,
+"Alternate: Steeled Frame"
+],
+"Alternate_ModularFrameHeavy": [
+6,
+"Alternate: Heavy Encased Frame"
+],
+"Alternate_Motor_1": [
+6,
+"Alternate: Rigor Motor"
+],
+"Alternate_NuclearFuelRod_1": [
+8,
+"Alternate: Uranium Fuel Unit"
+],
+"Alternate_OCSupercomputer": [
+8,
+"Alternate: OC Supercomputer"
+],
+"Alternate_PlasticSmartPlating": [
+6,
+"Alternate: Plastic Smart Plating"
+],
+"Alternate_Plastic_1": [
+5,
+"Alternate: Recycled Plastic"
+],
+"Alternate_PlutoniumFuelUnit": [
+8,
+"Alternate: Plutonium Fuel Unit"
+],
+"Alternate_PolyesterFabric": [
+5,
+"Synthetic Polyester Fabric"
+],
+"Alternate_PolymerResin": [
+5,
+"Alternate: Polymer Resin"
+],
+"Alternate_PureCateriumIngot": [
+5,
+"Alternate: Pure Caterium Ingot"
+],
+"Alternate_PureCopperIngot": [
+5,
+"Alternate: Pure Copper Ingot"
+],
+"Alternate_PureIronIngot": [
+5,
+"Alternate: Pure Iron Ingot"
+],
+"Alternate_PureQuartzCrystal": [
+5,
+"Alternate: Pure Quartz Crystal"
+],
+"Alternate_Quartz_Fused": [
+3,
+"Alternate: Fused Quartz Crystal"
+],
+"Alternate_Quartz_Purified": [
+8,
+"Alternate: Quartz Purification"
+],
+"Alternate_Quickwire": [
+2,
+"Alternate: Fused Quickwire"
+],
+"Alternate_RadioControlSystem": [
+7,
+"Alternate: Radio Control System"
+],
+"Alternate_RadioControlUnit_1": [
+8,
+"Alternate: Radio Connection Unit"
+],
+"Alternate_RecycledRubber": [
+5,
+"Alternate: Recycled Rubber"
+],
+"Alternate_ReinforcedIronPlate_1": [
+2,
+"Alternate: Bolted Iron Plate"
+],
+"Alternate_ReinforcedIronPlate_2": [
+2,
+"Alternate: Stitched Iron Plate"
+],
+"Alternate_RocketFuel_Nitro": [
+8,
+"Alternate: Nitro Rocket Fuel"
+],
+"Alternate_Rotor": [
+3,
+"Alternate: Steel Rotor"
+],
+"Alternate_RubberConcrete": [
+5,
+"Alternate: Rubber Concrete"
+],
+"Alternate_Screw": [
+1,
+"Alternate: Cast Screw"
+],
+"Alternate_Screw_2": [
+3,
+"Alternate: Steel Screw"
+],
+"Alternate_Silica": [
+2,
+"Alternate: Cheap Silica"
+],
+"Alternate_Silica_Distilled": [
+8,
+"with its machine"
+],
+"Alternate_SloppyAlumina": [
+7,
+"Alternate: Sloppy Alumina"
+],
+"Alternate_Stator": [
+4,
+"Alternate: Quickwire Stator"
+],
+"Alternate_SteamedCopperSheet": [
+5,
+"Alternate: Steamed Copper Sheet"
+],
+"Alternate_SteelBeam_Aluminum": [
+7,
+"Alternate: Aluminum Beam"
+],
+"Alternate_SteelBeam_Molded": [
+3,
+"Alternate: Molded Beam"
+],
+"Alternate_SteelCanister": [
+5,
+"Alternate: Steel Canister"
+],
+"Alternate_SteelCastedPlate": [
+3,
+"Alternate: Steel Cast Plate"
+],
+"Alternate_SteelPipe_Iron": [
+3,
+"Alternate: Iron Pipe"
+],
+"Alternate_SteelPipe_Molded": [
+3,
+"Alternate: Molded Steel Pipe"
+],
+"Alternate_SteelRod": [
+3,
+"Alternate: Steel Rod"
+],
+"Alternate_SuperStateComputer": [
+8,
+"Alternate: Super-State Computer"
+],
+"Alternate_TurboBlendFuel": [
+7,
+"Alternate: Turbo Blend Fuel"
+],
+"Alternate_TurboHeavyFuel": [
+5,
+"Alternate: Turbo Heavy Fuel"
+],
+"Alternate_TurboMotor_1": [
+8,
+"Alternate: Turbo Electric Motor"
+],
+"Alternate_TurboPressureMotor": [
+8,
+"Alternate: Turbo Pressure Motor"
+],
+"Alternate_Turbofuel": [
+5,
+"Turbofuel"
+],
+"Alternate_UraniumCell_1": [
+8,
+"Alternate: Infused Uranium Cell"
+],
+"Alternate_WetConcrete": [
+5,
+"Alternate: Wet Concrete"
+],
+"Alternate_Wire_1": [
+1,
+"Alternate: Iron Wire"
+],
+"Alternate_Wire_2": [
+1,
+"Alternate: Caterium Wire"
+],
+"AluminaSolution": [
+7,
+"Bauxite Refinement"
+],
+"AluminumCasing": [
+7,
+"Bauxite Refinement"
+],
+"AluminumScrap": [
+7,
+"Bauxite Refinement"
+],
+"AluminumSheet": [
+7,
+"Bauxite Refinement"
+],
+"AssemblerMk1": [
+2,
+"Part Assembly"
+],
+"Battery": [
+7,
+"Control System Development"
+],
+"Bauxite_Caterium": [
+9,
+"with its machine"
+],
+"Bauxite_Copper": [
+9,
+"with its machine"
+],
+"Biofuel": [
+2,
+"Obstacle Clearing"
+],
+"Biomass_AlienProtein": [
+1,
+"Bio-Organic Properties"
+],
+"Biomass_Leaves": [
+0,
+"HUB Upgrade 6"
+],
+"Biomass_Mycelia": [
+1,
+"Mycelia"
+],
+"Biomass_Wood": [
+0,
+"HUB Upgrade 6"
+],
+"BladeRunners": [
+2,
+"Blade Runners"
+],
+"Blender": [
+7,
+"Control System Development"
+],
+"BlueprintDesigner": [
+4,
+"FICSIT Blueprints"
+],
+"BlueprintDesigner_Mk2": [
+6,
+"FICSIT Blueprints Mk.2"
+],
+"BlueprintDesigner_Mk3": [
+9,
+"FICSIT Blueprints Mk.3"
+],
+"Cable": [
+0,
+"HUB Upgrade 2"
+],
+"Cartridge": [
+5,
+"The Rifle"
+],
+"CartridgeChaos": [
+7,
+"Turbo Rifle Ammo"
+],
+"CartridgeChaos_Packaged": [
+7,
+"with its machine"
+],
+"CartridgeSmart": [
+6,
+"Bullet Guidance System"
+],
+"Caterium_Copper": [
+9,
+"with its machine"
+],
+"Caterium_Quartz": [
+9,
+"with its machine"
+],
+"CentralStorage": [
+6,
+"Dimensional Depot"
+],
+"Chainsaw": [
+2,
+"Obstacle Clearing"
+],
+"CircuitBoard": [
+5,
+"Oil Processing"
+],
+"Coal_Iron": [
+9,
+"with its machine"
+],
+"Coal_Limestone": [
+9,
+"with its machine"
+],
+"Computer": [
+6,
+"Industrial Manufacturing"
+],
+"ComputerSuper": [
+7,
+"Control System Development"
+],
+"Concrete": [
+0,
+"HUB Upgrade 3"
+],
+"ConstructorMk1": [
+0,
+"HUB Upgrade 3"
+],
+"Converter": [
+9,
+"Matter Conversion"
+],
+"ConveyorAttachmentMerger": [
+1,
+"Logistics"
+],
+"ConveyorAttachmentSplitter": [
+1,
+"Logistics"
+],
+"ConveyorAttachmentSplitterProgrammable": [
+6,
+"Programmable Splitter"
+],
+"ConveyorAttachmentSplitterSmart": [
+2,
+"Smart Splitter"
+],
+"ConveyorBeltMk1": [
+0,
+"HUB Upgrade 4"
+],
+"ConveyorBeltMk2": [
+2,
+"Logistics Mk.2"
+],
+"ConveyorBeltMk3": [
+4,
+"Logistics Mk.3"
+],
+"ConveyorBeltMk4": [
+5,
+"Logistics Mk.4"
+],
+"ConveyorBeltMk5": [
+7,
+"Logistics Mk.5"
+],
+"ConveyorBeltMk6": [
+9,
+"Peak Efficiency"
+],
+"ConveyorLiftMk1": [
+1,
+"Logistics"
+],
+"ConveyorLiftMk2": [
+2,
+"Logistics Mk.2"
+],
+"ConveyorLiftMk3": [
+4,
+"Logistics Mk.3"
+],
+"ConveyorLiftMk4": [
+5,
+"Logistics Mk.4"
+],
+"ConveyorLiftMk5": [
+7,
+"Logistics Mk.5"
+],
+"ConveyorLiftMk6": [
+9,
+"Peak Efficiency"
+],
+"ConveyorPole": [
+0,
+"HUB Upgrade 4"
+],
+"ConveyorPoleStackable": [
+2,
+"Logistics Mk.2"
+],
+"CoolingSystem": [
+8,
+"Advanced Aluminum Production"
+],
+"CopperDust": [
+8,
+"Particle Enrichment"
+],
+"CopperSheet": [
+2,
+"Part Assembly"
+],
+"Copper_Quartz": [
+9,
+"with its machine"
+],
+"Copper_Sulfur": [
+9,
+"with its machine"
+],
+"CrystalOscillator": [
+6,
+"Crystal Oscillator"
+],
+"DarkEnergy": [
+9,
+"Quantum Encoding"
+],
+"DarkMatter": [
+9,
+"Quantum Encoding"
+],
+"Diamond": [
+9,
+"Matter Conversion"
+],
+"DroneStation": [
+8,
+"Aeronautical Engineering"
+],
+"DroneTransport": [
+8,
+"Aeronautical Engineering"
+],
+"ElectromagneticControlRod": [
+8,
+"Nuclear Power"
+],
+"EncasedIndustrialBeam": [
+4,
+"Advanced Steel Production"
+],
+"Explorer": [
+6,
+"The Explorer"
+],
+"Fabric": [
+2,
+"Fabric"
+],
+"FicsiteIngot_AL": [
+9,
+"with its machine"
+],
+"FicsiteIngot_CAT": [
+9,
+"with its machine"
+],
+"FicsiteIngot_Iron": [
+9,
+"Matter Conversion"
+],
+"FicsiteMesh": [
+9,
+"Matter Conversion"
+],
+"Ficsonium": [
+9,
+"Peak Efficiency"
+],
+"FicsoniumFuelRod": [
+9,
+"Peak Efficiency"
+],
+"FilterGasMask": [
+6,
+"Gas Mask"
+],
+"FilterHazmat": [
+7,
+"Hazmat Suit"
+],
+"FluidCanister": [
+5,
+"Fluid Packaging"
+],
+"Foundation_8x1_01": [
+1,
+"Base Building"
+],
+"Foundation_8x2_01": [
+1,
+"Base Building"
+],
+"Foundation_8x4_01": [
+1,
+"Base Building"
+],
+"FrackingExtractor": [
+8,
+"Advanced Aluminum Production"
+],
+"FrackingSmasher": [
+8,
+"Advanced Aluminum Production"
+],
+"FreightWagon": [
+6,
+"Monorail Train Technology"
+],
+"Fuel": [
+5,
+"Fluid Packaging"
+],
+"FusedModularFrame": [
+8,
+"Advanced Aluminum Production"
+],
+"GasTank": [
+8,
+"Advanced Aluminum Production"
+],
+"Gasmask": [
+3,
+"Gas Mask"
+],
+"GeneratorBiomass_Automated": [
+0,
+"HUB Upgrade 6"
+],
+"GeneratorCoal": [
+3,
+"Coal Power"
+],
+"GeneratorFuel": [
+5,
+"Petroleum Power"
+],
+"GeneratorGeoThermal": [
+6,
+"Geothermal Generator"
+],
+"GeneratorNuclear": [
+8,
+"Nuclear Power"
+],
+"Gunpowder": [
+2,
+"Black Powder"
+],
+"GunpowderMK2": [
+5,
+"Smokeless Powder"
+],
+"HadronCollider": [
+8,
+"Particle Enrichment"
+],
+"HazmatSuit": [
+7,
+"Hazmat Suit"
+],
+"HeatSink": [
+8,
+"Advanced Aluminum Production"
+],
+"HighSpeedConnector": [
+6,
+"High-Speed Connector"
+],
+"Hoverpack": [
+7,
+"Hoverpack"
+],
+"HyperPoleStackable": [
+4,
+"Hypertubes"
+],
+"IndustrialTank": [
+5,
+"Petroleum Power"
+],
+"IngotAluminum": [
+7,
+"Bauxite Refinement"
+],
+"IngotCaterium": [
+1,
+"Caterium Ingots"
+],
+"IngotCopper": [
+0,
+"HUB Upgrade 2"
+],
+"IngotIron": [
+0,
+"with its machine"
+],
+"IngotSAM": [
+1,
+"SAM Reanimation"
+],
+"IngotSteel": [
+3,
+"Basic Steel Production"
+],
+"IonizedFuel": [
+8,
+"Ionized Fuel"
+],
+"IronPlate": [
+0,
+"with its machine"
+],
+"IronPlateReinforced": [
+0,
+"HUB Upgrade 3"
+],
+"IronRod": [
+0,
+"with its machine"
+],
+"Iron_Limestone": [
+9,
+"with its machine"
+],
+"JetPack": [
+5,
+"Jetpack"
+],
+"JumpPadAdjustable": [
+2,
+"Jump Pads"
+],
+"Limestone_Sulfur": [
+9,
+"with its machine"
+],
+"LiquidBiofuel": [
+5,
+"Fluid Packaging"
+],
+"LiquidFuel": [
+5,
+"Oil Processing"
+],
+"Locomotive": [
+6,
+"Monorail Train Technology"
+],
+"LookoutTower": [
+1,
+"Base Building"
+],
+"Mam": [
+1,
+"Field Research"
+],
+"ManufacturerMk1": [
+6,
+"Industrial Manufacturing"
+],
+"MedicinalInhaler": [
+1,
+"Vitamin Inhaler"
+],
+"MedicinalInhalerAlienOrgans": [
+2,
+"Protein Inhaler"
+],
+"MinerMk1": [
+0,
+"HUB Upgrade 5"
+],
+"MinerMk2": [
+4,
+"Advanced Steel Production"
+],
+"MinerMk3": [
+8,
+"Leading-Edge Production"
+],
+"ModularFrame": [
+2,
+"Part Assembly"
+],
+"ModularFrameHeavy": [
+6,
+"Industrial Manufacturing"
+],
+"Motor": [
+4,
+"Advanced Steel Production"
+],
+"MotorTurbo": [
+8,
+"Leading-Edge Production"
+],
+"NitricAcid": [
+8,
+"Particle Enrichment"
+],
+"Nitrogen_Bauxite": [
+9,
+"with its machine"
+],
+"Nitrogen_Caterium": [
+9,
+"with its machine"
+],
+"Nobelisk": [
+3,
+"The Nobelisk Detonator"
+],
+"NobeliskCluster": [
+5,
+"Cluster Nobelisk"
+],
+"NobeliskDetonator": [
+3,
+"The Nobelisk Detonator"
+],
+"NobeliskGas": [
+3,
+"Toxic Cellular Modification"
+],
+"NobeliskNuke": [
+8,
+"Nuclear Deterrent Development"
+],
+"NobeliskShockwave": [
+6,
+"Explosive Resonance Application"
+],
+"NonFissileUranium": [
+8,
+"Particle Enrichment"
+],
+"NuclearFuelRod": [
+8,
+"Nuclear Power"
+],
+"NutritionalInhaler": [
+1,
+"Nutritional Inhaler"
+],
+"ObjectScanner": [
+1,
+"Field Research"
+],
+"OilPump": [
+5,
+"Oil Processing"
+],
+"OilRefinery": [
+5,
+"Oil Processing"
+],
+"PackagedAlumina": [
+7,
+"Bauxite Refinement"
+],
+"PackagedBiofuel": [
+5,
+"Fluid Packaging"
+],
+"PackagedCrudeOil": [
+5,
+"Fluid Packaging"
+],
+"PackagedIonizedFuel": [
+8,
+"Ionized Fuel"
+],
+"PackagedNitricAcid": [
+8,
+"Particle Enrichment"
+],
+"PackagedNitrogen": [
+8,
+"Advanced Aluminum Production"
+],
+"PackagedOilResidue": [
+5,
+"Fluid Packaging"
+],
+"PackagedRocketFuel": [
+8,
+"Rocket Fuel"
+],
+"PackagedSulfuricAcid": [
+7,
+"Control System Development"
+],
+"PackagedTurboFuel": [
+5,
+"Turbofuel"
+],
+"PackagedWater": [
+5,
+"Fluid Packaging"
+],
+"Packager": [
+5,
+"Fluid Packaging"
+],
+"Parachute": [
+2,
+"Parachute"
+],
+"PetroleumCoke": [
+5,
+"Oil Processing"
+],
+"PipeHyper": [
+4,
+"Hypertubes"
+],
+"PipeHyperStart": [
+4,
+"Hypertubes"
+],
+"PipeHyperSupport": [
+4,
+"Hypertubes"
+],
+"PipeStorageTank": [
+3,
+"Coal Power"
+],
+"PipeSupport": [
+3,
+"Coal Power"
+],
+"PipeSupportStackable": [
+4,
+"Logistics Mk.3"
+],
+"Pipeline": [
+3,
+"Coal Power"
+],
+"PipelineJunction_Cross": [
+3,
+"Coal Power"
+],
+"PipelineMK2": [
+6,
+"Pipeline Engineering Mk.2"
+],
+"PipelinePump": [
+3,
+"Coal Power"
+],
+"PipelinePumpMK2": [
+6,
+"Pipeline Engineering Mk.2"
+],
+"Plastic": [
+5,
+"Oil Processing"
+],
+"Plutonium": [
+8,
+"Particle Enrichment"
+],
+"PlutoniumCell": [
+8,
+"Particle Enrichment"
+],
+"PlutoniumFuelRod": [
+8,
+"Particle Enrichment"
+],
+"PortableMiner": [
+0,
+"HUB Upgrade 1"
+],
+"Portal": [
+9,
+"Spatial Energy Regulation"
+],
+"PortalSatellite": [
+9,
+"Spatial Energy Regulation"
+],
+"PowerCrystalShard_1": [
+1,
+"Blue Power Slugs"
+],
+"PowerCrystalShard_2": [
+2,
+"Yellow Power Slugs"
+],
+"PowerCrystalShard_3": [
+2,
+"Purple Power Slugs"
+],
+"PowerLine": [
+0,
+"HUB Upgrade 2"
+],
+"PowerPoleMk1": [
+0,
+"HUB Upgrade 3"
+],
+"PowerPoleMk2": [
+1,
+"Power Poles Mk.2"
+],
+"PowerPoleMk3": [
+6,
+"Power Poles Mk.3"
+],
+"PowerStorageMk1": [
+4,
+"Expanded Power Infrastructure"
+],
+"PowerSwitch": [
+3,
+"Power Switch"
+],
+"PowerTower": [
+4,
+"Expanded Power Infrastructure"
+],
+"PowerTowerPlatform": [
+4,
+"Expanded Power Infrastructure"
+],
+"PressureConversionCube": [
+8,
+"Particle Enrichment"
+],
+"PriorityPowerSwitch": [
+6,
+"Priority Power Switch"
+],
+"Protein_Crab": [
+1,
+"Hatcher Research"
+],
+"Protein_Hog": [
+1,
+"Hog Research"
+],
+"Protein_Spitter": [
+1,
+"Spitter Research"
+],
+"Protein_Stinger": [
+1,
+"Stinger Research"
+],
+"PureAluminumIngot": [
+7,
+"Alternate: Pure Aluminum Ingot"
+],
+"QuantumEncoder": [
+9,
+"Quantum Encoding"
+],
+"QuantumEnergy": [
+9,
+"Quantum Encoding"
+],
+"QuartzCrystal": [
+1,
+"Quartz Crystals"
+],
+"Quartz_Bauxite": [
+9,
+"with its machine"
+],
+"Quartz_Coal": [
+9,
+"with its machine"
+],
+"Quickwire": [
+1,
+"Quickwire"
+],
+"RadarTower": [
+6,
+"Radar Technology"
+],
+"RadioControlUnit": [
+7,
+"Control System Development"
+],
+"RailroadBlockSignal": [
+6,
+"Railway Signalling"
+],
+"RailroadPathSignal": [
+6,
+"Railway Signalling"
+],
+"RailroadTrack": [
+6,
+"Monorail Train Technology"
+],
+"Ramp_8x1_01": [
+1,
+"Base Building"
+],
+"Ramp_8x2_01": [
+1,
+"Base Building"
+],
+"Ramp_8x4_01": [
+1,
+"Base Building"
+],
+"RebarGun": [
+2,
+"The Rebar Gun"
+],
+"Rebar_Explosive": [
+6,
+"Explosive Rebar"
+],
+"Rebar_Spreadshot": [
+2,
+"Shatter Rebar"
+],
+"Rebar_Stunshot": [
+2,
+"Stun Rebar"
+],
+"ResidualFuel": [
+5,
+"with its machine"
+],
+"ResidualPlastic": [
+5,
+"with its machine"
+],
+"ResidualRubber": [
+5,
+"with its machine"
+],
+"ResourceSink": [
+2,
+"Resource Sink Bonus Program"
+],
+"ResourceSinkShop": [
+2,
+"Resource Sink Bonus Program"
+],
+"RocketFuel": [
+8,
+"Rocket Fuel"
+],
+"Rotor": [
+2,
+"Part Assembly"
+],
+"Rubber": [
+5,
+"Oil Processing"
+],
+"SAMFluctuator": [
+6,
+"SAM Fluctuator"
+],
+"Screw": [
+0,
+"HUB Upgrade 3"
+],
+"Silica": [
+1,
+"Silica"
+],
+"SingularityCell": [
+9,
+"Spatial Energy Regulation"
+],
+"SmelterBasicMk1": [
+0,
+"HUB Upgrade 2"
+],
+"SmelterMk1": [
+3,
+"Basic Steel Production"
+],
+"SpaceElevator": [
+0,
+"HUB Upgrade 6"
+],
+"SpaceElevatorPart_1": [
+2,
+"Part Assembly"
+],
+"SpaceElevatorPart_10": [
+9,
+"Matter Conversion"
+],
+"SpaceElevatorPart_11": [
+9,
+"Spatial Energy Regulation"
+],
+"SpaceElevatorPart_12": [
+9,
+"Quantum Encoding"
+],
+"SpaceElevatorPart_2": [
+3,
+"Basic Steel Production"
+],
+"SpaceElevatorPart_3": [
+4,
+"Advanced Steel Production"
+],
+"SpaceElevatorPart_4": [
+6,
+"Industrial Manufacturing"
+],
+"SpaceElevatorPart_5": [
+6,
+"Industrial Manufacturing"
+],
+"SpaceElevatorPart_6": [
+8,
+"Nuclear Power"
+],
+"SpaceElevatorPart_7": [
+7,
+"Control System Development"
+],
+"SpaceElevatorPart_8": [
+8,
+"Leading-Edge Production"
+],
+"SpaceElevatorPart_9": [
+8,
+"Particle Enrichment"
+],
+"SpaceRifleMk1": [
+5,
+"The Rifle"
+],
+"SpikedRebar": [
+2,
+"The Rebar Gun"
+],
+"Stator": [
+4,
+"Advanced Steel Production"
+],
+"SteelBeam": [
+3,
+"Basic Steel Production"
+],
+"SteelPipe": [
+3,
+"Basic Steel Production"
+],
+"StorageContainerMk1": [
+0,
+"HUB Upgrade 5"
+],
+"StorageContainerMk2": [
+4,
+"Logistics Mk.3"
+],
+"StoragePlayer": [
+1,
+"Field Research"
+],
+"Sulfur_Coal": [
+9,
+"with its machine"
+],
+"Sulfur_Iron": [
+9,
+"with its machine"
+],
+"SulfuricAcid": [
+7,
+"Control System Development"
+],
+"SuperpositionOscillator": [
+9,
+"Quantum Encoding"
+],
+"SyntheticPowerShard": [
+9,
+"Synthetic Power Shards"
+],
+"TemporalProcessor": [
+9,
+"Quantum Encoding"
+],
+"TherapeuticInhaler": [
+1,
+"Therapeutic Inhaler"
+],
+"TimeCrystal": [
+9,
+"Matter Conversion"
+],
+"Tractor": [
+3,
+"Vehicular Transport"
+],
+"TrainDockingStation": [
+6,
+"Monorail Train Technology"
+],
+"TrainDockingStationLiquid": [
+6,
+"Monorail Train Technology"
+],
+"TrainPlatformEmpty": [
+6,
+"Monorail Train Technology"
+],
+"TrainPlatformEmpty_02": [
+6,
+"Monorail Train Technology"
+],
+"TrainStation": [
+6,
+"Monorail Train Technology"
+],
+"Truck": [
+5,
+"Logistics Mk.4"
+],
+"TruckStation": [
+3,
+"Vehicular Transport"
+],
+"UJellyLandingPad": [
+2,
+"Jump Pads"
+],
+"UnpackageAlumina": [
+7,
+"with its machine"
+],
+"UnpackageBioFuel": [
+5,
+"with its machine"
+],
+"UnpackageFuel": [
+5,
+"with its machine"
+],
+"UnpackageIonizedFuel": [
+8,
+"Ionized Fuel"
+],
+"UnpackageNitricAcid": [
+8,
+"with its machine"
+],
+"UnpackageNitrogen": [
+8,
+"with its machine"
+],
+"UnpackageOil": [
+5,
+"with its machine"
+],
+"UnpackageOilResidue": [
+5,
+"with its machine"
+],
+"UnpackageRocketFuel": [
+8,
+"Rocket Fuel"
+],
+"UnpackageSulfuricAcid": [
+7,
+"with its machine"
+],
+"UnpackageTurboFuel": [
+5,
+"Alternate: Turbo Heavy Fuel"
+],
+"UnpackageWater": [
+5,
+"with its machine"
+],
+"UraniumCell": [
+8,
+"Nuclear Power"
+],
+"Uranium_Bauxite": [
+9,
+"with its machine"
+],
+"Valve": [
+5,
+"Oil Processing"
+],
+"Wall_8x4_01": [
+1,
+"Base Building"
+],
+"Wall_Orange_8x1": [
+1,
+"Base Building"
+],
+"WaterPump": [
+3,
+"Coal Power"
+],
+"Wire": [
+0,
+"HUB Upgrade 2"
+],
+"Workshop": [
+0,
+"HUB Upgrade 1"
+],
+"XenoBasher": [
+3,
+"Enhanced Asset Security"
+]
+}
+}

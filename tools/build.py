@@ -54,14 +54,12 @@ out = ROOT / "dist" / "recipe-matrix.html"
 out.write_text(page)
 print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
 
-plan = json.loads((ROOT / "data" / "optimized_plan.json").read_text())["sheet"]
-plan = {"c": plan.get("c", {}), "n": plan.get("n", {})}
 page = (src / "moves.html").read_text()
 for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
                      ("/*__VCSS__*/", (src / "moves.css").read_text()),
                      ("/*__DATA__*/", data),
-                     ("/*__PLAN__*/", "window.MOVES_PLAN = " + json.dumps(plan, separators=(",", ":")) + ";\n"
-                      "window.MOVES_START = " + (ROOT / "data" / "moves_start.json").read_text() + ";"),
+                     ("/*__PLAN__*/", "window.MOVES_START = " + (ROOT / "data" / "moves_start.json").read_text() + ";\n"
+                      "window.MOVES_TIERS = " + (ROOT / "data" / "tiers.json").read_text() + ";"),
                      ("/*__MOVES__*/", (src / "moves.js").read_text()),
                      ("/*__VAPP__*/", (src / "moves_app.js").read_text())]:
     assert marker in page, marker
