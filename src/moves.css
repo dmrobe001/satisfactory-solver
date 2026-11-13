@@ -46,21 +46,22 @@
 .mv-side h3.sec .count { font-family: var(--font-body); font-weight: 400; margin-left: 6px; }
 .move.chain { border-left: 3px solid var(--accent); }
 /* products tab */
-.pv-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr); gap: 10px; align-items: start; }
-@media (max-width: 960px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } }
+.pv-grid { display: grid; grid-template-columns: minmax(580px, 0.9fr) minmax(0, 1.4fr); gap: 10px; align-items: start; }
+@media (max-width: 1200px) { .pv-grid { grid-template-columns: minmax(0, 1fr); } .pv-sheet { position: static; } }
 .pv-list .scroll { max-height: calc(100vh - 250px); }
 #ptab td, #ptab th { white-space: nowrap; }
+#ptab td:first-child { white-space: normal; min-width: 9em; }
 #ptab tbody tr { cursor: pointer; }
 #ptab tbody tr:hover { background: var(--surface-2); }
 #ptab tbody tr.sel { box-shadow: inset 4px 0 0 var(--accent); }
 #ptab td.rule { color: var(--muted); font-size: 0.85rem; }
-:root { --zero-bg: color-mix(in srgb, var(--accent) 13%, var(--surface)); --raw-bg: color-mix(in srgb, var(--ora-edge) 11%, var(--surface)); }
+:root { --zero-bg: color-mix(in srgb, var(--accent) 16%, var(--surface)); --raw-bg: color-mix(in srgb, var(--ora-edge) 14%, var(--surface)); }
 #ptab tr.r-zero td { background: var(--zero-bg); }
 #ptab tr.r-raw td { background: var(--raw-bg); }
 #ptab tr.r-none td { color: var(--muted); }
 #ptab tr.r-zero.sel td, #ptab tr.r-raw.sel td { filter: brightness(0.97); }
 .legend { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); font-size: 0.85rem; }
-.sw { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--line); border-radius: 2px; margin-left: 6px; }
+.sw { display: inline-block; width: 14px; height: 14px; border: 1px solid var(--muted); border-radius: 2px; margin-left: 6px; }
 .sw-zero { background: var(--zero-bg); } .sw-pile { background: var(--surface); } .sw-raw { background: var(--raw-bg); }
 .pv-sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px; position: sticky; top: 8px; min-width: 0; }
 .sheet-scroll { max-height: calc(100vh - 210px); overflow: auto; }

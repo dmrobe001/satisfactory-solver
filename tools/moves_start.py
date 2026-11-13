@@ -20,8 +20,12 @@ of the factory can feed exactly; that is 192 AI Expansion Servers per minute
 (the lattice step of the page's engine; 3x the 64/min the Phase 5 machines
 alone would allow, because of the balances upstream).
 
-A linear program finds the fewest machines (fractional), then an integer
-program the fewest whole machines, with the raw draws as whole multiples of 30.
+A linear program finds the fewest machines (fractional); an integer program
+the fewest whole machines with raw draws free (the "seed"); then
+tools/moves_snap.js moves the seed exactly onto the lattice where every raw
+draw is a multiple of 30 (nearest lattice point, then repair).  With
+--raw-in-milp the integer program takes the multiples of 30 itself (HiGHS
+found no whole-machine point that way in 20 minutes).
 
 Usage: python3 tools/moves_start.py [--batch 192]   ->  data/moves_start.json
 """
@@ -75,6 +79,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--batch", type=float, default=192.0)
     ap.add_argument("--time", type=float, default=600)
+    ap.add_argument("--gap", type=float, default=0.005, help="relative optimality gap for the integer program")
+    ap.add_argument("--log", action="store_true", help="show the solver log")
+    ap.add_argument("--raw-in-milp", action="store_true", help="put the raw multiples of 30 in the integer program")
     a = ap.parse_args()
     recs, raw = recipe_set()
     acc = rules(raw)
@@ -89,7 +96,7 @@ def main():
     items = sorted({k for d in rates for k in d})
     n = len(recs)
     raw_used = [k for k in items if k in raw]
-    aux = {k: n + t for t, k in enumerate(raw_used)}   # raw draw = 30 * aux
+    aux = {k: n + t for t, k in enumerate(raw_used)} if a.raw_in_milp else {}   # raw draw = 30 * aux
     nv = n + len(aux)
     rows, irows = [], []
     for k in items:
@@ -100,7 +107,8 @@ def main():
         ic = {j: int(c * L) for j, c in fr.items()}
         r = int(rhs * L)
         if k in O.PHASE5: lo, hi = r, r
-        elif k in raw: ic[aux[k]] = RAW_STEP * L; lo, hi = 0, 0
+        elif k in raw and aux: ic[aux[k]] = RAW_STEP * L; lo, hi = 0, 0
+        elif k in raw: lo, hi = None, 0
         elif k in acc: lo, hi = 0, None
         else: lo, hi = 0, 0
         irows.append((ic, lo, hi))
@@ -111,7 +119,8 @@ def main():
         print("infeasible"); return 1
     base = {recs[j]["id"]: round(x[j], 6) for j in range(n) if x[j] > 1e-7}
     print("linear program: %.1f machines (fractional)" % obj, flush=True)
-    ok, xi, obj2 = O.solve(nv, cost, rows, [0.0] * nv, [None] * nv, integer=[1] * nv, time_limit=a.time)
+    ok, xi, obj2 = O.solve(nv, cost, rows, [0.0] * nv, [None] * nv, integer=[1] * nv, time_limit=a.time,
+                         options={"mip_rel_gap": a.gap, "output_flag": a.log})
     whole = None
     if ok and xi is not None:
         N = [int(round(v)) for v in xi]
@@ -125,11 +134,16 @@ def main():
     else:
         print("integer program: nothing found in the time limit")
     p5rec = [r["id"] for r in recs if any(k in O.PHASE5 for k, _ in r["outs"])]
-    out = {"recipes": [r["id"] for r in recs], "base": base, "n": whole, "batch": a.batch,
+    out = {"recipes": [r["id"] for r in recs], "base": base, "seed": whole, "n": whole if aux else None, "batch": a.batch,
            "rules": {"accumulate": sorted(acc), "raw": sorted(raw), "rawStep": RAW_STEP, "fixed": p5rec},
            "note": "base: fewest machines (fractional, all at 100 %) for one exact Phase 5 batch; "
-                   "n: fewest whole machines for the same, raw draws in multiples of 30/min (integer program)"}
-    (ROOT / "data" / "moves_start.json").write_text(json.dumps(out, indent=1))
+                   "seed: fewest whole machines for the same with raw draws free (integer program); "
+                   "n: the seed moved onto the full rules, raw draws in multiples of 30/min (tools/moves_snap.js)"}
+    dst = ROOT / "data" / "moves_start.json"
+    dst.write_text(json.dumps(out, indent=1))
+    if whole and not aux:
+        import subprocess
+        subprocess.run(["node", str(ROOT / "tools" / "moves_snap.js"), str(dst)], check=True)
     print("%d recipes in the set, %d used, %.1f machines for %g AI Expansion Servers/min"
           % (n, len(base), obj, a.batch))
     return 0

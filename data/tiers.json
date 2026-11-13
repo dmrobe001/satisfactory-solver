@@ -109,8 +109,8 @@
 "AI Limiter"
 ],
 "Coal": [
-0,
-"extracted"
+2,
+"extracted; first used"
 ],
 "CompactedCoal": [
 2,
@@ -412,6 +412,10 @@
 8,
 "Particle Enrichment"
 ],
+"HardDrive": [
+0,
+"gathered"
+],
 "HatcherParts": [
 0,
 "gathered"
@@ -494,7 +498,7 @@
 ],
 "LiquidOil": [
 5,
-"extracted"
+"with its machine"
 ],
 "LiquidTurboFuel": [
 5,
@@ -566,7 +570,7 @@
 ],
 "NitrogenGas": [
 8,
-"extracted"
+"with its machine"
 ],
 "NobeliskCluster": [
 5,
@@ -613,24 +617,24 @@
 "Oil Processing"
 ],
 "OreBauxite": [
-0,
-"extracted"
+7,
+"extracted; first used"
 ],
 "OreCopper": [
 0,
 "extracted"
 ],
 "OreGold": [
-0,
-"extracted"
+1,
+"extracted; first used"
 ],
 "OreIron": [
 0,
 "extracted"
 ],
 "OreUranium": [
-0,
-"extracted"
+8,
+"extracted; first used"
 ],
 "PackagedAlumina": [
 7,
@@ -845,8 +849,8 @@
 "Base Building"
 ],
 "RawQuartz": [
-0,
-"extracted"
+1,
+"extracted; first used"
 ],
 "RebarGunProjectile": [
 2,
@@ -889,8 +893,8 @@
 "Oil Processing"
 ],
 "SAM": [
-0,
-"extracted"
+1,
+"extracted; first used"
 ],
 "SAMFluctuator": [
 6,
@@ -1017,8 +1021,8 @@
 "Field Research"
 ],
 "Sulfur": [
-0,
-"extracted"
+2,
+"extracted; first used"
 ],
 "SulfuricAcid": [
 7,
@@ -1093,8 +1097,8 @@
 "Base Building"
 ],
 "Water": [
-3,
-"extracted"
+5,
+"extracted; first used"
 ],
 "WaterPump": [
 3,

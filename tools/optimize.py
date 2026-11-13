@@ -333,10 +333,12 @@ def bom_exact(counts, V, extra_items=True):
 
 
 # ------------------------------------------------------------- LP helpers ----
-def solve(nv, cost, rows, lb, ub, integer=None, time_limit=None, sense_max=False, start=None):
-    """rows: list of (dict col->coef, lo, hi).  Returns (status, x, obj)."""
+def solve(nv, cost, rows, lb, ub, integer=None, time_limit=None, sense_max=False, start=None, options=None):
+    """rows: list of (dict col->coef, lo, hi).  options: extra HiGHS options.  Returns (status, x, obj)."""
     h = highspy.Highs()
     h.setOptionValue("output_flag", False)
+    for k, v in (options or {}).items():
+        h.setOptionValue(k, v)
     if time_limit:
         h.setOptionValue("time_limit", float(time_limit))
     inf = highspy.kHighsInf

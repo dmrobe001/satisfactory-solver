@@ -345,7 +345,7 @@ item rules live in `tools/moves_start.py`, which writes them into
   Unpackage recipes and the Packager recipes other than Packaged Fuel,
   Turbofuel, Rocket Fuel and Ionized Fuel, at the fewest whole machines that
   satisfy the rules (`tools/moves_start.py`, an integer program verified
-  exactly): __START__. Power is not part of the problem.
+  exactly): 48,103 whole machines. The integer program solves the rules without the multiples of 30 (HiGHS finds no point with them), and `tools/moves_snap.js` then moves that seed exactly onto the full lattice (a particular solution, the nearest lattice point by Babai's method, a greedy repair): 48,086 → 48,103 machines; the linear-programming bound is 47,825. Power is not part of the problem.
 * **Products tab.** Every product with its unlock tier, rule, net per minute
   and build cost (the items it takes to construct every machine now in the
   factory). Net-0 rows are tinted. Tiers come from `tools/tiers.py`

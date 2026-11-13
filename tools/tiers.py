@@ -5,21 +5,26 @@ Source: the SatisfactoryTools 1.0 extraction (raw/data1.0.json; fetch it with
 tools/build_data.py --fetch), whose schematics carry their HUB tier, cost,
 prerequisites and unlocked recipes.
 
-Policy
-  milestone or HUB-upgrade unlock    the schematic's tier (HUB upgrades: 0)
-  MAM research                       the highest tier among what it takes to
-                                     get there: the MAM itself, the research's cost items, the
-                                     schematics it requires, the recipe's
-                                     ingredients and the machine it runs in
-  hard-drive alternate               the same, with the schematics it requires
-                                     in place of a cost (the hard drive itself
-                                     is gathered: tier 0)
-  item                               the lowest tier of any recipe that makes
-                                     it; mined or extracted resources take the
-                                     extractor's tier, gathered items 0
-  recipe with several unlocks        the lowest
-Resource-sink and customization schematics are ignored.  The definitions are
-recursive, so they are iterated to a fixed point.
+Policy: for each tier k = 0..9, take everything reachable using only the
+milestones (and HUB upgrades) of tier <= k, closed under
+  MAM research or hard-drive alternate   reachable once the MAM, its cost items
+                                         and the schematics it requires are
+                                         (the hard drive itself counts as gathered)
+  recipe                                 reachable once a schematic that unlocks
+                                         it is; for a MAM or alternate unlock, its
+                                         ingredients and machine too; a recipe no
+                                         schematic unlocks needs its ingredients
+                                         and machine
+  item                                   reachable once a recipe that makes it is;
+                                         gathered items always
+  mined or extracted resource            reachable once its extractor is (in the
+                                         game one starts by picking it up)
+The tier of anything is the first k that reaches it (a least fixed point, so
+cycles such as ore -> research cost -> ingot -> ore do not inflate it).  A raw
+resource is then shown at the first tier at which some recipe can use it.
+So a milestone recipe gets its milestone's tier, and a MAM or alternate unlock
+the highest tier among what it takes to unlock and make it.  Resource-sink and
+customization schematics are ignored.
 
 Usage: python3 tools/tiers.py  ->  data/tiers.json
 """
@@ -27,7 +32,6 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-INF = 99
 
 
 def short(cls):
@@ -46,6 +50,11 @@ def main():
         if s["type"] in ("EST_Milestone", "EST_Tutorial", "EST_MAM", "EST_Alternate"):
             for rc in s["unlock"]["recipes"]:
                 unlocks.setdefault(rc, []).append(sc)
+    users = {}  # item class -> [recipe class] that consume it (machine recipes)
+    for rc, r in R.items():
+        if r["inMachine"]:
+            for i in r["ingredients"]:
+                users.setdefault(i["item"], []).append(rc)
     makers = {}  # item class -> [recipe class]
     for rc, r in R.items():
         for p in r["products"]:
@@ -60,61 +69,81 @@ def main():
             extract.setdefault(res, []).append(m["className"])
     extract.setdefault("Desc_Water_C", []).append("Desc_WaterPump_C")  # not listed among the miners
     RANK = {"EST_Tutorial": 0, "EST_Milestone": 0, "EST_MAM": 1, "EST_Alternate": 2}
-    st = {sc: (INF, 9, "") for sc in S}   # (tier, rank, name): on a tie the milestone wins
-    rt = {rc: (INF, 9, "") for rc in R}
-    it = {}
+    gathered = {ic for ic in d["items"] if not makers.get(ic) and ic not in extract}
+    gathered.add("Desc_HardDrive_C")
+    st, rt, it = {}, {}, {}   # first tier at which each is reachable, with its source
 
-    def item_t(ic):
-        return it.get(ic, (INF,))[0]
+    def reach(k):
+        """Everything reachable using only milestones up to tier k (least fixed point)."""
+        S_ok, R_ok, I_ok = set(), set(), set(gathered)
+        mach_ok = lambda rc: all(m.replace("Build_", "Desc_", 1) in I_ok for m in R[rc]["producedIn"])
+        grow = True
+        while grow:
+            grow = False
+            for sc, s in S.items():
+                if sc in S_ok:
+                    continue
+                if s["type"] in ("EST_Milestone", "EST_Tutorial"):
+                    ok = s["tier"] <= k
+                elif s["type"] in ("EST_MAM", "EST_Alternate"):
+                    ok = ("Desc_Mam_C" in I_ok and all(c["item"] in I_ok for c in s["cost"])
+                          and all(q in S_ok for q in s["requiredSchematics"] if q in S))
+                else:
+                    ok = False
+                if ok:
+                    S_ok.add(sc); grow = True
+            for rc, r in R.items():
+                if rc in R_ok:
+                    continue
+                ings = all(i["item"] in I_ok for i in r["ingredients"])
+                ok = False
+                for sc in unlocks.get(rc, []):
+                    if sc in S_ok and (S[sc]["type"] in ("EST_Milestone", "EST_Tutorial") or (ings and mach_ok(rc))):
+                        ok = True
+                if not unlocks.get(rc) and r["producedIn"] and ings and mach_ok(rc):
+                    ok = True
+                if ok:
+                    R_ok.add(rc); grow = True
+                    for p in r["products"]:
+                        if p["item"] not in I_ok:
+                            I_ok.add(p["item"])
+            for ic in extract:
+                if ic in I_ok:
+                    continue
+                ok = any(m in I_ok for m in extract[ic]) or not extract[ic]
+                if ok:
+                    I_ok.add(ic); grow = True
+        return S_ok, R_ok, I_ok
 
-    def bld_t(bc):  # building class -> tier of its build recipe
-        return item_t(bc.replace("Build_", "Desc_", 1)) if bc.startswith("Build_") else item_t(bc)
-
-    changed = True
-    while changed:
-        changed = False
-        for sc, s in S.items():
-            if s["type"] in ("EST_Milestone", "EST_Tutorial"):
-                v = (s["tier"], 0, s["name"])
-            elif s["type"] in ("EST_MAM", "EST_Alternate"):
-                t = max([item_t(c["item"]) for c in s["cost"] if c["item"] != "Desc_HardDrive_C"] +
-                        [st[q][0] for q in s["requiredSchematics"] if q in st] + [item_t("Desc_Mam_C")])
-                v = (t, RANK[s["type"]], s["name"])
-            else:
-                continue
-            if v != st[sc]:
-                st[sc] = v; changed = True
-        for rc, r in R.items():
-            best = (INF, 9, "")
-            need = [item_t(i["item"]) for i in r["ingredients"]] + [bld_t(m) for m in r["producedIn"]]
-            for sc in unlocks.get(rc, []):
-                t, rank, name = st[sc]
-                if S[sc]["type"] in ("EST_MAM", "EST_Alternate"):
-                    t = max([t] + need)
-                best = min(best, (t, rank, name))
-            if not unlocks.get(rc) and r["producedIn"]:
-                # unlocked with no schematic (available from the start, or with its machine)
-                best = (max(need), 0, "with its machine")
-            if best != rt[rc]:
-                rt[rc] = best; changed = True
-        for ic in set(makers) | set(extract) | set(d["items"]):
-            cand = [rt[rc] for rc in makers.get(ic, [])]
-            if ic in extract:
-                cand += [(bld_t(m), 0, "extracted") for m in extract[ic]]
-            if not cand and ic in d["items"] and not makers.get(ic):
-                cand = [(0, 0, "gathered")]
-            v = min(cand) if cand else (INF, 9, "")
-            if v != it.get(ic):
-                it[ic] = v; changed = True
+    for k in range(10):
+        S_ok, R_ok, I_ok = reach(k)
+        for sc in S_ok:
+            st.setdefault(sc, (k, RANK[S[sc]["type"]], S[sc]["name"]))
+        for rc in R_ok:
+            if rc not in rt:
+                srcs = [st[q] for q in unlocks.get(rc, []) if q in st]
+                rt[rc] = (k,) + (min(srcs)[1:] if srcs else (0, "with its machine"))
+        for ic in I_ok:
+            if ic not in it:
+                if ic in gathered:
+                    it[ic] = (0, 0, "gathered")
+                elif ic in extract and not any(rc in R_ok for rc in makers.get(ic, [])):
+                    it[ic] = (k, 0, "extracted")
+                else:
+                    srcs = [rt[rc] for rc in makers.get(ic, []) if rc in rt and rt[rc][0] == k]
+                    it[ic] = min(srcs) if srcs else (k, 0, "extracted")
+    # a raw resource is shown at the first tier where some recipe can use it
+    for ic in extract:
+        u = [rt[q][0] for q in users.get(ic, []) if q in rt]
+        if ic in it and u and min(u) > it[ic][0]:
+            it[ic] = (min(u), 0, "extracted; first used")
     # the engine's ids: production recipes keep their short class name;
     # generators, miners and extractors are looked up by their building
     out = {"items": {}, "recipes": {}}
     for ic, (t, _, name) in it.items():
-        if t < INF:
-            out["items"][short(ic)] = [t, name]
+        out["items"][short(ic)] = [t, name]
     for rc, (t, _, name) in rt.items():
-        if t < INF:
-            out["recipes"][short(rc)] = [t, name]
+        out["recipes"][short(rc)] = [t, name]
     (ROOT / "data" / "tiers.json").write_text(json.dumps(out, indent=0, sort_keys=True))
     print(len(out["items"]), "items,", len(out["recipes"]), "recipes")
 

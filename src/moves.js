@@ -218,6 +218,76 @@
     this.moveNet = this.K.map((v) => this.netOf(v));
   };
 
+  /* A whole-machine factory that satisfies every exact rule and runs each
+   * fixed recipe j at vals[recipe id] machines (counts may be negative; the
+   * caller snaps it to a valid one).  Same column reduction with one more
+   * unknown s (fixed rows: n_j - vals_j s = 0); combines the kernel vectors to
+   * s = 1 by extended gcd.  Returns a Number array, or null when impossible. */
+  Moves.prototype.particular = function (vals) {
+    const M = this.R.length;
+    const rows = this.rows.map((r) => {
+      const e = [...r.coef].map(([j, c]) => [j, c]);
+      if (r.fix) { const j = [...r.coef.keys()][0]; e.push([-1, -BigInt(vals[this.R[j].id] || 0)]); }
+      return { e, mod: r.mod };
+    });
+    let A = 0;
+    for (const r of rows) if (r.mod) r.aux = M + A++;
+    const S = M + A, W = S + 1;
+    for (const r of rows) for (const t of r.e) if (t[0] === -1) t[0] = S;
+    let basis = [];
+    for (let j = 0; j < W; j++) { const b = new Array(W).fill(0n); b[j] = 1n; basis.push(b); }
+    for (const row of rows) {
+      const val = (b) => { let s = 0n; for (const [j, c] of row.e) if (b[j]) s += c * b[j]; if (row.mod && b[row.aux]) s -= row.mod * b[row.aux]; return s; };
+      let live = [], zero = [];
+      basis.forEach((b) => { const v = val(b); (v ? live.push([b, v]) : zero.push(b)); });
+      while (live.length > 1) {
+        let mi = 0;
+        for (let i = 1; i < live.length; i++) if (babs(live[i][1]) < babs(live[mi][1])) mi = i;
+        const [pb, pv] = live[mi], next = [[pb, pv]];
+        for (let i = 0; i < live.length; i++) {
+          if (i === mi) continue;
+          const [b, v] = live[i], q = v / pv;
+          if (q) for (let t = 0; t < W; t++) if (pb[t]) b[t] -= q * pb[t];
+          const nv = v - q * pv;
+          if (nv) next.push([b, nv]); else zero.push(b);
+        }
+        live = next;
+      }
+      basis = zero;
+      let big = 0n;
+      for (const b of basis) for (const x of b) { const a = babs(x); if (a > big) big = a; }
+      if (big > 1n << 30n) basis = lll(basis);
+    }
+    // combine to s = 1
+    let acc = null;
+    for (const b of basis) {
+      if (!b[S]) continue;
+      if (!acc) { acc = b.slice(); continue; }
+      // extended gcd of acc[S] and b[S]
+      let [r0, r1, s0, s1, t0, t1] = [acc[S], b[S], 1n, 0n, 0n, 1n];
+      while (r1) { const q = r0 / r1; [r0, r1] = [r1, r0 - q * r1]; [s0, s1] = [s1, s0 - q * s1]; [t0, t1] = [t1, t0 - q * t1]; }
+      acc = acc.map((x, t) => s0 * x + t0 * b[t]);
+    }
+    if (!acc || babs(acc[S]) !== 1n) return null;
+    const sg = acc[S];
+    const n = acc.slice(0, M).map((x) => x * sg);
+    // reduce against the moves so the numbers stay small
+    return this.reduceBy(n);
+  };
+  /* n minus the nearest move (Babai), as Numbers: a short representative of n's coset. */
+  Moves.prototype.reduceBy = function (n) {
+    const M = this.R.length;
+    let v = n.slice();
+    for (let pass = 0; pass < 3; pass++) for (const b of this.basis) {
+      let num = 0n, den = 0n;
+      for (let t = 0; t < M; t++) if (b[t]) { num += v[t] * b[t]; den += b[t] * b[t]; }
+      if (!den) continue;
+      const q = (2n * num + den) / (2n * den) - (2n * num + den < 0n && (2n * num + den) % (2n * den) ? 1n : 0n);
+      if (q) for (let t = 0; t < M; t++) if (b[t]) v[t] -= q * b[t];
+    }
+    return v.map(Number);
+  };
+
   /* LLL reduction (delta 0.99) of BigInt vectors with floating Gram-Schmidt. */
   function lll(B) {
     B = B.filter((b) => b.some((x) => x));
@@ -329,6 +399,10 @@
    * Babai rounding in the reduced basis, then a greedy repair with single and
    * paired moves.  Returns {n, ok, left} (left = remaining violations). */
   Moves.prototype.snap = function (t, pins) {
+    return this.repair(this.babai(t), pins);
+  };
+  /* Babai's nearest plane: a lattice point near the real target t. */
+  Moves.prototype.babai = function (t) {
     const M = this.R.length, d = this.dim, K = this.K;
     let n = new Array(M).fill(0);
     if (d) {
@@ -350,7 +424,7 @@
       }
       for (let i = 0; i < d; i++) if (c[i]) for (let x = 0; x < M; x++) n[x] += c[i] * K[i][x];
     }
-    return this.repair(n, pins);
+    return n;
   };
   /* Snap using only the recipes with a positive target (the others stay at 0):
    * a valid point there is also a valid point of the full lattice.  Falls back
