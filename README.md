@@ -37,6 +37,7 @@ capability, so the button only appears on claude.ai.
 | `tools/select_recipes.py` | Recipe selection for the tenth-of-the-world factory (continuous linear program, then removal of redundant recipes). Writes `data/recipe_set.json`. |
 | `src/planner.js`, `src/planner_app.js`, `src/planner.css`, `src/planner.html` | The factory planner page (engine, page script, styles, page), built to `dist/factory-planner.html`. |
 | `tools/test_planner.js` | Command-line checks of the planner engine. |
+| `tools/fuel_cluster.py` | Whole-machine fuel clusters on Heavy Oil Residue, Diluted Fuel, Nitro Rocket Fuel, Turbofuel and Ionized Fuel: every fluid exact, round raw inputs, generators at 100 % (turbofuel at 250 %). |
 | `tools/nice_top.py` | Search for exact, small-denominator clocks for the top of the chain (the planner's starting table). |
 | `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
