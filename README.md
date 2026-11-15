@@ -37,6 +37,7 @@ capability, so the button only appears on claude.ai.
 | `tools/select_recipes.py` | Recipe selection for the tenth-of-the-world factory (continuous linear program, then removal of redundant recipes). Writes `data/recipe_set.json`. |
 | `src/planner.js`, `src/planner_app.js`, `src/planner.css`, `src/planner.html` | The factory planner page (engine, page script, styles, page), built to `dist/factory-planner.html`. |
 | `tools/test_planner.js` | Command-line checks of the planner engine. |
+| `tools/nice_top.py` | Search for exact, small-denominator clocks for the top of the chain (the planner's starting table). |
 | `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
@@ -378,11 +379,11 @@ but the page keeps every machine at 100 %.
 
 ## Tenth-world factory (recipe selection and planner)
 
-A factory on a tenth of the world's raw supply that must (1) make every part
-needed to build itself again, (2) make a tenth of the optimizer's equipment
-list, (3) make the Phase 5 parts, (4) feed one Ficsonium-burning Nuclear Power
-Plant at 100 %, one Main Portal and one fueled Alien Power Augmentor, (5) power
-itself, and (6) leave one power shard per minute over.
+A factory on roughly a tenth of the world's raw supply that must (1) make every
+part needed to build itself again, (2) make a tenth of the optimizer's
+equipment list, (3) make the Phase 5 parts, (4) feed one Ficsonium-burning
+Nuclear Power Plant at 100 %, one Main Portal and one fueled Alien Power
+Augmentor, (5) power itself, and (6) leave one power shard per minute over.
 
 ### Recipe selection: `python3 tools/select_recipes.py`
 
@@ -397,8 +398,8 @@ Assumptions, each a constant at the top of the script:
   **250 %**, divided by 10, with the 1.2 node counts. At 100 % the tenth would
   give 408 SAM ore per minute and the augmentor alone needs 600, so the
   requirements cannot be met at 100 %. Each resource is one "average node"
-  source. Water is unlimited. A tenth of the geysers (3.1 generators, 710 MW)
-  always runs.
+  source. Water is unlimited. **Every geyser in the world** (31 generators,
+  7.1 GW) always runs.
 * Power: a machine draws its 100 % power in proportion to its level; variable
   power counts at its average. Miners at 250 % draw 2.5 x. Generated power is
   multiplied by 1.3 and 500 MW is added (the augmentor).
@@ -411,31 +412,73 @@ Assumptions, each a constant at the top of the script:
   here, because neither can be sunk; this costs nothing (T is the same to four
   digits with fluids free, `--free-fluids`). No Packager recipes except the
   four packaged fuels; nothing that needs a hand-gathered item.
-* The top of the factory is given (the `START` table in the script). Its
-  recipes are kept, alternates for the same main product are left out
-  (Plutonium Fuel Unit, Instant Plutonium Cell, Fertile Uranium), and the
-  nuclear plants run at its counts (4 uranium, 2 plutonium, 1 ficsonium). All
-  four Dark Matter recipes are kept whatever the program says.
+* Only the Ficsonium plant is fixed. The planner's starting table plays no part
+  in the optimization. Three groups of recipes are kept in the result whatever
+  the program uses, because the planner needs them: the recipes of the starting
+  table, all four Dark Matter recipes, and the fluid sinks.
 
 Selection. A vertex of a linear program is already sparse: the unrestricted
-optimum uses 119 recipes for 116 items. What redundancy is left is removed by
-backward elimination: of the recipes in use that are the only maker of nothing,
-ban the one whose loss costs the least time, re-optimizing over all remaining
-recipes each time (so a banned recipe can be replaced by an idle one, and its
-partner can change level), until the next ban would push T more than
+optimum uses 119 recipes for about as many items. What redundancy is left is
+removed by backward elimination: of the recipes in use that are the only maker
+of nothing, ban the one whose loss costs the least time, re-optimizing over all
+remaining recipes each time (so a banned recipe can be replaced by an idle one,
+and its partner can change level), until the next ban would push T more than
 `--budget` (default 1 %) above the unrestricted optimum.
 
-Result (reproducible; 8 s): T0 = 428.2 min unrestricted; **117 recipes, T =
-429.2 min** (+0.24 %). The next removal would cost 9 % (Fuel generators), so
-1 % sits on a wide plateau. Pairs that survive because each is worth more than
-1 %: Diamonds with Oil-Based Diamonds (coal against oil), and Distilled Silica
-alongside the silica that Alumina Solution gives off. What binds: crude oil,
-SAM, and nearly coal, sulfur, quartz and bauxite. Power is 43 GW: the seven
-nuclear plants, about 58 fuel generators on Diluted Fuel, and the geysers.
+Result (reproducible; 10 s): T0 = 427.9 min unrestricted; **117 recipes, T =
+431.2 min** (+0.78 %). What binds: crude oil, SAM, bauxite, and nearly sulfur
+and quartz. Power is 42.7 GW drawn, from 7.1 uranium plants, 2 plutonium
+plants, the ficsonium plant and the geysers; with every geyser running the
+program burns no fuel (Fuel generators are in the set only as the fluid sink).
+It makes more plutonium than the two plutonium plants burn and sinks the rest.
 
-The given top makes the Phase 5 parts in 333 min. That is 29 % faster than the
-best a tenth of the world allows (429 min), so the starting plan overdraws
-several resources; the planner shows by how much.
+### Nice clocks for the top: `python3 tools/nice_top.py`
+
+Searches machine counts and clocks for the top of the chain (exact fractions)
+such that the Phase 5 parts are in exact proportion, Singularity Cells and
+Alien Power Matrix are made exactly as fast as they are used, Dark Matter
+Residue and Excited Photonic Matter balance exactly, every other part keeps up
+with little waste, and some shards are left after the Alien Power Matrix and
+Ionized Fuel. A clock is nice when its denominator is small **and made of 2s
+and 5s only**: the game sets clocks in steps of 0.0001 %, so 2/3 cannot be
+typed in exactly, and an inexact clock breaks a fluid balance. Results are
+ranked by the largest denominator, then the sum, then distance from 100 %.
+
+Between 300 and 520 min, **T = 400 min is the only Phase 5 time** whose forced
+rows (the Phase 5 parts, Singularity Cell, Nuclear Pasta) all have a
+denominator of 40 or less. The first result is the planner's starting table:
+
+| Machines | Clock % | Recipe |
+|---|---|---|
+| 7 | 90 | Nuclear Pasta |
+| 2 | 62.5 | Biochemical Sculptor |
+| 1 | 16 | AI Expansion Server |
+| 1 | 50 | Ballistic Warp Drive |
+| 1 | 65 | Singularity Cell |
+| 4 | 80 | Pressure Conversion Cube |
+| 1 | 100 | Assembly Director System |
+| 2 | 75 | Adaptive Control Unit |
+| 1 | 50 | Thermal Propulsion Rocket |
+| 2 | 75 | Modular Engine |
+| 1 | 75 | Magnetic Field Generator |
+| 1 | 40 | Neural-Quantum Processor |
+| 2 | 100 | Alien Power Matrix |
+| 4 | 90 | Superposition Oscillator |
+| 4 | 85 | Synthetic Power Shard |
+| 1 | 10 | Ionized Fuel |
+| 1 | 5 | Packaged Ionized Fuel |
+| 5 | 84 | Excited Photonic Matter |
+| 1 | 100 | Dark Matter Residue |
+| 6 | 100 | Dark Matter Crystal |
+
+plus the nuclear chain that one Ficsonium reactor fixes (Ficsonium Fuel Rod
+40 %, Ficsonium 20 %, 2 Plutonium plants, Plutonium Fuel Rod 80 %, 2 Encased
+Plutonium Cell at 60 %, Plutonium Pellet 40 %, Non-Fissile Uranium 80 %,
+4 Uranium plants). Largest denominator 25 (the 16 % and the 84 %). Spare per
+minute: 1.75 power shards, 0.56 Neural-Quantum Processors, 1.36 Superposition
+Oscillators, 5 Dark Matter Crystals; 4 Ionized Fuel is made and packaged. The
+second result swaps the Residue converter for 4 Dark Matter Crystal, 1 Trap and
+1 Crystallization at 25 %, which draws less SAM and more Time Crystals.
 
 ### Planner: `dist/factory-planner.html`
 
@@ -460,14 +503,20 @@ demand), found by iterating upward and then lowering whatever ended above its
 need. Power uses the game's clock exponent (1.32) here. The build need is the
 bill of materials over a build time, by default the time Phase 5 takes.
 
+A tenth of the world is a yardstick here, not a limit: the Raw supply tab shows
+each resource's draw as a share of it. Every geyser runs. Power beyond the set
+nuclear plants and the geysers comes from fuel generators, which follow the
+demand.
+
 "Auto rows run at: exact demand" keeps the same rules but clocks every auto
 row down to exactly what is asked, which is the least the plan can draw.
 
-At the start (the given table): 1,076 machines and 59 GW with auto rows at
-100 %; 854 machines and 50 GW at exact demand. Both overdraw a tenth of the
-world (at exact demand: crude oil wells, SAM, quartz, bauxite, sulfur, and caterium by 1 %). One row
-is short from the outset: the table leaves 1 power shard per minute spare, and
-Ionized Fuel for the packaged-fuel equipment takes some of it.
+At the start: nothing short, nothing unbalanced; 1,094 machines and 59 GW with
+auto rows at 100 % (814 machines and 48 GW at exact demand). Crude oil is drawn
+at 3.6 times a tenth of the world (2.3 times at exact demand), because the
+table's 4 uranium plants leave 82 fuel generators (50) to cover the power; the
+linear program covers it with about 7 uranium plants and no fuel. SAM, bauxite
+and quartz run 110 to 185 % of a tenth.
 
 Data fix made along the way: the source data marks Singularity Cell, Ballistic
 Warp Drive and Biochemical Sculptor (Manufacturer and Blender recipes) as

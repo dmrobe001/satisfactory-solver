@@ -10,7 +10,8 @@
  *            items the row is the MAKER of (one maker per item, from the data)
  *   trim     an auto row that currently balances a fluid: its level is solved,
  *            not rounded, and shown as ceil(level) machines at an equal clock
- *   source   draws exactly what is used (miners at up to 250 %)
+ *   source   draws exactly what is used (miners at up to 250 %).  A tenth of the world's
+ *            nodes is the yardstick, not a limit: drawing more is reported, not refused
  *
  * Rules
  *   solids   net >= build need + the row's minimum net; a surplus is fine
@@ -432,7 +433,6 @@
             (it.fluid ? " (nothing on auto can balance it)" : ""))
             : IT[it.key].n + " is short by " + fmt(it.net < 0 ? -it.net + (it.need + it.min) : it.need + it.min - it.net) + " /min" });
       }
-      for (const r of outRows) if (r.over) issues.push({ kind: "raw", row: r.id, text: rows[rowIdx[r.id]].name + " draws more than a tenth of the world's nodes give" });
       if (supply < draw - 1e-6) issues.push({ kind: "power", text: "Power is short by " + fmt(draw - supply) + " MW" });
       if (!isFinite(T)) issues.push({ kind: "phase5", text: "A Phase 5 part has no net production, so there is no pace to build against" });
       return { rows: outRows, items, issues, gathered, T, T5, Trebuild: Tre, limit, power: { generated: genRaw, supply, draw },

@@ -57,11 +57,12 @@
     $("st-iss").classList.toggle("bad", res.issues.length > 0);
     if (document.activeElement !== $("inT")) $("inT").value = st.T || "";
     for (const b of $("segLean").children) b.setAttribute("aria-pressed", String(!!st.lean === (b.dataset.lean === "1")));
-    const raw = res.issues.filter((i) => i.kind === "raw"), other = res.issues.filter((i) => i.kind !== "raw");
-    const show = other.slice(0, 6).map((i) => i.text);
-    if (raw.length) show.push("More than a tenth of the world's supply is drawn of: " + raw.map((i) => P.rows[P.rowIdx[i.row]].name.replace(/^.*: /, "")).join(", ") + " (Raw supply tab)");
-    $("issues").innerHTML = show.map((t) => '<div class="iss">' + esc(t) + "</div>").join("") +
-      (other.length > 6 ? '<div class="more">and ' + (other.length - 6) + " more; see the Items tab.</div>" : "");
+    const show = res.issues.slice(0, 6);
+    $("issues").innerHTML = show.map((i) => '<div class="iss">' + esc(i.text) + "</div>").join("") +
+      (res.issues.length > show.length ? '<div class="more">and ' + (res.issues.length - show.length) + " more; see the Items tab.</div>" : "");
+    let top = null;
+    for (const [k, v] of Object.entries(rawShares())) if (!top || v.share > top.sh) top = { sh: v.share, name: iname(k) };
+    $("sv-raw").innerHTML = top ? num(100 * top.sh, 0) + " % <small>" + esc(top.name) + "</small>" : "–";
     renderRows(); renderSide(); renderItems(); renderRaw(); renderBuild();
     $("planText").value = JSON.stringify(exportPlan(), null, 1);
     if (focus && $(focus)) $(focus).focus();
@@ -138,15 +139,30 @@
     $("itemCount").textContent = rows.length + " items";
   }
 
+  /* Per raw item: what is drawn and what a tenth of the world gives, over all its sources. */
+  function rawShares() {
+    const out = {};
+    res.rows.forEach((r, i) => {
+      const row = P.rows[i];
+      if (row.kind !== "source" || row.cap == null) return;
+      const k = row.outs[0][0], rate = row.outs[0][1];
+      const o = out[k] = out[k] || { drawn: 0, tenth: 0 };
+      o.drawn += rate * r.level; o.tenth += rate * row.cap * row.maxClock;
+    });
+    for (const o of Object.values(out)) o.share = o.drawn / o.tenth;
+    return out;
+  }
+
   function renderRaw() {
+    const shares = rawShares();
     let html = "";
     res.rows.forEach((r, i) => {
       const row = P.rows[i];
       if (row.kind !== "source" && row.kind !== "geo") return;
       const rate = row.outs.length ? row.outs[0][1] : 0;
       const drawn = rate * r.level, lim = row.cap != null && rate ? row.cap * row.maxClock * rate : null;
-      const share = lim ? drawn / lim : null;
-      html += '<tr class="' + (r.over ? "bad" : "") + '"><td>' + esc(row.name) + '</td><td class="n">' + (rate ? num(drawn) : "") + '</td><td class="n">' + (lim ? num(lim) : rate ? "no limit" : "") +
+      const share = lim ? shares[row.outs[0][0]].share : null;
+      html += '<tr><td>' + esc(row.name) + '</td><td class="n">' + (rate ? num(drawn) : "") + '</td><td class="n">' + (lim ? num(lim) : rate ? "no limit" : "") +
         "</td><td>" + (share != null ? '<span class="meter' + (share > 1 + 1e-9 ? " over" : "") + '"><i style="width:' + Math.min(100, 100 * share).toFixed(1) + '%"></i></span> ' + num(100 * share, 0) + " %" : "") +
         '</td><td class="n">' + num(r.n, 1) + (row.cap != null ? " of " + num(row.cap, 1) : "") + '</td><td class="n">' + clockText(r.clock) + '</td><td class="n">' +
         (r.gen ? '<span class="gen">+' + num(r.gen, 0) + "</span>" : num(r.mw, 0)) + "</td></tr>";

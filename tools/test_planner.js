@@ -23,15 +23,20 @@ ok("start: trims run at or below 100 % on the fewest machines",
   r0.rows.every((r) => r.role !== "trim" || (r.clock <= 100 + 1e-9 && r.n === Math.ceil(r.level - 1e-7))), r0.rows.filter((r) => r.role === "trim"));
 ok("start: no auto row is short", shortAuto(r0).length === 0, shortAuto(r0));
 ok("start: power covers the draw", r0.power.supply >= r0.power.draw - 1e-6, r0.power);
-ok("start: Phase 5 takes 333.3 min", Math.abs(r0.T5 - 1000 / 3) < 1e-6, r0.T5);
-ok("start: the given Dark Matter and Photonic Matter numbers balance", ["DarkEnergy", "QuantumEnergy", "DarkMatter"].every((k) => Math.abs(item(r0, k).net) < 1e-6), null);
-ok("start: only the Power Shard row is short (Ionized Fuel takes shards the table did not count)",
-  r0.rows.filter((r) => r.short).map((r) => r.id).join() === "SyntheticPowerShard", r0.rows.filter((r) => r.short).map((r) => r.id));
+ok("start: Phase 5 takes 400 min", Math.abs(r0.T5 - 400) < 1e-6, r0.T5);
+const p5 = Object.entries(SET.phase5).map(([k, q]) => item(r0, k).net / q);
+ok("start: Phase 5 parts in exact proportion", p5.every((v) => Math.abs(v - p5[0]) < 1e-12), p5);
+ok("start: Singularity Cell and Alien Power Matrix made exactly as used", ["SingularityCell", "AlienPowerFuel"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
+ok("start: 1.75 power shards a minute spare", Math.abs(item(r0, "CrystalShard").net - 1.75) < 1e-9, item(r0, "CrystalShard").net);
+ok("start: every clock in the table is one the game can set exactly", SET.start.every((s) => Number.isInteger(s.clock * 1e4)), null);
+ok("start: nothing is short and nothing is unbalanced", r0.issues.length === 0 && r0.rows.every((r) => !r.short), r0.issues);
+ok("start: all 31 geysers run", row(r0, "Geothermal").n === 31, row(r0, "Geothermal").n);
+ok("start: the table's Dark Matter Residue and Photonic Matter numbers balance", ["DarkEnergy", "QuantumEnergy"].every((k) => Math.abs(item(r0, k).net) < 1e-6), null);
 
 // one more Nuclear Pasta machine: upstream follows, fluids stay exact
 const st1 = JSON.parse(JSON.stringify(st0));
-st1.rows.SpaceElevatorPart_9 = { n: 9, clock: 92.5 };
-st1.rows.PressureConversionCube = { n: 5, clock: 83.25 };
+st1.rows.SpaceElevatorPart_9 = { n: 8, clock: 90 };
+st1.rows.PressureConversionCube = { n: 4, clock: 90 };
 const r1 = P.solve(st1);
 ok("more pasta: Copper Powder machines rise", row(r1, "CopperDust").n > row(r0, "CopperDust").n, [row(r0, "CopperDust").n, row(r1, "CopperDust").n]);
 ok("more pasta: fluids still net 0", exactOff(r1).length === 0, exactOff(r1));
@@ -39,16 +44,16 @@ ok("more pasta: no auto row is short", shortAuto(r1).length === 0, shortAuto(r1)
 
 // a set fluid maker that is too small is reported, not hidden
 const st2 = JSON.parse(JSON.stringify(st0));
-st2.rows.QuantumEnergy = { n: 4, clock: 83 };
+st2.rows.QuantumEnergy = { n: 4, clock: 84 };
 const r2 = P.solve(st2);
 ok("Photonic Matter set too low: reported as short", item(r2, "QuantumEnergy").status === "short" && r2.issues.some((i) => i.item === "QuantumEnergy"), item(r2, "QuantumEnergy"));
 delete st2.rows.QuantumEnergy;
 const r2b = P.solve(st2);
-ok("Photonic Matter on auto: trimmed back to 5 at 83 %", row(r2b, "QuantumEnergy").role === "trim" && row(r2b, "QuantumEnergy").n === 5 && Math.abs(row(r2b, "QuantumEnergy").clock - 83) < 1e-6, row(r2b, "QuantumEnergy"));
+ok("Photonic Matter on auto: trimmed back to 5 at 84 %", row(r2b, "QuantumEnergy").role === "trim" && row(r2b, "QuantumEnergy").n === 5 && Math.abs(row(r2b, "QuantumEnergy").clock - 84) < 1e-6, row(r2b, "QuantumEnergy"));
 
 // Dark Matter Residue: maker or sink takes the difference
 const st3 = JSON.parse(JSON.stringify(st0));
-delete st3.rows.DarkEnergy; delete st3.rows.Alternate_DarkMatter_Crystallization;
+delete st3.rows.DarkEnergy;
 st3.rows.SuperpositionOscillator = { n: 5, clock: 90 };
 const r3 = P.solve(st3);
 ok("more residue than is used: the sink (Crystallization) trims it", row(r3, "Alternate_DarkMatter_Crystallization").role === "trim" && Math.abs(item(r3, "DarkEnergy").net) < 1e-6,

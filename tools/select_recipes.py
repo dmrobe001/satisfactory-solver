@@ -27,7 +27,7 @@ Model (rates per minute)
         power (the same linear rule).  Water is unlimited (extractors at 100 %).
         At 100 % the tenth would hold 408 SAM ore per minute, and the augmentor
         alone needs 600, so the supply has to be the overclocked one.
-  geothermal generators: a tenth of the geysers, always on.
+  geothermal generators: every geyser in the world, always on.
   for each item k, with lam = 1 / T:
         solid         net(k) >= lam * stock(k) + rate(k)
         fluid         net(k)  = 0   (a fluid cannot be sunk or left to pile up)
@@ -38,10 +38,11 @@ Model (rates per minute)
   (--free-fluids drops the fluid equalities, to see what they cost.)
 
 Recipes in scope: everything that needs no hand-gathered item, without the
-Packager recipes other than the four packaged fuels.  The top of the factory is
-given (START below, the starting point of the planner page): those recipes are
-kept, alternates that make the same main product are left out, and the nuclear
-plants run at the given counts.  All Dark Matter recipes are kept.
+Packager recipes other than the four packaged fuels.  Only the Ficsonium plant
+is fixed.  Three groups of recipes are kept in the result whatever the program
+uses, because the planner page needs them: the recipes of START (the page's
+starting table; its counts and clocks play no part here), all Dark Matter
+recipes, and the fluid sinks (SINK).
 
 Selection
   1. the optimum with every recipe allowed (T0).  A vertex of a linear program
@@ -57,7 +58,7 @@ Selection
      necessary, and stale costs are lower bounds (lazy re-evaluation).
   The result is the set in use at the end plus the protected recipes.
 
-Usage: python3 tools/select_recipes.py [--budget 0.05]   ->  data/recipe_set.json
+Usage: python3 tools/select_recipes.py [--budget 0.01]   ->  data/recipe_set.json
 Needs numpy and highspy (pip install numpy highspy).
 """
 import argparse, json, math, sys, time
@@ -86,28 +87,31 @@ DARK = ["DarkEnergy", "DarkMatter", "Alternate_DarkMatter_Crystallization", "Alt
 SINK = {"DarkEnergy": "Alternate_DarkMatter_Crystallization", "HeavyOilResidue": "Alternate_DilutedFuel",
         "LiquidFuel": "Burn_LiquidFuel_GeneratorFuel", "DissolvedSilica": "Alternate_Silica_Distilled"}
 
-# The top of the factory, as given: (machines, clock %, recipe id).  The planner page starts from it.
+# Where the planner page starts: (machines, clock %, recipe id) for the top of the factory.
+# The linear program does not have to meet these; it only keeps these recipes in the set.
 START = [
+    # fixed by one Ficsonium reactor
     (1, 100, "Burn_FicsoniumFuelRod_GeneratorNuclear"), (1, 40, "FicsoniumFuelRod"), (1, 20, "Ficsonium"),
     (2, 100, "Burn_PlutoniumFuelRod_GeneratorNuclear"), (1, 80, "PlutoniumFuelRod"),
-    (1, 60, "SpaceElevatorPart_11"),   # Ballistic Warp Drive
-    (2, 60, "PlutoniumCell"), (1, 70, "SingularityCell"), (1, 40, "Plutonium"),
-    (2, 75, "SpaceElevatorPart_10"),   # Biochemical Sculptor
-    (8, 92.5, "SpaceElevatorPart_9"),  # Nuclear Pasta
-    (1, 19.2, "SpaceElevatorPart_12"),  # AI Expansion Server
+    (2, 60, "PlutoniumCell"), (1, 40, "Plutonium"), (1, 80, "NonFissileUranium"),
+    (4, 100, "Burn_NuclearFuelRod_GeneratorNuclear"),
+    # Phase 5 in 400 min, in exact proportion (tools/nice_top.py, first result)
+    (7, 90, "SpaceElevatorPart_9"),    # Nuclear Pasta
+    (2, 62.5, "SpaceElevatorPart_10"),  # Biochemical Sculptor
+    (1, 16, "SpaceElevatorPart_12"),   # AI Expansion Server
+    (1, 50, "SpaceElevatorPart_11"),   # Ballistic Warp Drive
+    (1, 65, "SingularityCell"), (4, 80, "PressureConversionCube"),
     (1, 100, "SpaceElevatorPart_7"),   # Assembly Director System
-    (1, 60, "SpaceElevatorPart_8"),    # Thermal Propulsion Rocket
-    (4, 92.5, "PressureConversionCube"), (1, 80, "NonFissileUranium"),
-    (1, 76.8, "SpaceElevatorPart_6"),  # Magnetic Field Generator
     (2, 75, "SpaceElevatorPart_5"),    # Adaptive Control Unit
+    (1, 50, "SpaceElevatorPart_8"),    # Thermal Propulsion Rocket
     (2, 75, "SpaceElevatorPart_4"),    # Modular Engine
-    (4, 100, "Burn_NuclearFuelRod_GeneratorNuclear"), (1, 38.4, "TemporalProcessor"),
-    (2, 100, "AlienPowerFuel"), (4, 90, "SuperpositionOscillator"), (4, 80, "SyntheticPowerShard"),
-    (5, 83, "QuantumEnergy"), (1, 90, "DarkEnergy"), (3, 100, "DarkMatter"),
-    (2, 70, "Alternate_DarkMatter_Crystallization"), (1, 100, "Alternate_DarkMatter_Trap"),
+    (1, 75, "SpaceElevatorPart_6"),    # Magnetic Field Generator
+    (1, 40, "TemporalProcessor"),      # Neural-Quantum Processor
+    (2, 100, "AlienPowerFuel"), (4, 90, "SuperpositionOscillator"), (4, 85, "SyntheticPowerShard"),
+    (1, 10, "IonizedFuel"), (1, 5, "PackagedIonizedFuel"),
+    (5, 84, "QuantumEnergy"), (1, 100, "DarkEnergy"), (6, 100, "DarkMatter"),
 ]
-PINNED = {"Burn_FicsoniumFuelRod_GeneratorNuclear": 1.0, "Burn_PlutoniumFuelRod_GeneratorNuclear": 2.0,
-          "Burn_NuclearFuelRod_GeneratorNuclear": 4.0}
+PINNED = {"Burn_FicsoniumFuelRod_GeneratorNuclear": 1.0}   # requirement 4; everything else is free
 
 # A tenth of the optimizer's extra buildings (the production sheet's defaults), one shop,
 # one Main Portal and one augmentor.
@@ -152,7 +156,7 @@ def sources():
     V.append(v)
     ng = sum(O.GEYSERS)
     mw = sum(c * q for c, q in zip(O.GEYSERS, O.GEO_MW)) / ng
-    v = O.Var("Geothermal", "geo", {}, 0.0, {"GeneratorGeoThermal": 1}, 0, 0, 0, 0, ub=float(ng * SHARE), gen=mw)
+    v = O.Var("Geothermal", "geo", {}, 0.0, {"GeneratorGeoThermal": 1}, 0, 0, 0, 0, ub=float(ng), gen=mw)   # every geyser
     v.name = "Geothermal Generator"
     v.lb = v.ub
     V.append(v)
@@ -169,11 +173,7 @@ def sources():
 def recipe_scope():
     recs, raw, have = O.scope()
     recs = [r for r in recs if not (r["m"] == "Packager" and r["id"] not in KEEP_PACKAGER)]
-    top = {rid for _, _, rid in START}
-    main = {BY_ID[rid]["outs"][0][0] for rid in top if BY_ID[rid]["kind"] == "machine"}
-    left_out = [r for r in recs if r["kind"] == "machine" and r["id"] not in top and r["outs"][0][0] in main]
-    recs = [r for r in recs if r not in left_out]
-    return recs, raw, have, left_out
+    return recs, raw, have, []
 
 
 # -------------------------------------------------------------------- model ----
@@ -394,8 +394,9 @@ def frame(model, x, keep, T):
                 best = (key, v.id)
         if best:
             maker[k] = best[1]
-    maker["Power"] = max((j for j in keep if V[j].gen and V[j].kind == "recipe" and V[j].id not in PINNED),
-                         key=lambda j: V[j].gen * x[j], default=None)
+    # power follows demand through a generator that leaves no waste behind
+    maker["Power"] = max((j for j in keep if V[j].gen and V[j].kind == "recipe" and not (set(V[j].rates) & WASTE)
+                          and "Ficsonium" not in V[j].id), key=lambda j: (V[j].gen * x[j], V[j].id in SINK.values()), default=None)
     maker["Power"] = V[maker["Power"]].id if maker["Power"] is not None else None
     for k in WASTE:            # nuclear waste is only checked, never steered
         maker.pop(k, None)
@@ -407,18 +408,17 @@ def frame(model, x, keep, T):
 # ------------------------------------------------------------------- output ----
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--budget", type=float, default=0.05, help="largest increase of T over the unrestricted optimum (default 0.05)")
+    ap.add_argument("--budget", type=float, default=0.01, help="largest increase of T over the unrestricted optimum (default 0.01)")
     ap.add_argument("--free-fluids", action="store_true", help="let fluids pile up (net >= 0), for comparison only")
     ap.add_argument("--out", default=str(ROOT / "data" / "recipe_set.json"))
     args = ap.parse_args()
     t0 = time.time()
     model = Model(args.free_fluids)
     V = model.V
-    log("%d recipes in scope; left out as alternates of the given top: %s"
-        % (sum(1 for v in V if v.kind == "recipe"), ", ".join(r["name"] for r in model.left_out)))
+    log("%d recipes in scope" % sum(1 for v in V if v.kind == "recipe"))
     if model.dropped_equipment:
         log("equipment that needs gathered items, dropped: " + ", ".join(model.dropped_equipment))
-    protected = {rid for _, _, rid in START} | set(DARK)
+    protected = {rid for _, _, rid in START} | set(DARK) | set(SINK.values())
     T0, x0, lam, x, banned, trace = select(model, args.budget, protected)
     T = 1 / lam
     act = active(model, x)
@@ -448,7 +448,8 @@ def main():
     start_ids = {rid for _, _, rid in START}
     makes = set(maker.values())
     defaults = {r["id"]: {"n": max(1, round(r["lp_machines"] * scale)), "clock": 100} for r in recipes
-                if r["id"] not in makes and r["id"] not in start_ids and r["lp_machines"] > 1e-6}
+                if r["id"] not in makes and r["id"] not in start_ids and r["id"] not in DARK
+                and r["id"] not in SINK.values() and r["lp_machines"] > 1e-6}
     for s in srcs:
         s["clock"] = 1.0 if s["kind"] in ("water", "geo") else float(CLOCK)
     tight = sorted(((model.items[i], float(net[i] - need[i])) for i in range(len(model.items))

@@ -27,6 +27,7 @@
   <div class="stat" id="st-re"><span class="lbl">Rebuilds itself in</span><span class="val" id="sv-re">–</span></div>
   <div class="stat"><span class="lbl" title="The time the bill of materials, the equipment and Phase 5 are spread over. Empty: the time Phase 5 takes at the current pace.">Build over (min)</span><span class="val"><input id="inT" type="number" min="1" step="any" placeholder="Phase 5"></span></div>
   <div class="stat"><span class="lbl">Auto rows run at</span><span class="val"><span class="seg" id="segLean"><button type="button" data-lean="0" aria-pressed="true" title="Whole machines at 100 %: the fewest that cover demand">100 %</button><button type="button" data-lean="1" aria-pressed="false" title="The same machines, clocked down to exactly what is needed">exact demand</button></span></span></div>
+  <div class="stat"><span class="lbl" title="The raw resource drawn hardest, as a share of a tenth of the world's supply (Raw supply tab). A yardstick, not a limit.">Most-drawn raw, of a tenth</span><span class="val" id="sv-raw">–</span></div>
   <div class="stat" id="st-iss"><span class="lbl">Open issues</span><span class="val" id="sv-iss">–</span></div>
 </section>
 
@@ -75,9 +76,9 @@
   </section>
 
   <section class="panel" id="tab-raw" role="tabpanel" hidden>
-    <p class="note">A tenth of the world's nodes, each with a Miner Mk.3, Oil Extractor or pressurizer at up to 250 %. Water is unlimited. Node counts are averages over purities, so a tenth of 17 bauxite nodes is 1.7 miners.</p>
+    <p class="note">The yardstick is a tenth of the world's nodes, each with a Miner Mk.3, Oil Extractor or pressurizer at up to 250 %. It is a ballpark, not a limit: the share can pass 100 %. Node counts are averages over purities, so a tenth of 17 bauxite nodes is 1.7 miners. Water is unlimited, and every geyser in the world carries a geothermal generator.</p>
     <div class="scroll free"><table id="wtab">
-      <thead><tr><th>Source</th><th class="n">Drawn /min</th><th class="n">Limit /min</th><th>Share</th><th class="n">Machines</th><th class="n">Clock %</th><th class="n">MW</th></tr></thead>
+      <thead><tr><th>Source</th><th class="n">Drawn /min</th><th class="n">A tenth /min</th><th title="Everything drawn of this resource, over all its sources, against a tenth of the world">Share of a tenth</th><th class="n">Machines</th><th class="n">Clock %</th><th class="n">MW</th></tr></thead>
       <tbody id="wbody"></tbody>
     </table></div>
   </section>
@@ -104,7 +105,7 @@
   <section class="panel" id="tab-notes" role="tabpanel" hidden>
     <div class="prose">
       <h3>What this is</h3>
-      <p>A factory on a tenth of the world's raw supply that makes the Phase 5 parts, feeds one Ficsonium reactor, one Main Portal and one fueled Alien Power Augmentor, powers itself, and makes the parts to build itself again. The recipes were chosen by a linear program (<code>tools/select_recipes.py</code>): the set that finishes Phase 5 and its own bill of materials soonest, with redundant recipes removed while that time stayed within 1 %.</p>
+      <p>A factory on roughly a tenth of the world's raw supply that makes the Phase 5 parts, feeds one Ficsonium reactor, one Main Portal and one fueled Alien Power Augmentor, powers itself, and makes the parts to build itself again. The recipes were chosen by a linear program (<code>tools/select_recipes.py</code>): the set that finishes Phase 5 and its own bill of materials soonest, with redundant recipes removed while that time stayed within 1 %.</p>
       <h3>Rows</h3>
       <ul>
         <li><b>Set</b>: you typed machines and clock. Nothing changes them. The page starts with the top of the chain set as given.</li>
