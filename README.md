@@ -34,6 +34,9 @@ capability, so the button only appears on claude.ai.
 | `tools/separate.py` | Chooses recipes (alternates included) so the net-0 balance equations split into as many independent groups as possible (integer program). Writes `data/separate*.json`. |
 | `tools/output_lattice.py` | For the largest coupled group in `data/separate.json`: which recipe counts are forced, and the exact equations and congruences (Smith normal form) the free output counts must satisfy. Writes `data/output_lattice*.json`. |
 | `tools/tiers.py` | Unlock tier of every recipe and item (for sorting). Writes `data/tiers.json`. |
+| `tools/select_recipes.py` | Recipe selection for the tenth-of-the-world factory (continuous linear program, then removal of redundant recipes). Writes `data/recipe_set.json`. |
+| `src/planner.js`, `src/planner_app.js`, `src/planner.css`, `src/planner.html` | The factory planner page (engine, page script, styles, page), built to `dist/factory-planner.html`. |
+| `tools/test_planner.js` | Command-line checks of the planner engine. |
 | `tools/clean_clocks.py` | Is there a recipe combination with clean clock totals (denominators up to 125)? Integer program, verified exactly. |
 | `tools/import_plan.js` | Turns a plan exported from the older "factory ledger" tool (`data/old_plan_factory_ledger.json`) into the page's default sheet, `data/default_plan.json`. |
 
@@ -46,6 +49,8 @@ python3 tools/build.py
 node tools/test_solver.js
 node tools/test_lattice.js
 node tools/test_moves.js
+python3 tools/select_recipes.py         # re-select the planner's recipes (then build.py again)
+node tools/test_planner.js
 ```
 
 ## Update rules
@@ -370,3 +375,101 @@ item rules live in `tools/moves_start.py`, which writes them into
 
 The engine in `src/moves.js` also accepts per-recipe clocks (used by the tests),
 but the page keeps every machine at 100 %.
+
+## Tenth-world factory (recipe selection and planner)
+
+A factory on a tenth of the world's raw supply that must (1) make every part
+needed to build itself again, (2) make a tenth of the optimizer's equipment
+list, (3) make the Phase 5 parts, (4) feed one Ficsonium-burning Nuclear Power
+Plant at 100 %, one Main Portal and one fueled Alien Power Augmentor, (5) power
+itself, and (6) leave one power shard per minute over.
+
+### Recipe selection: `python3 tools/select_recipes.py`
+
+A continuous linear program (HiGHS). Unknowns are machines of each recipe at
+100 %, as real numbers. The objective is the least time T in which the stocks
+(1)-(3) are made while the rates (4)-(6) hold. For a fixed T everything is
+linear, so T is found by bisection.
+
+Assumptions, each a constant at the top of the script:
+
+* Raw supply: a Miner Mk.3, Oil Extractor or pressurizer on every node at
+  **250 %**, divided by 10, with the 1.2 node counts. At 100 % the tenth would
+  give 408 SAM ore per minute and the augmentor alone needs 600, so the
+  requirements cannot be met at 100 %. Each resource is one "average node"
+  source. Water is unlimited. A tenth of the geysers (3.1 generators, 710 MW)
+  always runs.
+* Power: a machine draws its 100 % power in proportion to its level; variable
+  power counts at its average. Miners at 250 % draw 2.5 x. Generated power is
+  multiplied by 1.3 and 500 MW is added (the augmentor).
+* Stocks: the bill of materials of `tools/optimize.py` (machines, the support
+  rules, a tenth of its extra buildings, plus one Main Portal and one
+  augmentor), a tenth of its equipment list (the Gas Nobelisk needs Biomass and
+  is dropped; Somersloops and Mercer Spheres are gathered by hand and not
+  timed), and the Phase 5 parts.
+* Solids need net >= demand. **Fluids and nuclear waste net exactly 0** even
+  here, because neither can be sunk; this costs nothing (T is the same to four
+  digits with fluids free, `--free-fluids`). No Packager recipes except the
+  four packaged fuels; nothing that needs a hand-gathered item.
+* The top of the factory is given (the `START` table in the script). Its
+  recipes are kept, alternates for the same main product are left out
+  (Plutonium Fuel Unit, Instant Plutonium Cell, Fertile Uranium), and the
+  nuclear plants run at its counts (4 uranium, 2 plutonium, 1 ficsonium). All
+  four Dark Matter recipes are kept whatever the program says.
+
+Selection. A vertex of a linear program is already sparse: the unrestricted
+optimum uses 119 recipes for 116 items. What redundancy is left is removed by
+backward elimination: of the recipes in use that are the only maker of nothing,
+ban the one whose loss costs the least time, re-optimizing over all remaining
+recipes each time (so a banned recipe can be replaced by an idle one, and its
+partner can change level), until the next ban would push T more than
+`--budget` (default 1 %) above the unrestricted optimum.
+
+Result (reproducible; 8 s): T0 = 428.2 min unrestricted; **117 recipes, T =
+429.2 min** (+0.24 %). The next removal would cost 9 % (Fuel generators), so
+1 % sits on a wide plateau. Pairs that survive because each is worth more than
+1 %: Diamonds with Oil-Based Diamonds (coal against oil), and Distilled Silica
+alongside the silica that Alumina Solution gives off. What binds: crude oil,
+SAM, and nearly coal, sulfur, quartz and bauxite. Power is 43 GW: the seven
+nuclear plants, about 58 fuel generators on Diluted Fuel, and the geysers.
+
+The given top makes the Phase 5 parts in 333 min. That is 29 % faster than the
+best a tenth of the world allows (429 min), so the starting plan overdraws
+several resources; the planner shows by how much.
+
+### Planner: `dist/factory-planner.html`
+
+Rows are the 117 recipes, top of the chain first, plus the sources. Type
+machines and a clock to **set** a row. Every other row is on **auto**: whole
+machines at 100 %, the fewest that cover the demand for what the row makes
+(each item has one maker, listed in `data/recipe_set.json`). A minimum net
+production of a row's first product can be typed instead of a count.
+
+Fluids, raw resources and nuclear waste net exactly 0. Each fluid has a maker
+and, for four of them, a sink that takes up a surplus (Dark Matter
+Crystallization, Diluted Fuel for Heavy Oil Residue, fuel generators for Fuel,
+Distilled Silica for Dissolved Silica). Whichever of the two is on auto is the
+fluid's **trim**: its level is not rounded but solved, all fluids together, as
+one small set of linear equations, and shown as the fewest machines at an equal
+clock. The maker is tried first; if it would have to run below what its solid
+products need, or below zero, the sink takes over. With both set, the fluid
+must balance by the typed numbers and the page reports the difference.
+
+The counts are a fixed point (demand -> machines -> power, buildings, inputs ->
+demand), found by iterating upward and then lowering whatever ended above its
+need. Power uses the game's clock exponent (1.32) here. The build need is the
+bill of materials over a build time, by default the time Phase 5 takes.
+
+"Auto rows run at: exact demand" keeps the same rules but clocks every auto
+row down to exactly what is asked, which is the least the plan can draw.
+
+At the start (the given table): 1,076 machines and 59 GW with auto rows at
+100 %; 854 machines and 50 GW at exact demand. Both overdraw a tenth of the
+world (at exact demand: crude oil wells, SAM, quartz, bauxite, sulfur, and caterium by 1 %). One row
+is short from the outset: the table leaves 1 power shard per minute spare, and
+Ionized Fuel for the packaged-fuel equipment takes some of it.
+
+Data fix made along the way: the source data marks Singularity Cell, Ballistic
+Warp Drive and Biochemical Sculptor (Manufacturer and Blender recipes) as
+variable-power, which gave them 0, 1000 and 1000 MW. They now draw their
+machine's power (55, 55, 75 MW); `tools/build_data.py` applies the same rule.

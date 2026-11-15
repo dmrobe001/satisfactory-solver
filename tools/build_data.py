@@ -193,14 +193,18 @@ def main():
             continue
         mach = r["producedIn"][0]
         per = 60.0 / r["time"]
-        if r["isVariablePower"]:
+        # The source marks a few Manufacturer and Blender recipes (Singularity Cell,
+        # Ballistic Warp Drive, Biochemical Sculptor) as variable-power; only these
+        # three machines really are.
+        variable = r["isVariablePower"] and short(mach) in ("HadronCollider", "QuantumEncoder", "Converter")
+        if variable:
             p = (r["minPower"] + r["maxPower"]) / 2.0
         else:
             p = bpow(mach)
         add(id=short(cls), name=r["name"], m=short(mach), alt=1 if r["alternate"] else 0,
             ins=[(item(i["item"]), i["amount"] * per) for i in r["ingredients"]],
             outs=[(item(i["item"]), i["amount"] * per) for i in r["products"]],
-            p=p, vp=1 if r["isVariablePower"] else 0)
+            p=p, vp=1 if variable else 0)
 
     # ---- Miners ------------------------------------------------------------
     resources = d["miners"]["Desc_MinerMk1_C"]["allowedResources"]

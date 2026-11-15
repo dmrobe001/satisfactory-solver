@@ -1,0 +1,34 @@
+/* Factory planner: recipe list top-down on the left, the selected recipe's flows on the right. */
+.pl-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 10px; align-items: start; }
+@media (max-width: 980px) { .pl-grid { grid-template-columns: minmax(0, 1fr); } .pl-side { position: static; max-height: none; } }
+.pl-grid > * { min-width: 0; }
+.pl-side { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px; position: sticky; top: calc(8px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - 24px); overflow: auto; }
+.pl-side h2 { font-size: 1.2rem; }
+.pl-side h3 { font-size: 0.95rem; margin: 10px 0 4px; }
+.pl-side .meta { color: var(--muted); font-size: 0.85rem; margin: 2px 0 6px; }
+#rtab td, #rtab th { white-space: nowrap; }
+#rtab td.rcell { white-space: normal; min-width: 170px; }
+#rtab tbody tr { cursor: pointer; }
+#rtab tbody tr:hover { background: var(--surface-2); }
+#rtab tbody tr.sel { background: var(--surface-2); box-shadow: inset 4px 0 0 var(--accent); }
+#rtab tbody tr.zero { color: var(--muted); }
+#rtab tbody tr.bad td.need, #rtab tbody tr.bad td.rcell { background: var(--red-bg); }
+#rtab tbody tr.layer td { background: var(--surface-2); font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; color: var(--muted); cursor: default; padding-block: 2px; }
+#rtab input.num-in { width: 5.2em; font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; }
+#rtab input.num-in.is-set { border-color: var(--accent); background: var(--surface); font-weight: 500; }
+#rtab .btn.sm, .pl-side .btn.sm { padding: 0 7px; font-size: 0.8rem; }
+.role { font-family: var(--font-display); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0 6px; border-radius: 9px; border: 1px solid var(--line); margin-left: 4px; white-space: nowrap; }
+.role.set { border-color: var(--accent); color: var(--accent); }
+.role.trim { border-color: var(--good); color: var(--good); }
+.flowtab td, .flowtab th { padding: 2px 6px; font-size: 0.85rem; }
+.flowtab td.bad { background: var(--red-bg); }
+.who { color: var(--muted); font-size: 0.8rem; }
+.who button { font-size: 0.8rem; }
+.issues { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+.issues .iss { background: var(--red-bg); border-left: 4px solid var(--red-edge); padding: 3px 8px; border-radius: 3px; font-size: 0.88rem; }
+.issues .more { color: var(--muted); font-size: 0.82rem; }
+.meter { display: inline-block; width: 120px; height: 9px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; vertical-align: middle; }
+.meter i { display: block; height: 100%; background: var(--accent); }
+.meter.over i { background: var(--red-edge); }
+tr.bad > td { background: var(--red-bg); }
+.stat .seg button { padding: 1px 8px; font-size: 0.85rem; }

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Inline data, CSS and JS into the pages: dist/satisfactory-sheet.html
 (production sheet), dist/lattice-clocks.html (lattice clocks),
-dist/recipe-matrix.html (recipe matrix) and dist/machine-moves.html
-(machine moves).
+dist/recipe-matrix.html (recipe matrix), dist/machine-moves.html
+(machine moves) and dist/factory-planner.html (tenth-world factory planner).
 
 The page has no <html>/<head>/<body> wrapper because it is published as a
 claude.ai artifact, which adds that skeleton.  Browsers open it fine as is.
@@ -65,6 +65,20 @@ for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
     assert marker in page, marker
     page = page.replace(marker, text)
 out = ROOT / "dist" / "machine-moves.html"
+out.write_text(page)
+print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
+
+page = (src / "planner.html").read_text()
+for marker, text in [("/*__CSS__*/", (src / "style.css").read_text()),
+                     ("/*__PCSS__*/", (src / "planner.css").read_text()),
+                     ("/*__DATA__*/", data),
+                     ("/*__SET__*/", "window.RECIPE_SET = " + json.dumps(json.loads((ROOT / "data" / "recipe_set.json").read_text()),
+                                                                         separators=(",", ":")).replace("</", "<\\/") + ";"),
+                     ("/*__PLANNER__*/", (src / "planner.js").read_text()),
+                     ("/*__PAPP__*/", (src / "planner_app.js").read_text())]:
+    assert marker in page, marker
+    page = page.replace(marker, text)
+out = ROOT / "dist" / "factory-planner.html"
 out.write_text(page)
 print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
 

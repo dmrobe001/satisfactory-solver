@@ -1,0 +1,2631 @@
+{
+ "what": "Recipe set for the tenth-of-the-world factory (tools/select_recipes.py)",
+ "T_min": 429.2,
+ "T0_min": 428.17,
+ "budget": 0.05,
+ "free_fluids": false,
+ "share": 0.1,
+ "shards_per_min": 1.0,
+ "augmentor": {
+  "boost": 0.3,
+  "mw": 500.0,
+  "fuel_per_min": 5.0
+ },
+ "portal": {
+  "mw": 250.0,
+  "cells_per_min": 2.0
+ },
+ "power": {
+  "generated_mw": 32648.4,
+  "with_augmentor_mw": 42942.9,
+  "drawn_mw": 42942.9
+ },
+ "phase5": {
+  "SpaceElevatorPart_9": 1000,
+  "SpaceElevatorPart_10": 1000,
+  "SpaceElevatorPart_12": 256,
+  "SpaceElevatorPart_11": 200
+ },
+ "equipment": {
+  "SpikedRebar": 30.0,
+  "Rebar_Stunshot": 30.0,
+  "Rebar_Spreadshot": 30.0,
+  "Rebar_Explosive": 300.0,
+  "CartridgeStandard": 100.0,
+  "CartridgeSmartProjectile": 200.0,
+  "CartridgeChaos": 200.0,
+  "NobeliskExplosive": 30.0,
+  "NobeliskCluster": 100.0,
+  "NobeliskShockwave": 10.0,
+  "NobeliskNuke": 50.0,
+  "Filter": 40.0,
+  "HazmatFilter": 20.0,
+  "Fuel": 10.0,
+  "TurboFuel": 100.0,
+  "PackagedRocketFuel": 100.0,
+  "PackagedIonizedFuel": 100.0,
+  "Battery": 100.0
+ },
+ "extra_buildings": {
+  "CeilingLight": 100.0,
+  "FloodlightWall": 100.0,
+  "BlueprintDesigner_MK3": 3.0,
+  "StandaloneWidgetSign_SmallVeryWide": 100.0,
+  "StandaloneWidgetSign_Square": 100.0,
+  "RailroadBlockSignal": 20.0,
+  "ResourceSink": 20.0,
+  "ResourceSinkShop": 1,
+  "CatwalkCross": 200.0,
+  "DroneTransport": 10.0,
+  "DroneStation": 20.0,
+  "Locomotive": 10.0,
+  "FreightWagon": 50.0,
+  "TrainDockingStation": 30.0,
+  "StandaloneWidgetSign_Huge": 10.0,
+  "RadarTower": 20.0,
+  "Elevator": 3.0,
+  "ElevatorFloorStop": 15.0,
+  "Portal": 1,
+  "PortalSatellite": 20.0,
+  "AlienPowerBuilding": 1
+ },
+ "rules": {
+  "machines": {
+   "PipeHyper": 1,
+   "PowerLine": 2,
+   "PowerPoleMk1": 0.5,
+   "PowerTower": 0.05,
+   "Foundation_8x1_01": 2,
+   "Foundation_Metal_8x1": 2,
+   "Foundation_Asphalt_8x1": 2,
+   "Foundation_ConcretePolished_8x1": 2,
+   "Wall_8x4_01": 2,
+   "Wall_8x4_02": 2,
+   "Wall_Concrete_8x4": 2,
+   "Roof_Orange_01": 1,
+   "Roof_A_01": 1,
+   "Roof_Tar_01": 1,
+   "Roof_Window_01": 1,
+   "Ladder": 1
+  },
+  "belts": {
+   "ConveyorPole": 0.04
+  },
+  "inLanes": {
+   "ConveyorAttachmentSplitter": 1
+  },
+  "outLanes": {
+   "ConveyorAttachmentMerger": 1
+  },
+  "fluidLanes": {
+   "PipelineJunction_T": 1
+  },
+  "solidTypes": {
+   "StorageContainerMk2": 5,
+   "ConveyorAttachmentSplitterSmart": 2
+  },
+  "fluidTypes": {
+   "IndustrialTank": 1
+  },
+  "depotItems": {
+   "CentralStorage": 1
+  },
+  "pipe1": {
+   "PipelinePump": 0.01
+  },
+  "pipe2": {
+   "PipelinePumpMk2": 0.01
+  }
+ },
+ "expendable": [
+  "CartridgeStandard",
+  "CartridgeSmartProjectile",
+  "CartridgeChaos",
+  "SpikedRebar",
+  "Rebar_Stunshot",
+  "Rebar_Spreadshot",
+  "Rebar_Explosive",
+  "NobeliskExplosive",
+  "NobeliskGas",
+  "NobeliskShockwave",
+  "NobeliskCluster",
+  "NobeliskNuke",
+  "Filter",
+  "HazmatFilter",
+  "Biofuel",
+  "Fuel",
+  "TurboFuel",
+  "PackagedBiofuel",
+  "PackagedRocketFuel",
+  "PackagedIonizedFuel",
+  "Battery"
+ ],
+ "start": [
+  {
+   "n": 1,
+   "clock": 100,
+   "id": "Burn_FicsoniumFuelRod_GeneratorNuclear"
+  },
+  {
+   "n": 1,
+   "clock": 40,
+   "id": "FicsoniumFuelRod"
+  },
+  {
+   "n": 1,
+   "clock": 20,
+   "id": "Ficsonium"
+  },
+  {
+   "n": 2,
+   "clock": 100,
+   "id": "Burn_PlutoniumFuelRod_GeneratorNuclear"
+  },
+  {
+   "n": 1,
+   "clock": 80,
+   "id": "PlutoniumFuelRod"
+  },
+  {
+   "n": 1,
+   "clock": 60,
+   "id": "SpaceElevatorPart_11"
+  },
+  {
+   "n": 2,
+   "clock": 60,
+   "id": "PlutoniumCell"
+  },
+  {
+   "n": 1,
+   "clock": 70,
+   "id": "SingularityCell"
+  },
+  {
+   "n": 1,
+   "clock": 40,
+   "id": "Plutonium"
+  },
+  {
+   "n": 2,
+   "clock": 75,
+   "id": "SpaceElevatorPart_10"
+  },
+  {
+   "n": 8,
+   "clock": 92.5,
+   "id": "SpaceElevatorPart_9"
+  },
+  {
+   "n": 1,
+   "clock": 19.2,
+   "id": "SpaceElevatorPart_12"
+  },
+  {
+   "n": 1,
+   "clock": 100,
+   "id": "SpaceElevatorPart_7"
+  },
+  {
+   "n": 1,
+   "clock": 60,
+   "id": "SpaceElevatorPart_8"
+  },
+  {
+   "n": 4,
+   "clock": 92.5,
+   "id": "PressureConversionCube"
+  },
+  {
+   "n": 1,
+   "clock": 80,
+   "id": "NonFissileUranium"
+  },
+  {
+   "n": 1,
+   "clock": 76.8,
+   "id": "SpaceElevatorPart_6"
+  },
+  {
+   "n": 2,
+   "clock": 75,
+   "id": "SpaceElevatorPart_5"
+  },
+  {
+   "n": 2,
+   "clock": 75,
+   "id": "SpaceElevatorPart_4"
+  },
+  {
+   "n": 4,
+   "clock": 100,
+   "id": "Burn_NuclearFuelRod_GeneratorNuclear"
+  },
+  {
+   "n": 1,
+   "clock": 38.4,
+   "id": "TemporalProcessor"
+  },
+  {
+   "n": 2,
+   "clock": 100,
+   "id": "AlienPowerFuel"
+  },
+  {
+   "n": 4,
+   "clock": 90,
+   "id": "SuperpositionOscillator"
+  },
+  {
+   "n": 4,
+   "clock": 80,
+   "id": "SyntheticPowerShard"
+  },
+  {
+   "n": 5,
+   "clock": 83,
+   "id": "QuantumEnergy"
+  },
+  {
+   "n": 1,
+   "clock": 90,
+   "id": "DarkEnergy"
+  },
+  {
+   "n": 3,
+   "clock": 100,
+   "id": "DarkMatter"
+  },
+  {
+   "n": 2,
+   "clock": 70,
+   "id": "Alternate_DarkMatter_Crystallization"
+  },
+  {
+   "n": 1,
+   "clock": 100,
+   "id": "Alternate_DarkMatter_Trap"
+  }
+ ],
+ "recipes": [
+  {
+   "id": "Burn_FicsoniumFuelRod_GeneratorNuclear",
+   "name": "Ficsonium Fuel Rod (Burning)",
+   "machine": "Nuclear Power Plant",
+   "layer": 13,
+   "lp_machines": 1.0,
+   "share": {
+    "Power": 0.0766
+   },
+   "protected": true
+  },
+  {
+   "id": "FicsoniumFuelRod",
+   "name": "Ficsonium Fuel Rod",
+   "machine": "Quantum Encoder",
+   "layer": 12,
+   "lp_machines": 0.4,
+   "share": {
+    "FicsoniumFuelRod": 1.0,
+    "DarkEnergy": 0.0253
+   },
+   "protected": true
+  },
+  {
+   "id": "Ficsonium",
+   "name": "Ficsonium",
+   "machine": "Particle Accelerator",
+   "layer": 11,
+   "lp_machines": 0.2,
+   "share": {
+    "Ficsonium": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "Burn_PlutoniumFuelRod_GeneratorNuclear",
+   "name": "Plutonium Fuel Rod (Burning)",
+   "machine": "Nuclear Power Plant",
+   "layer": 10,
+   "lp_machines": 2.0,
+   "share": {
+    "PlutoniumWaste": 1.0,
+    "Power": 0.1531
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_11",
+   "name": "Ballistic Warp Drive",
+   "machine": "Manufacturer",
+   "layer": 10,
+   "lp_machines": 0.466,
+   "share": {
+    "SpaceElevatorPart_11": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "PlutoniumCell",
+   "name": "Encased Plutonium Cell",
+   "machine": "Assembler",
+   "layer": 9,
+   "lp_machines": 1.2,
+   "share": {
+    "PlutoniumCell": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "PlutoniumFuelRod",
+   "name": "Plutonium Fuel Rod",
+   "machine": "Manufacturer",
+   "layer": 9,
+   "lp_machines": 0.8,
+   "share": {
+    "PlutoniumFuelRod": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SingularityCell",
+   "name": "Singularity Cell",
+   "machine": "Manufacturer",
+   "layer": 9,
+   "lp_machines": 0.633,
+   "share": {
+    "SingularityCell": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "Plutonium",
+   "name": "Plutonium Pellet",
+   "machine": "Particle Accelerator",
+   "layer": 8,
+   "lp_machines": 0.4,
+   "share": {
+    "PlutoniumPellet": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_10",
+   "name": "Biochemical Sculptor",
+   "machine": "Blender",
+   "layer": 8,
+   "lp_machines": 1.165,
+   "share": {
+    "SpaceElevatorPart_10": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_9",
+   "name": "Nuclear Pasta",
+   "machine": "Particle Accelerator",
+   "layer": 8,
+   "lp_machines": 5.9258,
+   "share": {
+    "SpaceElevatorPart_9": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "NonFissileUranium",
+   "name": "Non-Fissile Uranium",
+   "machine": "Blender",
+   "layer": 7,
+   "lp_machines": 0.8,
+   "share": {
+    "NonFissibleUranium": 1.0,
+    "Water": 0.0017
+   },
+   "protected": true
+  },
+  {
+   "id": "PressureConversionCube",
+   "name": "Pressure Conversion Cube",
+   "machine": "Assembler",
+   "layer": 7,
+   "lp_machines": 2.9629,
+   "share": {
+    "PressureConversionCube": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_12",
+   "name": "AI Expansion Server",
+   "machine": "Quantum Encoder",
+   "layer": 7,
+   "lp_machines": 0.1491,
+   "share": {
+    "SpaceElevatorPart_12": 1.0,
+    "DarkEnergy": 0.0189
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_7",
+   "name": "Assembly Director System",
+   "machine": "Assembler",
+   "layer": 7,
+   "lp_machines": 0.7766,
+   "share": {
+    "SpaceElevatorPart_7": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_8",
+   "name": "Thermal Propulsion Rocket",
+   "machine": "Manufacturer",
+   "layer": 7,
+   "lp_machines": 0.466,
+   "share": {
+    "SpaceElevatorPart_8": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "AlienPowerFuel",
+   "name": "Alien Power Matrix",
+   "machine": "Quantum Encoder",
+   "layer": 6,
+   "lp_machines": 2.0,
+   "share": {
+    "AlienPowerFuel": 1.0,
+    "DarkEnergy": 0.152
+   },
+   "protected": true
+  },
+  {
+   "id": "Alternate_HeatFusedFrame",
+   "name": "Alternate: Heat-Fused Frame",
+   "machine": "Blender",
+   "layer": 6,
+   "lp_machines": 1.8197,
+   "share": {
+    "ModularFrameFused": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_RadioControlUnit_1",
+   "name": "Alternate: Radio Connection Unit",
+   "machine": "Manufacturer",
+   "layer": 6,
+   "lp_machines": 3.4209,
+   "share": {
+    "ModularFrameLightweight": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_SuperStateComputer",
+   "name": "Alternate: Super-State Computer",
+   "machine": "Manufacturer",
+   "layer": 6,
+   "lp_machines": 1.0488,
+   "share": {
+    "ComputerSuper": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_TurboMotor_1",
+   "name": "Alternate: Turbo Electric Motor",
+   "machine": "Manufacturer",
+   "layer": 6,
+   "lp_machines": 0.5311,
+   "share": {
+    "MotorLightweight": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Burn_NuclearFuelRod_GeneratorNuclear",
+   "name": "Uranium Fuel Rod (Burning)",
+   "machine": "Nuclear Power Plant",
+   "layer": 6,
+   "lp_machines": 4.0,
+   "share": {
+    "NuclearWaste": 1.0,
+    "Power": 0.3063
+   },
+   "protected": true
+  },
+  {
+   "id": "CoolingSystem",
+   "name": "Cooling System",
+   "machine": "Blender",
+   "layer": 6,
+   "lp_machines": 0.9248,
+   "share": {
+    "CoolingSystem": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "SpaceElevatorPart_5",
+   "name": "Adaptive Control Unit",
+   "machine": "Manufacturer",
+   "layer": 6,
+   "lp_machines": 1.165,
+   "share": {
+    "SpaceElevatorPart_5": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SpaceElevatorPart_6",
+   "name": "Magnetic Field Generator",
+   "machine": "Assembler",
+   "layer": 6,
+   "lp_machines": 0.5965,
+   "share": {
+    "SpaceElevatorPart_6": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "TemporalProcessor",
+   "name": "Neural-Quantum Processor",
+   "machine": "Quantum Encoder",
+   "layer": 6,
+   "lp_machines": 0.2221,
+   "share": {
+    "TemporalProcessor": 1.0,
+    "DarkEnergy": 0.0211
+   },
+   "protected": true
+  },
+  {
+   "id": "Alternate_Computer_2",
+   "name": "Alternate: Crystal Computer",
+   "machine": "Assembler",
+   "layer": 5,
+   "lp_machines": 3.3402,
+   "share": {
+    "Computer": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_ElectromagneticControlRod_1",
+   "name": "Alternate: Electromagnetic Connection Rod",
+   "machine": "Assembler",
+   "layer": 5,
+   "lp_machines": 1.4337,
+   "share": {
+    "ElectromagneticControlRod": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_FlexibleFramework",
+   "name": "Alternate: Flexible Framework",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 0.1988,
+   "share": {
+    "SpaceElevatorPart_2": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_HeatSink_1",
+   "name": "Alternate: Heat Exchanger",
+   "machine": "Assembler",
+   "layer": 5,
+   "lp_machines": 6.441,
+   "share": {
+    "AluminumPlateReinforced": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_HighSpeedWiring",
+   "name": "Alternate: Automated Speed Wiring",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 0.7766,
+   "share": {
+    "SpaceElevatorPart_3": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_ModularFrameHeavy",
+   "name": "Alternate: Heavy Encased Frame",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 3.436,
+   "share": {
+    "ModularFrameHeavy": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Motor_1",
+   "name": "Alternate: Rigor Motor",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 1.9515,
+   "share": {
+    "Motor": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_NuclearFuelRod_1",
+   "name": "Alternate: Uranium Fuel Unit",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 1.3333,
+   "share": {
+    "NuclearFuelRod": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Silica_Distilled",
+   "name": "Alternate: Distilled Silica",
+   "machine": "Blender",
+   "layer": 5,
+   "lp_machines": 5.3482,
+   "share": {
+    "Silica": 0.7554
+   },
+   "protected": false
+  },
+  {
+   "id": "Battery",
+   "name": "Battery",
+   "machine": "Blender",
+   "layer": 5,
+   "lp_machines": 1.2702,
+   "share": {
+    "Battery": 1.0,
+    "Water": 0.0053
+   },
+   "protected": false
+  },
+  {
+   "id": "CartridgeChaos",
+   "name": "Turbo Rifle Ammo",
+   "machine": "Blender",
+   "layer": 5,
+   "lp_machines": 0.0019,
+   "share": {
+    "CartridgeChaos": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "CartridgeSmart",
+   "name": "Homing Rifle Ammo",
+   "machine": "Assembler",
+   "layer": 5,
+   "lp_machines": 0.0186,
+   "share": {
+    "CartridgeSmartProjectile": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "FilterHazmat",
+   "name": "Iodine-Infused Filter",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 0.0124,
+   "share": {
+    "HazmatFilter": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "NobeliskShockwave",
+   "name": "Pulse Nobelisk",
+   "machine": "Assembler",
+   "layer": 5,
+   "lp_machines": 0.0047,
+   "share": {
+    "NobeliskShockwave": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "PackagedIonizedFuel",
+   "name": "Packaged Ionized Fuel",
+   "machine": "Packager",
+   "layer": 5,
+   "lp_machines": 0.0058,
+   "share": {
+    "PackagedIonizedFuel": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "PackagedRocketFuel",
+   "name": "Packaged Rocket Fuel",
+   "machine": "Packager",
+   "layer": 5,
+   "lp_machines": 0.0039,
+   "share": {
+    "PackagedRocketFuel": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "SpaceElevatorPart_4",
+   "name": "Modular Engine",
+   "machine": "Manufacturer",
+   "layer": 5,
+   "lp_machines": 1.165,
+   "share": {
+    "SpaceElevatorPart_4": 1.0
+   },
+   "protected": true
+  },
+  {
+   "id": "SuperpositionOscillator",
+   "name": "Superposition Oscillator",
+   "machine": "Quantum Encoder",
+   "layer": 5,
+   "lp_machines": 3.4059,
+   "share": {
+    "QuantumOscillator": 1.0,
+    "DarkEnergy": 0.5391
+   },
+   "protected": true
+  },
+  {
+   "id": "Alternate_AlcladCasing",
+   "name": "Alternate: Alclad Casing",
+   "machine": "Assembler",
+   "layer": 4,
+   "lp_machines": 1.9976,
+   "share": {
+    "AluminumCasing": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_AluminumRod",
+   "name": "Alternate: Aluminum Rod",
+   "machine": "Constructor",
+   "layer": 4,
+   "lp_machines": 0.1696,
+   "share": {
+    "IronRod": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CrystalOscillator",
+   "name": "Alternate: Insulated Crystal Oscillator",
+   "machine": "Manufacturer",
+   "layer": 4,
+   "lp_machines": 14.465,
+   "share": {
+    "CrystalOscillator": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_HighSpeedConnector",
+   "name": "Alternate: Silicon High-Speed Connector",
+   "machine": "Manufacturer",
+   "layer": 4,
+   "lp_machines": 11.3356,
+   "share": {
+    "HighSpeedConnector": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_ModularFrame",
+   "name": "Alternate: Steeled Frame",
+   "machine": "Assembler",
+   "layer": 4,
+   "lp_machines": 10.5798,
+   "share": {
+    "ModularFrame": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_PlasticSmartPlating",
+   "name": "Alternate: Plastic Smart Plating",
+   "machine": "Manufacturer",
+   "layer": 4,
+   "lp_machines": 0.466,
+   "share": {
+    "SpaceElevatorPart_1": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Quartz_Purified",
+   "name": "Alternate: Quartz Purification",
+   "machine": "Refinery",
+   "layer": 4,
+   "lp_machines": 10.6963,
+   "share": {
+    "QuartzCrystal": 1.0,
+    "DissolvedSilica": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_SteelBeam_Aluminum",
+   "name": "Alternate: Aluminum Beam",
+   "machine": "Constructor",
+   "layer": 4,
+   "lp_machines": 8.8715,
+   "share": {
+    "SteelPlate": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "AluminumSheet",
+   "name": "Alclad Aluminum Sheet",
+   "machine": "Assembler",
+   "layer": 4,
+   "lp_machines": 5.3328,
+   "share": {
+    "AluminumPlate": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "FicsiteIngot_AL",
+   "name": "Ficsite Ingot (Aluminum)",
+   "machine": "Converter",
+   "layer": 4,
+   "lp_machines": 1.1467,
+   "share": {
+    "FicsiteIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "GasTank",
+   "name": "Empty Fluid Tank",
+   "machine": "Constructor",
+   "layer": 4,
+   "lp_machines": 0.0078,
+   "share": {
+    "GasTank": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "NobeliskCluster",
+   "name": "Cluster Nobelisk",
+   "machine": "Assembler",
+   "layer": 4,
+   "lp_machines": 0.0932,
+   "share": {
+    "NobeliskCluster": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "NobeliskNuke",
+   "name": "Nuke Nobelisk",
+   "machine": "Manufacturer",
+   "layer": 4,
+   "lp_machines": 0.233,
+   "share": {
+    "NobeliskNuke": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Rebar_Explosive",
+   "name": "Explosive Rebar",
+   "machine": "Manufacturer",
+   "layer": 4,
+   "lp_machines": 0.1398,
+   "share": {
+    "Rebar_Explosive": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Rebar_Spreadshot",
+   "name": "Shatter Rebar",
+   "machine": "Assembler",
+   "layer": 4,
+   "lp_machines": 0.014,
+   "share": {
+    "Rebar_Spreadshot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Rebar_Stunshot",
+   "name": "Stun Rebar",
+   "machine": "Assembler",
+   "layer": 4,
+   "lp_machines": 0.007,
+   "share": {
+    "Rebar_Stunshot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "SyntheticPowerShard",
+   "name": "Synthetic Power Shard",
+   "machine": "Quantum Encoder",
+   "layer": 4,
+   "lp_machines": 3.2058,
+   "share": {
+    "CrystalShard": 1.0,
+    "DarkEnergy": 0.2436
+   },
+   "protected": true
+  },
+  {
+   "id": "Alternate_AILimiter_Plastic",
+   "name": "Alternate: Plastic AI Limiter",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 3.5498,
+   "share": {
+    "CircuitBoardHighSpeed": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_AutomatedMiner",
+   "name": "Alternate: Automated Miner",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 0.1567,
+   "share": {
+    "ItemDescriptorPortableMiner": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CircuitBoard_1",
+   "name": "Alternate: Silicon Circuit Board",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 4.5226,
+   "share": {
+    "CircuitBoard": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CoatedCable",
+   "name": "Alternate: Coated Cable",
+   "machine": "Refinery",
+   "layer": 3,
+   "lp_machines": 0.3529,
+   "share": {
+    "Cable": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CokeSteelIngot",
+   "name": "Alternate: Coke Steel Ingot",
+   "machine": "Foundry",
+   "layer": 3,
+   "lp_machines": 4.081,
+   "share": {
+    "SteelIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CopperRotor",
+   "name": "Alternate: Copper Rotor",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 1.6248,
+   "share": {
+    "Rotor": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_DarkMatter_Crystallization",
+   "name": "Alternate: Dark Matter Crystallization",
+   "machine": "Particle Accelerator",
+   "layer": 3,
+   "lp_machines": 0.0,
+   "share": {},
+   "protected": true
+  },
+  {
+   "id": "Alternate_DarkMatter_Trap",
+   "name": "Alternate: Dark Matter Trap",
+   "machine": "Particle Accelerator",
+   "layer": 3,
+   "lp_machines": 0.5201,
+   "share": {
+    "DarkMatter": 0.1885
+   },
+   "protected": true
+  },
+  {
+   "id": "Alternate_ReinforcedIronPlate_1",
+   "name": "Alternate: Bolted Iron Plate",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 1.9977,
+   "share": {
+    "IronPlateReinforced": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Screw_2",
+   "name": "Alternate: Steel Screw",
+   "machine": "Constructor",
+   "layer": 3,
+   "lp_machines": 3.1412,
+   "share": {
+    "IronScrew": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Stator",
+   "name": "Alternate: Quickwire Stator",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 2.7126,
+   "share": {
+    "Stator": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Cartridge",
+   "name": "Rifle Ammo",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 0.0186,
+   "share": {
+    "CartridgeStandard": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "DarkMatter",
+   "name": "Dark Matter Crystal",
+   "machine": "Particle Accelerator",
+   "layer": 3,
+   "lp_machines": 4.4776,
+   "share": {
+    "DarkMatter": 0.8115
+   },
+   "protected": true
+  },
+  {
+   "id": "EncasedIndustrialBeam",
+   "name": "Encased Industrial Beam",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 6.9602,
+   "share": {
+    "SteelPlateReinforced": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "FicsiteMesh",
+   "name": "Ficsite Trigon",
+   "machine": "Constructor",
+   "layer": 3,
+   "lp_machines": 3.4402,
+   "share": {
+    "FicsiteMesh": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "FilterGasMask",
+   "name": "Gas Filter",
+   "machine": "Manufacturer",
+   "layer": 3,
+   "lp_machines": 0.0186,
+   "share": {
+    "Filter": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Fuel",
+   "name": "Packaged Fuel",
+   "machine": "Packager",
+   "layer": 3,
+   "lp_machines": 0.0006,
+   "share": {
+    "Fuel": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "IngotAluminum",
+   "name": "Aluminum Ingot",
+   "machine": "Foundry",
+   "layer": 3,
+   "lp_machines": 17.859,
+   "share": {
+    "AluminumIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "IonizedFuel",
+   "name": "Ionized Fuel",
+   "machine": "Refinery",
+   "layer": 3,
+   "lp_machines": 0.0116,
+   "share": {
+    "IonizedFuel": 1.0,
+    "CompactedCoal": 0.2727
+   },
+   "protected": false
+  },
+  {
+   "id": "NitricAcid",
+   "name": "Nitric Acid",
+   "machine": "Blender",
+   "layer": 3,
+   "lp_machines": 5.4212,
+   "share": {
+    "NitricAcid": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Nobelisk",
+   "name": "Nobelisk",
+   "machine": "Assembler",
+   "layer": 3,
+   "lp_machines": 0.1375,
+   "share": {
+    "NobeliskExplosive": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "PackagedTurboFuel",
+   "name": "Packaged Turbofuel",
+   "machine": "Packager",
+   "layer": 3,
+   "lp_machines": 0.0116,
+   "share": {
+    "TurboFuel": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "SAMFluctuator",
+   "name": "SAM Fluctuator",
+   "machine": "Manufacturer",
+   "layer": 3,
+   "lp_machines": 3.1033,
+   "share": {
+    "SAMFluctuator": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "SpikedRebar",
+   "name": "Iron Rebar",
+   "machine": "Constructor",
+   "layer": 3,
+   "lp_machines": 0.1118,
+   "share": {
+    "SpikedRebar": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CoatedIronPlate",
+   "name": "Alternate: Coated Iron Plate",
+   "machine": "Assembler",
+   "layer": 2,
+   "lp_machines": 4.2846,
+   "share": {
+    "IronPlate": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_CopperIngot_Leached",
+   "name": "Alternate: Leached Copper Ingot",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 35.8632,
+   "share": {
+    "CopperIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_DilutedFuel",
+   "name": "Alternate: Diluted Fuel",
+   "machine": "Blender",
+   "layer": 2,
+   "lp_machines": 12.8557,
+   "share": {
+    "LiquidFuel": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_IronIngot_Leached",
+   "name": "Alternate: Leached Iron ingot",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 1.6067,
+   "share": {
+    "IronIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Plastic_1",
+   "name": "Alternate: Recycled Plastic",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 2.4984,
+   "share": {
+    "Plastic": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_PolyesterFabric",
+   "name": "Alternate: Polyester Fabric",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 0.0093,
+   "share": {
+    "Fabric": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_RocketFuel_Nitro",
+   "name": "Alternate: Nitro Rocket Fuel",
+   "machine": "Blender",
+   "layer": 2,
+   "lp_machines": 0.0062,
+   "share": {
+    "RocketFuel": 1.0,
+    "CompactedCoal": 0.7273
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_SteamedCopperSheet",
+   "name": "Alternate: Steamed Copper Sheet",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 8.2796,
+   "share": {
+    "CopperSheet": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_SteelPipe_Molded",
+   "name": "Alternate: Molded Steel Pipe",
+   "machine": "Foundry",
+   "layer": 2,
+   "lp_machines": 8.162,
+   "share": {
+    "SteelPipe": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Turbofuel",
+   "name": "Turbofuel",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 0.0139,
+   "share": {
+    "LiquidTurboFuel": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Wire_2",
+   "name": "Alternate: Caterium Wire",
+   "machine": "Constructor",
+   "layer": 2,
+   "lp_machines": 2.6743,
+   "share": {
+    "Wire": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "AluminumScrap",
+   "name": "Aluminum Scrap",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 4.4648,
+   "share": {
+    "AluminumScrap": 1.0,
+    "Water": 0.0741
+   },
+   "protected": false
+  },
+  {
+   "id": "Burn_LiquidFuel_GeneratorFuel",
+   "name": "Fuel (Burning)",
+   "machine": "Fuel-Powered Generator",
+   "layer": 2,
+   "lp_machines": 57.7536,
+   "share": {
+    "Power": 0.4422
+   },
+   "protected": false
+  },
+  {
+   "id": "CopperDust",
+   "name": "Copper Powder",
+   "machine": "Constructor",
+   "layer": 2,
+   "lp_machines": 11.8517,
+   "share": {
+    "CopperDust": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "DarkEnergy",
+   "name": "Dark Matter Residue",
+   "machine": "Converter",
+   "layer": 2,
+   "lp_machines": 0.0,
+   "share": {
+    "DarkEnergy": 0.0
+   },
+   "protected": true
+  },
+  {
+   "id": "FluidCanister",
+   "name": "Empty Canister",
+   "machine": "Constructor",
+   "layer": 2,
+   "lp_machines": 0.0043,
+   "share": {
+    "FluidCanister": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "GunpowderMK2",
+   "name": "Smokeless Powder",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 0.1841,
+   "share": {
+    "GunpowderMK2": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "PetroleumCoke",
+   "name": "Petroleum Coke",
+   "machine": "Refinery",
+   "layer": 2,
+   "lp_machines": 2.5506,
+   "share": {
+    "PetroleumCoke": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Quickwire",
+   "name": "Quickwire",
+   "machine": "Constructor",
+   "layer": 2,
+   "lp_machines": 27.6024,
+   "share": {
+    "HighSpeedWire": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "TimeCrystal",
+   "name": "Time Crystal",
+   "machine": "Converter",
+   "layer": 2,
+   "lp_machines": 9.1467,
+   "share": {
+    "TimeCrystal": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "UraniumCell",
+   "name": "Encased Uranium Cell",
+   "machine": "Blender",
+   "layer": 2,
+   "lp_machines": 1.1599,
+   "share": {
+    "UraniumCell": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_Diamond_OilBased",
+   "name": "Alternate: Oil-Based Diamonds",
+   "machine": "Particle Accelerator",
+   "layer": 1,
+   "lp_machines": 1.6055,
+   "share": {
+    "Diamond": 0.2631
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_HeavyOilResidue",
+   "name": "Alternate: Heavy Oil Residue",
+   "machine": "Refinery",
+   "layer": 1,
+   "lp_machines": 6.3005,
+   "share": {
+    "HeavyOilResidue": 0.3352,
+    "PolymerResin": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Alternate_WetConcrete",
+   "name": "Alternate: Wet Concrete",
+   "machine": "Refinery",
+   "layer": 1,
+   "lp_machines": 10.6174,
+   "share": {
+    "Cement": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "AluminaSolution",
+   "name": "Alumina Solution",
+   "machine": "Refinery",
+   "layer": 1,
+   "lp_machines": 9.3529,
+   "share": {
+    "AluminaSolution": 1.0,
+    "Silica": 0.2446
+   },
+   "protected": false
+  },
+  {
+   "id": "Diamond",
+   "name": "Diamonds",
+   "machine": "Particle Accelerator",
+   "layer": 1,
+   "lp_machines": 5.9956,
+   "share": {
+    "Diamond": 0.7369
+   },
+   "protected": false
+  },
+  {
+   "id": "Gunpowder",
+   "name": "Black Powder",
+   "machine": "Assembler",
+   "layer": 1,
+   "lp_machines": 0.2144,
+   "share": {
+    "Gunpowder": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "IngotCaterium",
+   "name": "Caterium Ingot",
+   "machine": "Smelter",
+   "layer": 1,
+   "lp_machines": 24.7562,
+   "share": {
+    "GoldIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "IngotSAM",
+   "name": "Reanimated SAM",
+   "machine": "Constructor",
+   "layer": 1,
+   "lp_machines": 8.5,
+   "share": {
+    "SAMIngot": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "Rubber",
+   "name": "Rubber",
+   "machine": "Refinery",
+   "layer": 1,
+   "lp_machines": 24.9963,
+   "share": {
+    "Rubber": 1.0,
+    "HeavyOilResidue": 0.6648
+   },
+   "protected": false
+  },
+  {
+   "id": "SulfuricAcid",
+   "name": "Sulfuric Acid",
+   "machine": "Refinery",
+   "layer": 1,
+   "lp_machines": 20.459,
+   "share": {
+    "SulfuricAcid": 1.0
+   },
+   "protected": false
+  },
+  {
+   "id": "QuantumEnergy",
+   "name": "Excited Photonic Matter",
+   "machine": "Converter",
+   "layer": 0,
+   "lp_machines": 3.9483,
+   "share": {
+    "QuantumEnergy": 1.0
+   },
+   "protected": true
+  }
+ ],
+ "sources": [
+  {
+   "id": "Extractor_LiquidOil",
+   "name": "Oil Extractor",
+   "kind": "oil",
+   "item": "LiquidOil",
+   "rate": 330.0,
+   "mw": 100.0,
+   "gen_mw": 0.0,
+   "max": 3.0,
+   "lp_units": 3.0,
+   "buildings": {
+    "OilPump": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Geothermal",
+   "name": "Geothermal Generator",
+   "kind": "geo",
+   "item": null,
+   "rate": 0.0,
+   "mw": 0.0,
+   "gen_mw": 229.03225806451613,
+   "max": 3.1,
+   "lp_units": 3.1,
+   "buildings": {
+    "GeneratorGeoThermal": 1.0
+   },
+   "clock": 1.0
+  },
+  {
+   "id": "Miner_Coal",
+   "name": "Miner Mk.3: Coal",
+   "kind": "miner",
+   "item": "Coal",
+   "rate": 682.258064516129,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 6.2,
+   "lp_units": 6.064,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_OreBauxite",
+   "name": "Miner Mk.3: Bauxite",
+   "kind": "miner",
+   "item": "OreBauxite",
+   "rate": 723.5294117647059,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 1.7,
+   "lp_units": 1.5512,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_OreCopper",
+   "name": "Miner Mk.3: Copper Ore",
+   "kind": "miner",
+   "item": "OreCopper",
+   "rate": 670.9090909090909,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 5.5,
+   "lp_units": 2.4055,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_OreGold",
+   "name": "Miner Mk.3: Caterium Ore",
+   "kind": "miner",
+   "item": "OreGold",
+   "rate": 882.3529411764706,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 1.7,
+   "lp_units": 1.2626,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_OreIron",
+   "name": "Miner Mk.3: Iron Ore",
+   "kind": "miner",
+   "item": "OreIron",
+   "rate": 725.1968503937007,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 12.7,
+   "lp_units": 0.5328,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_OreUranium",
+   "name": "Miner Mk.3: Uranium",
+   "kind": "miner",
+   "item": "OreUranium",
+   "rate": 420.0,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 0.5,
+   "lp_units": 0.1381,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_RawQuartz",
+   "name": "Miner Mk.3: Raw Quartz",
+   "kind": "miner",
+   "item": "RawQuartz",
+   "rate": 794.1176470588235,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 1.7,
+   "lp_units": 1.6163,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_SAM",
+   "name": "Miner Mk.3: SAM",
+   "kind": "miner",
+   "item": "SAM",
+   "rate": 536.8421052631579,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 1.9,
+   "lp_units": 1.9,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_Stone",
+   "name": "Miner Mk.3: Limestone",
+   "kind": "miner",
+   "item": "Stone",
+   "rate": 737.2340425531914,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 9.4,
+   "lp_units": 2.0909,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Miner_Sulfur",
+   "name": "Miner Mk.3: Sulfur",
+   "kind": "miner",
+   "item": "Sulfur",
+   "rate": 675.0,
+   "mw": 112.5,
+   "gen_mw": 0.0,
+   "max": 1.6,
+   "lp_units": 1.5212,
+   "buildings": {
+    "MinerMk3": 1.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "WaterExtractor",
+   "name": "Water Extractor",
+   "kind": "water",
+   "item": "Water",
+   "rate": 120.0,
+   "mw": 20.0,
+   "gen_mw": 0.0,
+   "max": null,
+   "lp_units": 55.3622,
+   "buildings": {
+    "WaterPump": 1.0
+   },
+   "clock": 1.0
+  },
+  {
+   "id": "Well_LiquidOil",
+   "name": "Resource Well: Crude Oil",
+   "kind": "well",
+   "item": "LiquidOil",
+   "rate": 900.0,
+   "mw": 375.0,
+   "gen_mw": 0.0,
+   "max": 0.3,
+   "lp_units": 0.3,
+   "buildings": {
+    "FrackingSmasher": 1.0,
+    "FrackingExtractor": 6.0
+   },
+   "clock": 2.5
+  },
+  {
+   "id": "Well_NitrogenGas",
+   "name": "Resource Well: Nitrogen Gas",
+   "kind": "well",
+   "item": "NitrogenGas",
+   "rate": 2000.0,
+   "mw": 375.0,
+   "gen_mw": 0.0,
+   "max": 0.6,
+   "lp_units": 0.3949,
+   "buildings": {
+    "FrackingSmasher": 1.0,
+    "FrackingExtractor": 7.5
+   },
+   "clock": 2.5
+  }
+ ],
+ "maker": {
+  "AlienPowerFuel": "AlienPowerFuel",
+  "AluminaSolution": "AluminaSolution",
+  "AluminumCasing": "Alternate_AlcladCasing",
+  "AluminumIngot": "IngotAluminum",
+  "AluminumPlate": "AluminumSheet",
+  "AluminumPlateReinforced": "Alternate_HeatSink_1",
+  "AluminumScrap": "AluminumScrap",
+  "Battery": "Battery",
+  "Cable": "Alternate_CoatedCable",
+  "CartridgeChaos": "CartridgeChaos",
+  "CartridgeSmartProjectile": "CartridgeSmart",
+  "CartridgeStandard": "Cartridge",
+  "Cement": "Alternate_WetConcrete",
+  "CircuitBoard": "Alternate_CircuitBoard_1",
+  "CircuitBoardHighSpeed": "Alternate_AILimiter_Plastic",
+  "Coal": "Miner_Coal",
+  "CompactedCoal": "Alternate_RocketFuel_Nitro",
+  "Computer": "Alternate_Computer_2",
+  "ComputerSuper": "Alternate_SuperStateComputer",
+  "CoolingSystem": "CoolingSystem",
+  "CopperDust": "CopperDust",
+  "CopperIngot": "Alternate_CopperIngot_Leached",
+  "CopperSheet": "Alternate_SteamedCopperSheet",
+  "CrystalOscillator": "Alternate_CrystalOscillator",
+  "CrystalShard": "SyntheticPowerShard",
+  "DarkEnergy": "DarkEnergy",
+  "DarkMatter": "DarkMatter",
+  "Diamond": "Diamond",
+  "DissolvedSilica": "Alternate_Quartz_Purified",
+  "ElectromagneticControlRod": "Alternate_ElectromagneticControlRod_1",
+  "Fabric": "Alternate_PolyesterFabric",
+  "FicsiteIngot": "FicsiteIngot_AL",
+  "FicsiteMesh": "FicsiteMesh",
+  "Ficsonium": "Ficsonium",
+  "FicsoniumFuelRod": "FicsoniumFuelRod",
+  "Filter": "FilterGasMask",
+  "FluidCanister": "FluidCanister",
+  "Fuel": "Fuel",
+  "GasTank": "GasTank",
+  "GoldIngot": "IngotCaterium",
+  "Gunpowder": "Gunpowder",
+  "GunpowderMK2": "GunpowderMK2",
+  "HazmatFilter": "FilterHazmat",
+  "HeavyOilResidue": "Alternate_HeavyOilResidue",
+  "HighSpeedConnector": "Alternate_HighSpeedConnector",
+  "HighSpeedWire": "Quickwire",
+  "IonizedFuel": "IonizedFuel",
+  "IronIngot": "Alternate_IronIngot_Leached",
+  "IronPlate": "Alternate_CoatedIronPlate",
+  "IronPlateReinforced": "Alternate_ReinforcedIronPlate_1",
+  "IronRod": "Alternate_AluminumRod",
+  "IronScrew": "Alternate_Screw_2",
+  "ItemDescriptorPortableMiner": "Alternate_AutomatedMiner",
+  "LiquidFuel": "Alternate_DilutedFuel",
+  "LiquidOil": "Extractor_LiquidOil",
+  "LiquidTurboFuel": "Alternate_Turbofuel",
+  "ModularFrame": "Alternate_ModularFrame",
+  "ModularFrameFused": "Alternate_HeatFusedFrame",
+  "ModularFrameHeavy": "Alternate_ModularFrameHeavy",
+  "ModularFrameLightweight": "Alternate_RadioControlUnit_1",
+  "Motor": "Alternate_Motor_1",
+  "MotorLightweight": "Alternate_TurboMotor_1",
+  "NitricAcid": "NitricAcid",
+  "NitrogenGas": "Well_NitrogenGas",
+  "NobeliskCluster": "NobeliskCluster",
+  "NobeliskExplosive": "Nobelisk",
+  "NobeliskNuke": "NobeliskNuke",
+  "NobeliskShockwave": "NobeliskShockwave",
+  "NonFissibleUranium": "NonFissileUranium",
+  "NuclearFuelRod": "Alternate_NuclearFuelRod_1",
+  "OreBauxite": "Miner_OreBauxite",
+  "OreCopper": "Miner_OreCopper",
+  "OreGold": "Miner_OreGold",
+  "OreIron": "Miner_OreIron",
+  "OreUranium": "Miner_OreUranium",
+  "PackagedIonizedFuel": "PackagedIonizedFuel",
+  "PackagedRocketFuel": "PackagedRocketFuel",
+  "PetroleumCoke": "PetroleumCoke",
+  "Plastic": "Alternate_Plastic_1",
+  "PlutoniumCell": "PlutoniumCell",
+  "PlutoniumFuelRod": "PlutoniumFuelRod",
+  "PlutoniumPellet": "Plutonium",
+  "PolymerResin": "Alternate_HeavyOilResidue",
+  "Power": "Burn_LiquidFuel_GeneratorFuel",
+  "PressureConversionCube": "PressureConversionCube",
+  "QuantumEnergy": "QuantumEnergy",
+  "QuantumOscillator": "SuperpositionOscillator",
+  "QuartzCrystal": "Alternate_Quartz_Purified",
+  "RawQuartz": "Miner_RawQuartz",
+  "Rebar_Explosive": "Rebar_Explosive",
+  "Rebar_Spreadshot": "Rebar_Spreadshot",
+  "Rebar_Stunshot": "Rebar_Stunshot",
+  "RocketFuel": "Alternate_RocketFuel_Nitro",
+  "Rotor": "Alternate_CopperRotor",
+  "Rubber": "Rubber",
+  "SAM": "Miner_SAM",
+  "SAMFluctuator": "SAMFluctuator",
+  "SAMIngot": "IngotSAM",
+  "Silica": "Alternate_Silica_Distilled",
+  "SingularityCell": "SingularityCell",
+  "SpaceElevatorPart_1": "Alternate_PlasticSmartPlating",
+  "SpaceElevatorPart_10": "SpaceElevatorPart_10",
+  "SpaceElevatorPart_11": "SpaceElevatorPart_11",
+  "SpaceElevatorPart_12": "SpaceElevatorPart_12",
+  "SpaceElevatorPart_2": "Alternate_FlexibleFramework",
+  "SpaceElevatorPart_3": "Alternate_HighSpeedWiring",
+  "SpaceElevatorPart_4": "SpaceElevatorPart_4",
+  "SpaceElevatorPart_5": "SpaceElevatorPart_5",
+  "SpaceElevatorPart_6": "SpaceElevatorPart_6",
+  "SpaceElevatorPart_7": "SpaceElevatorPart_7",
+  "SpaceElevatorPart_8": "SpaceElevatorPart_8",
+  "SpaceElevatorPart_9": "SpaceElevatorPart_9",
+  "SpikedRebar": "SpikedRebar",
+  "Stator": "Alternate_Stator",
+  "SteelIngot": "Alternate_CokeSteelIngot",
+  "SteelPipe": "Alternate_SteelPipe_Molded",
+  "SteelPlate": "Alternate_SteelBeam_Aluminum",
+  "SteelPlateReinforced": "EncasedIndustrialBeam",
+  "Stone": "Miner_Stone",
+  "Sulfur": "Miner_Sulfur",
+  "SulfuricAcid": "SulfuricAcid",
+  "TemporalProcessor": "TemporalProcessor",
+  "TimeCrystal": "TimeCrystal",
+  "TurboFuel": "PackagedTurboFuel",
+  "UraniumCell": "UraniumCell",
+  "Water": "WaterExtractor",
+  "Wire": "Alternate_Wire_2"
+ },
+ "sink": {
+  "DarkEnergy": "Alternate_DarkMatter_Crystallization",
+  "HeavyOilResidue": "Alternate_DilutedFuel",
+  "LiquidFuel": "Burn_LiquidFuel_GeneratorFuel",
+  "DissolvedSilica": "Alternate_Silica_Distilled"
+ },
+ "exact": [
+  "AluminaSolution",
+  "Coal",
+  "DarkEnergy",
+  "DissolvedSilica",
+  "HeavyOilResidue",
+  "IonizedFuel",
+  "LiquidFuel",
+  "LiquidOil",
+  "LiquidTurboFuel",
+  "NitricAcid",
+  "NitrogenGas",
+  "NuclearWaste",
+  "OreBauxite",
+  "OreCopper",
+  "OreGold",
+  "OreIron",
+  "OreUranium",
+  "PlutoniumWaste",
+  "QuantumEnergy",
+  "RawQuartz",
+  "RocketFuel",
+  "SAM",
+  "Stone",
+  "Sulfur",
+  "SulfuricAcid",
+  "Water"
+ ],
+ "defaults": {
+  "Alternate_Diamond_OilBased": {
+   "n": 2,
+   "clock": 100
+  }
+ },
+ "min_net": {
+  "SyntheticPowerShard": 1.0
+ },
+ "start_scale": 1.2876,
+ "left_out": [
+  "Alternate_PlutoniumFuelUnit",
+  "Alternate_InstantPlutoniumCell",
+  "Alternate_FertileUranium"
+ ],
+ "banned": [
+  "AILimiter",
+  "Alternate_BoltedFrame",
+  "Alternate_Cable_1",
+  "Alternate_CateriumIngot_Leached",
+  "Alternate_CateriumIngot_Tempered",
+  "Alternate_CircuitBoard_2",
+  "Alternate_ClassicBattery",
+  "Alternate_CopperAlloyIngot",
+  "Alternate_CopperIngot_Tempered",
+  "Alternate_Diamond_Cloudy",
+  "Alternate_Diamond_Petroleum",
+  "Alternate_Diamond_Pink",
+  "Alternate_Diamond_Turbo",
+  "Alternate_ElectricMotor",
+  "Alternate_ElectroAluminumScrap",
+  "Alternate_EncasedIndustrialBeam",
+  "Alternate_EnrichedCoal",
+  "Alternate_FusedWire",
+  "Alternate_Gunpowder_1",
+  "Alternate_IngotIron",
+  "Alternate_IngotSteel_1",
+  "Alternate_InstantScrap",
+  "Alternate_OCSupercomputer",
+  "Alternate_PureCopperIngot",
+  "Alternate_Quickwire",
+  "Alternate_RadioControlSystem",
+  "Alternate_RecycledRubber",
+  "Alternate_ReinforcedIronPlate_2",
+  "Alternate_Rotor",
+  "Alternate_RubberConcrete",
+  "Alternate_Silica",
+  "Alternate_SloppyAlumina",
+  "Alternate_SteelBeam_Molded",
+  "Alternate_SteelPipe_Iron",
+  "Alternate_SteelRod",
+  "Alternate_TurboBlendFuel",
+  "Alternate_TurboHeavyFuel",
+  "AluminumCasing",
+  "Bauxite_Caterium",
+  "Bauxite_Copper",
+  "Burn_CompactedCoal_GeneratorCoal",
+  "Burn_LiquidTurboFuel_GeneratorFuel",
+  "Burn_RocketFuel_GeneratorFuel",
+  "Cable",
+  "ComputerSuper",
+  "CrystalOscillator",
+  "FicsiteIngot_CAT",
+  "FicsiteIngot_Iron",
+  "HeatSink",
+  "IngotCopper",
+  "IngotSteel",
+  "MotorTurbo",
+  "PureAluminumIngot",
+  "RadioControlUnit",
+  "ResidualFuel",
+  "ResidualPlastic",
+  "ResidualRubber",
+  "RocketFuel",
+  "Silica",
+  "SpaceElevatorPart_2",
+  "SteelBeam",
+  "Sulfur_Coal",
+  "Sulfur_Iron"
+ ],
+ "trace": [
+  {
+   "banned": "Alternate_Quickwire",
+   "name": "Alternate: Fused Quickwire",
+   "share_before": 0.2171,
+   "T_min": 428.17,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_RecycledRubber",
+   "name": "Alternate: Recycled Rubber",
+   "share_before": 0.4149,
+   "T_min": 428.18,
+   "recipes_in_use": 121
+  },
+  {
+   "banned": "RocketFuel",
+   "name": "Rocket Fuel",
+   "share_before": 0.2173,
+   "T_min": 428.18,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "ResidualFuel",
+   "name": "Residual Fuel",
+   "share_before": 0.0204,
+   "T_min": 428.18,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_ElectroAluminumScrap",
+   "name": "Alternate: Electrode Aluminum Scrap",
+   "share_before": 0.0348,
+   "T_min": 428.18,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_Diamond_Turbo",
+   "name": "Alternate: Turbo Diamonds",
+   "share_before": 0.0051,
+   "T_min": 428.18,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_SteelBeam_Molded",
+   "name": "Alternate: Molded Beam",
+   "share_before": 0.009,
+   "T_min": 428.18,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Burn_LiquidTurboFuel_GeneratorFuel",
+   "name": "Turbofuel (Burning)",
+   "share_before": 0.0,
+   "T_min": 428.18,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "SteelBeam",
+   "name": "Steel Beam",
+   "share_before": 0.0001,
+   "T_min": 428.18,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_Diamond_Petroleum",
+   "name": "Alternate: Petroleum Diamonds",
+   "share_before": 0.0,
+   "T_min": 428.18,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_CopperAlloyIngot",
+   "name": "Alternate: Copper Alloy Ingot",
+   "share_before": 0.2365,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_CateriumIngot_Tempered",
+   "name": "Alternate: Tempered Caterium Ingot",
+   "share_before": 0.0298,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_CopperIngot_Tempered",
+   "name": "Alternate: Tempered Copper Ingot",
+   "share_before": 0.0023,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_IngotIron",
+   "name": "Alternate: Iron Alloy Ingot",
+   "share_before": 0.0882,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "RadioControlUnit",
+   "name": "Radio Control Unit",
+   "share_before": 0.0065,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_EncasedIndustrialBeam",
+   "name": "Alternate: Encased Industrial Pipe",
+   "share_before": 0.0133,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_PureCopperIngot",
+   "name": "Alternate: Pure Copper Ingot",
+   "share_before": 0.0075,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_Silica",
+   "name": "Alternate: Cheap Silica",
+   "share_before": 0.0039,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Sulfur_Coal",
+   "name": "Sulfur (Coal)",
+   "share_before": 0.0,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Sulfur_Iron",
+   "name": "Sulfur (Iron)",
+   "share_before": 0.0,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Bauxite_Caterium",
+   "name": "Bauxite (Caterium)",
+   "share_before": 0.0,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Bauxite_Copper",
+   "name": "Bauxite (Copper)",
+   "share_before": 0.0,
+   "T_min": 428.27,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "AluminumCasing",
+   "name": "Aluminum Casing",
+   "share_before": 0.2517,
+   "T_min": 428.28,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "IngotCopper",
+   "name": "Copper Ingot",
+   "share_before": 0.0128,
+   "T_min": 428.28,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_OCSupercomputer",
+   "name": "Alternate: OC Supercomputer",
+   "share_before": 0.0163,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_CircuitBoard_2",
+   "name": "Alternate: Caterium Circuit Board",
+   "share_before": 0.1092,
+   "T_min": 428.28,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_SteelRod",
+   "name": "Alternate: Steel Rod",
+   "share_before": 0.2368,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_ClassicBattery",
+   "name": "Alternate: Classic Battery",
+   "share_before": 0.1061,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_RubberConcrete",
+   "name": "Alternate: Rubber Concrete",
+   "share_before": 0.0237,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "ComputerSuper",
+   "name": "Supercomputer",
+   "share_before": 0.017,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_Rotor",
+   "name": "Alternate: Steel Rotor",
+   "share_before": 0.0699,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "IngotSteel",
+   "name": "Steel Ingot",
+   "share_before": 0.0364,
+   "T_min": 428.28,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "ResidualPlastic",
+   "name": "Residual Plastic",
+   "share_before": 0.0321,
+   "T_min": 428.28,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Burn_RocketFuel_GeneratorFuel",
+   "name": "Rocket Fuel (Burning)",
+   "share_before": 0.1372,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "ResidualRubber",
+   "name": "Residual Rubber",
+   "share_before": 0.0036,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_EnrichedCoal",
+   "name": "Alternate: Compacted Coal",
+   "share_before": 0.9004,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_Diamond_Cloudy",
+   "name": "Alternate: Cloudy Diamonds",
+   "share_before": 0.0003,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "SpaceElevatorPart_2",
+   "name": "Versatile Framework",
+   "share_before": 0.0378,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_IngotSteel_1",
+   "name": "Alternate: Solid Steel Ingot",
+   "share_before": 0.0384,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Silica",
+   "name": "Silica",
+   "share_before": 0.0164,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_Diamond_Pink",
+   "name": "Alternate: Pink Diamonds",
+   "share_before": 0.0,
+   "T_min": 428.34,
+   "recipes_in_use": 120
+  },
+  {
+   "banned": "Alternate_Gunpowder_1",
+   "name": "Alternate: Fine Black Powder",
+   "share_before": 0.0996,
+   "T_min": 428.34,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Cable",
+   "name": "Cable",
+   "share_before": 0.1825,
+   "T_min": 428.34,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_SteelPipe_Iron",
+   "name": "Alternate: Iron Pipe",
+   "share_before": 0.0084,
+   "T_min": 428.34,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "HeatSink",
+   "name": "Heat Sink",
+   "share_before": 0.0273,
+   "T_min": 428.34,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "AILimiter",
+   "name": "AI Limiter",
+   "share_before": 0.0119,
+   "T_min": 428.35,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_ReinforcedIronPlate_2",
+   "name": "Alternate: Stitched Iron Plate",
+   "share_before": 0.0823,
+   "T_min": 428.35,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Alternate_BoltedFrame",
+   "name": "Alternate: Bolted Frame",
+   "share_before": 0.0343,
+   "T_min": 428.35,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "CrystalOscillator",
+   "name": "Crystal Oscillator",
+   "share_before": 0.005,
+   "T_min": 428.35,
+   "recipes_in_use": 119
+  },
+  {
+   "banned": "Burn_CompactedCoal_GeneratorCoal",
+   "name": "Compacted Coal (Burning)",
+   "share_before": 0.0,
+   "T_min": 428.35,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_ElectricMotor",
+   "name": "Alternate: Electric Motor",
+   "share_before": 0.0204,
+   "T_min": 428.35,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_CateriumIngot_Leached",
+   "name": "Alternate: Leached Caterium Ingot",
+   "share_before": 0.0616,
+   "T_min": 428.36,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_Cable_1",
+   "name": "Alternate: Insulated Cable",
+   "share_before": 0.4273,
+   "T_min": 428.36,
+   "recipes_in_use": 118
+  },
+  {
+   "banned": "Alternate_TurboHeavyFuel",
+   "name": "Alternate: Turbo Heavy Fuel",
+   "share_before": 0.8185,
+   "T_min": 428.36,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "Alternate_FusedWire",
+   "name": "Alternate: Fused Wire",
+   "share_before": 0.1517,
+   "T_min": 428.36,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "PureAluminumIngot",
+   "name": "Alternate: Pure Aluminum Ingot",
+   "share_before": 0.5539,
+   "T_min": 428.52,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "Alternate_SloppyAlumina",
+   "name": "Alternate: Sloppy Alumina",
+   "share_before": 0.4655,
+   "T_min": 428.53,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "Alternate_InstantScrap",
+   "name": "Alternate: Instant Scrap",
+   "share_before": 0.0928,
+   "T_min": 428.66,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "FicsiteIngot_CAT",
+   "name": "Ficsite Ingot (Caterium)",
+   "share_before": 0.0,
+   "T_min": 428.66,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "FicsiteIngot_Iron",
+   "name": "Ficsite Ingot (Iron)",
+   "share_before": 0.0,
+   "T_min": 428.66,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "Alternate_RadioControlSystem",
+   "name": "Alternate: Radio Control System",
+   "share_before": 0.7972,
+   "T_min": 429.17,
+   "recipes_in_use": 117
+  },
+  {
+   "banned": "Alternate_TurboBlendFuel",
+   "name": "Alternate: Turbo Blend Fuel",
+   "share_before": 0.262,
+   "T_min": 429.17,
+   "recipes_in_use": 116
+  },
+  {
+   "banned": "MotorTurbo",
+   "name": "Turbo Motor",
+   "share_before": 0.3952,
+   "T_min": 429.19,
+   "recipes_in_use": 116
+  }
+ ],
+ "stock": {
+  "AluminumCasing": 2586.25,
+  "AluminumPlate": 2884.07,
+  "Battery": 100.0,
+  "Cable": 10224.46,
+  "CartridgeChaos": 200.0,
+  "CartridgeSmartProjectile": 200.0,
+  "CartridgeStandard": 100.0,
+  "Cement": 49398.86,
+  "CircuitBoardHighSpeed": 248.0,
+  "Computer": 537.73,
+  "ComputerSuper": 544.32,
+  "CoolingSystem": 1781.42,
+  "CopperSheet": 10765.49,
+  "CrystalOscillator": 550.0,
+  "FicsiteMesh": 2837.62,
+  "Filter": 40.0,
+  "Fuel": 10.0,
+  "HazmatFilter": 20.0,
+  "HighSpeedConnector": 477.5,
+  "HighSpeedWire": 19950.02,
+  "IronPlate": 9929.14,
+  "IronPlateReinforced": 3279.52,
+  "IronRod": 3102.58,
+  "IronScrew": 200.0,
+  "ItemDescriptorPortableMiner": 67.25,
+  "ModularFrame": 2241.84,
+  "ModularFrameFused": 871.36,
+  "ModularFrameHeavy": 1304.68,
+  "ModularFrameLightweight": 1039.03,
+  "Motor": 3785.89,
+  "MotorLightweight": 441.15,
+  "NobeliskCluster": 100.0,
+  "NobeliskExplosive": 30.0,
+  "NobeliskNuke": 50.0,
+  "NobeliskShockwave": 10.0,
+  "PackagedIonizedFuel": 100.0,
+  "PackagedRocketFuel": 100.0,
+  "Plastic": 6330.09,
+  "QuantumOscillator": 215.0,
+  "QuartzCrystal": 1400.0,
+  "Rebar_Explosive": 300.0,
+  "Rebar_Spreadshot": 30.0,
+  "Rebar_Stunshot": 30.0,
+  "Rotor": 1563.72,
+  "Rubber": 3157.39,
+  "SAMFluctuator": 2589.17,
+  "Silica": 1186.87,
+  "SpaceElevatorPart_10": 1000.0,
+  "SpaceElevatorPart_11": 200.0,
+  "SpaceElevatorPart_12": 256.0,
+  "SpaceElevatorPart_9": 1000.0,
+  "SpikedRebar": 30.0,
+  "SteelPipe": 19341.16,
+  "SteelPlate": 21694.01,
+  "SteelPlateReinforced": 4098.2,
+  "TemporalProcessor": 30.0,
+  "TimeCrystal": 1668.47,
+  "TurboFuel": 100.0,
+  "Wire": 13452.88
+ },
+ "binding": [
+  "Silica",
+  "Cement",
+  "Wire",
+  "CopperSheet",
+  "SteelPlateReinforced",
+  "SteelPipe",
+  "TimeCrystal",
+  "Motor",
+  "ModularFrameFused",
+  "ComputerSuper",
+  "ModularFrameLightweight",
+  "Battery",
+  "ModularFrame",
+  "MotorLightweight",
+  "NobeliskExplosive",
+  "Filter",
+  "CartridgeChaos",
+  "CartridgeSmartProjectile",
+  "Fuel",
+  "HazmatFilter",
+  "IronRod",
+  "NobeliskCluster",
+  "NobeliskNuke",
+  "NobeliskShockwave",
+  "PackagedIonizedFuel",
+  "PackagedRocketFuel",
+  "Rebar_Explosive",
+  "Rebar_Spreadshot",
+  "Rebar_Stunshot",
+  "Rotor",
+  "SpaceElevatorPart_10",
+  "SpaceElevatorPart_11",
+  "SpaceElevatorPart_12",
+  "TurboFuel",
+  "TemporalProcessor",
+  "CartridgeStandard",
+  "ItemDescriptorPortableMiner",
+  "SpikedRebar",
+  "SpaceElevatorPart_9",
+  "Computer",
+  "SAMFluctuator",
+  "HighSpeedConnector",
+  "CrystalShard",
+  "CircuitBoardHighSpeed",
+  "CrystalOscillator",
+  "QuantumOscillator",
+  "AluminumCasing",
+  "ModularFrameHeavy",
+  "Cable",
+  "SteelPlate",
+  "CoolingSystem",
+  "IronPlateReinforced",
+  "IronScrew",
+  "FicsiteMesh",
+  "AluminumPlate",
+  "Rubber",
+  "Plastic",
+  "HighSpeedWire",
+  "IronPlate"
+ ]
+}

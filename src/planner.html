@@ -1,0 +1,140 @@
+<title>Tenth-World Factory Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Saira+Condensed:wght@500;600&display=swap">
+<style>
+/*__CSS__*/
+/*__PCSS__*/
+</style>
+
+<header class="top">
+  <div>
+    <h1>Tenth-World Factory Planner</h1>
+    <div class="sub">Satisfactory 1.2. Set machines and clocks from the top of the chain down; everything upstream follows in whole machines, and every fluid balances exactly.</div>
+  </div>
+  <div class="io-top">
+    <button class="btn" type="button" id="btnUndo" disabled>Undo</button>
+    <button class="btn" type="button" id="btnReset" title="Back to the starting table: the given top of the chain, everything else on auto">Reset to start</button>
+    <span class="count" id="ioMsg" role="status"></span>
+  </div>
+</header>
+
+<section class="summary" aria-label="Summary">
+  <div class="stat"><span class="lbl">Machines</span><span class="val" id="sv-mach">–</span></div>
+  <div class="stat" id="st-pow"><span class="lbl">Power made / drawn</span><span class="val" id="sv-pow">–</span></div>
+  <div class="stat"><span class="lbl">Phase 5 done in</span><span class="val" id="sv-p5">–</span></div>
+  <div class="stat" id="st-re"><span class="lbl">Rebuilds itself in</span><span class="val" id="sv-re">–</span></div>
+  <div class="stat"><span class="lbl" title="The time the bill of materials, the equipment and Phase 5 are spread over. Empty: the time Phase 5 takes at the current pace.">Build over (min)</span><span class="val"><input id="inT" type="number" min="1" step="any" placeholder="Phase 5"></span></div>
+  <div class="stat"><span class="lbl">Auto rows run at</span><span class="val"><span class="seg" id="segLean"><button type="button" data-lean="0" aria-pressed="true" title="Whole machines at 100 %: the fewest that cover demand">100 %</button><button type="button" data-lean="1" aria-pressed="false" title="The same machines, clocked down to exactly what is needed">exact demand</button></span></span></div>
+  <div class="stat" id="st-iss"><span class="lbl">Open issues</span><span class="val" id="sv-iss">–</span></div>
+</section>
+
+<nav class="tabs" role="tablist" id="tabs">
+  <button role="tab" type="button" data-tab="recipes" aria-selected="true">Recipes</button>
+  <button role="tab" type="button" data-tab="items" aria-selected="false">Items</button>
+  <button role="tab" type="button" data-tab="raw" aria-selected="false">Raw supply</button>
+  <button role="tab" type="button" data-tab="build" aria-selected="false">Buildings</button>
+  <button role="tab" type="button" data-tab="save" aria-selected="false">Save / load</button>
+  <button role="tab" type="button" data-tab="notes" aria-selected="false">How it works</button>
+</nav>
+
+<main>
+  <section class="panel" id="tab-recipes" role="tabpanel">
+    <div class="issues" id="issues"></div>
+    <div class="tools">
+      <label>Search <input type="search" id="q" placeholder="recipe, machine or item"></label>
+      <label class="chk"><input type="checkbox" id="onlySet"> only rows I set</label>
+      <label class="chk"><input type="checkbox" id="onlyBad"> only rows with a problem</label>
+      <span class="count" id="rowCount"></span>
+    </div>
+    <div class="pl-grid">
+      <div class="scroll"><table id="rtab">
+        <thead><tr>
+          <th>Recipe</th>
+          <th class="n" title="Whole machines. Typing here sets the row; Auto hands it back.">Machines</th>
+          <th class="n" title="Clock of each machine, percent">Clock %</th>
+          <th class="n" title="Machines at 100 % it takes to cover what is asked of this row">Needed</th>
+          <th class="n" title="Net production of the first product, per minute: made minus used by everything">Net /min</th>
+          <th class="n" title="Minimum net production of the first product you ask for, per minute, on top of the build need">Min net</th>
+          <th class="n">MW</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="rbody"></tbody>
+      </table></div>
+      <aside class="pl-side" id="side" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-items" role="tabpanel" hidden>
+    <div class="tools"><label>Search <input type="search" id="iq" placeholder="item"></label><span class="count" id="itemCount"></span></div>
+    <div class="scroll"><table id="itab">
+      <thead><tr><th>Item</th><th>Rule</th><th class="n">Made</th><th class="n">Used</th><th class="n" title="Bill of materials (and equipment, Phase 5) divided by the build time">Build need</th><th class="n">Min net</th><th class="n">Net</th><th class="n" title="Minutes to make the stock the bill of materials asks for">Stock in (min)</th><th>Follows demand</th></tr></thead>
+      <tbody id="ibody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="panel" id="tab-raw" role="tabpanel" hidden>
+    <p class="note">A tenth of the world's nodes, each with a Miner Mk.3, Oil Extractor or pressurizer at up to 250 %. Water is unlimited. Node counts are averages over purities, so a tenth of 17 bauxite nodes is 1.7 miners.</p>
+    <div class="scroll free"><table id="wtab">
+      <thead><tr><th>Source</th><th class="n">Drawn /min</th><th class="n">Limit /min</th><th>Share</th><th class="n">Machines</th><th class="n">Clock %</th><th class="n">MW</th></tr></thead>
+      <tbody id="wbody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="panel" id="tab-build" role="tabpanel" hidden>
+    <p class="note" id="buildNote"></p>
+    <div class="scroll"><table id="btab">
+      <thead><tr><th>Building</th><th class="n">Count</th></tr></thead>
+      <tbody id="bbody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="panel" id="tab-save" role="tabpanel" hidden>
+    <p class="note">The plan is what you set: machine counts and clocks, minimum nets, the build time and the auto mode. It is also kept in this browser between visits.</p>
+    <div class="tools">
+      <button class="btn" type="button" id="btnCopy">Copy plan</button>
+      <button class="btn primary" type="button" id="btnLoad">Load the text below</button>
+      <label class="btn" for="fileState">Load a file</label><input type="file" id="fileState" accept=".json,application/json" hidden>
+      <span class="count" id="saveMsg" role="status"></span>
+    </div>
+    <textarea id="planText" spellcheck="false" aria-label="Plan as text"></textarea>
+  </section>
+
+  <section class="panel" id="tab-notes" role="tabpanel" hidden>
+    <div class="prose">
+      <h3>What this is</h3>
+      <p>A factory on a tenth of the world's raw supply that makes the Phase 5 parts, feeds one Ficsonium reactor, one Main Portal and one fueled Alien Power Augmentor, powers itself, and makes the parts to build itself again. The recipes were chosen by a linear program (<code>tools/select_recipes.py</code>): the set that finishes Phase 5 and its own bill of materials soonest, with redundant recipes removed while that time stayed within 1 %.</p>
+      <h3>Rows</h3>
+      <ul>
+        <li><b>Set</b>: you typed machines and clock. Nothing changes them. The page starts with the top of the chain set as given.</li>
+        <li><b>Auto</b>: whole machines at 100 %, the fewest that cover the demand for what the row makes. Each item has one recipe that follows its demand; the Items tab names it.</li>
+        <li><b>Trim</b>: an auto row that is balancing a fluid. Its level is solved exactly and shown as the fewest machines at an equal clock.</li>
+        <li><b>Needed</b> is the level (machines at 100 %) the row must reach. A set row below it is marked. <b>Fit</b> sets the row to exactly that; <b>Auto</b> hands it back.</li>
+      </ul>
+      <h3>Rules</h3>
+      <ul>
+        <li>Solids: net at least the build need plus any minimum net you typed. Surplus is fine (sink it).</li>
+        <li>Fluids, raw resources and nuclear waste: net exactly zero. No Packager recipes except the four packaged fuels.</li>
+        <li>Power: 1.3 × generated + 500 MW must cover the draw (one fueled augmentor). Fuel generators follow the demand. A machine at clock c draws c<sup>1.32</sup> of its 100 % power; variable-power machines count at their average.</li>
+        <li>Build need: the bill of materials (machines, miners, generators, the per-machine foundations, walls, roofs and power lines, belts, pipes, splitters, storage, a tenth of the extra buildings), a tenth of the equipment list and the Phase 5 parts, spread over the build time.</li>
+      </ul>
+      <h3>How fluids are balanced</h3>
+      <p>Every fluid has a maker, and some have a sink: a recipe that takes up a surplus (Dark Matter Crystallization for Dark Matter Residue, Diluted Fuel for Heavy Oil Residue, fuel generators for Fuel, Distilled Silica for Dissolved Silica). Whichever of the two is on auto can be the fluid's trim. The trim levels of all fluids together are the solution of one small set of linear equations, so a change in one fluid's trim that moves another fluid is accounted for. The maker is tried first; if it would have to run below what its solid products need, or below zero, the sink takes over. If you set both, the fluid has to balance by your numbers, and the page says by how much it does not.</p>
+      <p class="note">Clocks are shown to four decimals of a percent, the game's step. A trim clock rounded to that step leaves a residue of at most a few millionths per minute.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__SET__*/
+</script>
+<script>
+/*__PLANNER__*/
+</script>
+<script>
+/*__PAPP__*/
+</script>
