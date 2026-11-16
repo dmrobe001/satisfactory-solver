@@ -113,8 +113,20 @@ START = [
     # the acid side: with Non-Fissile Uranium these take 220 sulfuric acid a minute, so Sulfuric
     # Acid trims to 5 at 88 % and the sulfur total is 430 (cluster) + 220 = 650
     (2, 80, "UraniumCell"), (2, 70, "Alternate_NuclearFuelRod_1"),      # Encased Uranium Cell, Uranium Fuel Unit
-    (3, 70, "Battery"), (2, 80, "Alternate_SuperStateComputer"),
-    (2, 55, "Alternate_InstantScrap"),  # also 110 coal: 290 (cluster) + 110 = 400
+    (3, 100, "Battery"), (2, 80, "Alternate_SuperStateComputer"),
+    (1, 20, "Alternate_InstantScrap"),
+    # aluminum: alumina solution, scrap and ingots all net exactly 0 at whole machines
+    #   alumina 16 x 120 = 10 x 180 (Electrode Scrap) + 3 x 40 (Battery)
+    #   scrap   10 x 300 + 60 (Instant Scrap) = 34 x 90
+    #   ingots  34 x 60 = 180 + 1200 + 360 + 15 + 45 + 240 (the six rows below)
+    (16, 100, "AluminaSolution"), (10, 100, "Alternate_ElectroAluminumScrap"), (34, 100, "IngotAluminum"),
+    (6, 100, "AluminumSheet"),                 # Alclad Aluminum Sheet
+    (8, 100, "Alternate_AlcladCasing"),
+    (16, 100, "Alternate_SteelBeam_Aluminum"),  # Aluminum Beam (steel beams)
+    (2, 100, "Alternate_AluminumRod"),         # Aluminum Rod (iron rods)
+    (1, 75, "GasTank"),                        # Empty Fluid Tank
+    (2, 100, "FicsiteIngot_AL"),
+    (5, 90, "FusedModularFrame"),   # Fused Modular Frame: at 100 % the five would take more Aluminum Casing than 8 Alclad Casing make
 ]
 PINNED = {"Burn_FicsoniumFuelRod_GeneratorNuclear": 1.0}   # requirement 4
 
@@ -428,6 +440,8 @@ def frame(model, x, keep, T):
                 continue
             if k not in outs:
                 continue
+            # the maker should be a row the page leaves on auto, even if it makes the item on the side
+            # (Rubber for heavy oil residue): it can be raised when the item's sink needs more
             key = (v.kind != "recipe", v.id not in fixed, bool(outs) and outs[0] == k, sh.get(j, {}).get(k, 0.0), -j)
             if best is None or key > best[0]:
                 best = (key, v.id)

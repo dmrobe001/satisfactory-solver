@@ -227,7 +227,7 @@
       };
 
       /* What a row would run at as an ordinary auto row, from the last evaluation's demand. */
-      const ordinary = (i) => (lean ? Math.max(0, reqOf(i, -1)) : Math.max(n[i], Math.ceil(reqOf(i, -1) - EPS)));
+      const ordinary = (i) => (lean ? Math.max(0, reqOf(i, -1)) : Math.max(0, Math.ceil(reqOf(i, -1) - EPS)));
       /* Solve the trims for one assignment; returns the worst violation (0 = valid). */
       const tryCombo = (ch, apply) => {
         const fr = [], fk = [];

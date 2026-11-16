@@ -534,19 +534,41 @@ demand.
 "Auto rows run at: exact demand" keeps the same rules but clocks every auto
 row down to exactly what is asked, which is the least the plan can draw.
 
-The start is the top table, the fuel and munitions cluster, and the acid side.
-Nothing is short and nothing unbalanced; 1,032 machines, 53 GW drawn against
-84 GW available with auto rows at 100 % (903 machines and 48 GW at exact
-demand). Power no longer follows demand: every generator is a set row.
+The start is the top table, the fuel and munitions cluster, the acid side and
+the aluminum chain. Nothing is short and nothing unbalanced; 1,011 machines,
+52 GW drawn against 84 GW available with auto rows at 100 % (945 machines and
+49 GW at exact demand). Power no longer follows demand: every generator is a
+set row.
 
 The acid side is set so that the sulfur total is round. Sulfuric acid goes to
 Non-Fissile Uranium (80 %, 12/min), Encased Uranium Cell (2 at 80 %, 48 net),
-Battery (3 at 70 %, 105) and Instant Scrap (2 at 55 %, 55): 220 a minute, so
+Battery (3 at 100 %, 150) and Instant Scrap (1 at 20 %, 10): 220 a minute, so
 Sulfuric Acid trims to 5 at 88 % and the factory draws **650 sulfur** (430 for
 the cluster). Uranium Fuel Unit (2 at 70 %) and Super-State Computer (2 at
-80 %) are set so the cells and batteries cover them. Instant Scrap at 55 % also
-brings coal to 290 + 110 = 400 before the whole-machine rows (Solid Steel Ingot
-at 40 each, Diamonds at 600 each).
+80 %) are set so the cells and batteries cover them.
+
+The aluminum chain is whole machines at 100 % with alumina solution, scrap and
+ingots all at exactly net 0, on **1,950 bauxite**:
+
+| Machines | Clock % | Recipe | Balance |
+|---|---|---|---|
+| 16 | 100 | Alumina Solution | 1,920 alumina = 1,800 (scrap) + 120 (Battery) |
+| 10 | 100 | Electrode Aluminum Scrap | 3,000 scrap |
+| 1 | 20 | Instant Scrap | 60 scrap; 3,060 = 34 x 90 |
+| 34 | 100 | Aluminum Ingot | 2,040 ingots |
+| 6 | 100 | Alclad Aluminum Sheet | 180 ingots |
+| 8 | 100 | Alclad Casing | 1,200 |
+| 16 | 100 | Aluminum Beam | 360 |
+| 2 | 100 | Aluminum Rod | 15 |
+| 1 | 75 | Empty Fluid Tank | 45 |
+| 2 | 100 | Ficsite Ingot (Aluminum) | 240 |
+
+Battery at 3 whole machines is what makes the alumina come out even (16 x 120
+= 10 x 180 + 3 x 40), and Instant Scrap at 20 % is what makes the scrap divide
+by 90 while keeping the acid total at 220. Fused Modular Frame is set to 5 at
+90 %, because at 100 % the five would take more Aluminum Casing than the eight
+Alclad Casing assemblers make. The parts downstream of ingots (sheets, casing,
+steel beams, iron rods, tanks, ficsite) run a little ahead of their use.
 
 Heavy oil residue from the Rubber and Plastic refineries is trimmed away by
 Petroleum Coke; that plastics chain, not the fuel cluster, is what takes crude

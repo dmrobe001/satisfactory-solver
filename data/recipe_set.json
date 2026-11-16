@@ -293,7 +293,7 @@
   },
   {
    "n": 3,
-   "clock": 70,
+   "clock": 100,
    "id": "Battery"
   },
   {
@@ -302,9 +302,59 @@
    "id": "Alternate_SuperStateComputer"
   },
   {
-   "n": 2,
-   "clock": 55,
+   "n": 1,
+   "clock": 20,
    "id": "Alternate_InstantScrap"
+  },
+  {
+   "n": 16,
+   "clock": 100,
+   "id": "AluminaSolution"
+  },
+  {
+   "n": 10,
+   "clock": 100,
+   "id": "Alternate_ElectroAluminumScrap"
+  },
+  {
+   "n": 34,
+   "clock": 100,
+   "id": "IngotAluminum"
+  },
+  {
+   "n": 6,
+   "clock": 100,
+   "id": "AluminumSheet"
+  },
+  {
+   "n": 8,
+   "clock": 100,
+   "id": "Alternate_AlcladCasing"
+  },
+  {
+   "n": 16,
+   "clock": 100,
+   "id": "Alternate_SteelBeam_Aluminum"
+  },
+  {
+   "n": 2,
+   "clock": 100,
+   "id": "Alternate_AluminumRod"
+  },
+  {
+   "n": 1,
+   "clock": 75,
+   "id": "GasTank"
+  },
+  {
+   "n": 2,
+   "clock": 100,
+   "id": "FicsiteIngot_AL"
+  },
+  {
+   "n": 5,
+   "clock": 90,
+   "id": "FusedModularFrame"
   },
   {
    "n": 8,
@@ -695,7 +745,7 @@
    "share": {
     "ModularFrameFused": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "SpaceElevatorPart_5",
@@ -929,7 +979,7 @@
    "share": {
     "AluminumCasing": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "Alternate_AluminumRod",
@@ -940,7 +990,7 @@
    "share": {
     "IronRod": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "Alternate_CrystalOscillator",
@@ -1007,7 +1057,7 @@
    "share": {
     "SteelPlate": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "AluminumSheet",
@@ -1018,7 +1068,7 @@
    "share": {
     "AluminumPlate": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "Burn_IonizedFuel_GeneratorFuel",
@@ -1051,7 +1101,7 @@
    "share": {
     "FicsiteIngot": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "GasTank",
@@ -1062,7 +1112,7 @@
    "share": {
     "GasTank": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "Motor",
@@ -1240,7 +1290,7 @@
     "AluminumScrap": 0.8357,
     "Water": 0.1127
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "Alternate_Screw_2",
@@ -1372,7 +1422,7 @@
    "share": {
     "AluminumIngot": 1.0
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "IonizedFuel",
@@ -1728,7 +1778,7 @@
     "AluminaSolution": 1.0,
     "Silica": 0.2298
    },
-   "protected": false
+   "protected": true
   },
   {
    "id": "Diamond",

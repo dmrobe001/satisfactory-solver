@@ -31,6 +31,10 @@ ok("start: 1.3125 power shards a minute spare (17 made, 15 to Alien Power Matrix
 const raw = (res, k) => item(res, k).made;
 ok("start: the fuel cluster's fluids balance by its own numbers", ["LiquidFuel", "LiquidTurboFuel", "RocketFuel", "IonizedFuel", "HeavyOilResidue"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
 ok("start: sulfur drawn is exactly 650 /min, Sulfuric Acid trims to 5 at 88 %", Math.abs(raw(r0, "Sulfur") - 650) < 1e-9 && row(r0, "SulfuricAcid").n === 5 && Math.abs(row(r0, "SulfuricAcid").clock - 88) < 1e-9, [raw(r0, "Sulfur"), row(r0, "SulfuricAcid")]);
+ok("start: alumina solution, aluminum scrap and aluminum ingots net exactly 0", ["AluminaSolution", "AluminumScrap", "AluminumIngot"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
+ok("start: the aluminum rows are whole machines at 100 % (16 Alumina Solution, 10 Electrode Scrap, 34 Aluminum Ingot)",
+  [["AluminaSolution", 16], ["Alternate_ElectroAluminumScrap", 10], ["IngotAluminum", 34]].every(([id, n]) => row(r0, id).n === n && row(r0, id).clock === 100), null);
+ok("start: bauxite drawn is exactly 1950 /min", Math.abs(raw(r0, "OreBauxite") - 1950) < 1e-9, raw(r0, "OreBauxite"));
 ok("start: compacted coal is used up exactly", Math.abs(item(r0, "CompactedCoal").net) < 1e-9, item(r0, "CompactedCoal").net);
 ok("start: copper ingots come from Copper Alloy Ingot only", r0.rows.filter((r) => r.main === "CopperIngot" && r.level > 0).map((r) => r.id).join() === "Alternate_CopperAlloyIngot", null);
 ok("start: every clock in the table is one the game can set exactly", SET.start.every((s) => Number.isInteger(s.clock * 1e4)), null);
