@@ -27,7 +27,12 @@ ok("start: Phase 5 takes 400 min", Math.abs(r0.T5 - 400) < 1e-6, r0.T5);
 const p5 = Object.entries(SET.phase5).map(([k, q]) => item(r0, k).net / q);
 ok("start: Phase 5 parts in exact proportion", p5.every((v) => Math.abs(v - p5[0]) < 1e-12), p5);
 ok("start: Singularity Cell and Alien Power Matrix made exactly as used", ["SingularityCell", "AlienPowerFuel"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
-ok("start: 1.75 power shards a minute spare", Math.abs(item(r0, "CrystalShard").net - 1.75) < 1e-9, item(r0, "CrystalShard").net);
+ok("start: 1.3125 power shards a minute spare (17 made, 15 to Alien Power Matrix, 0.6875 to Ionized Fuel)", Math.abs(item(r0, "CrystalShard").net - 1.3125) < 1e-9, item(r0, "CrystalShard").net);
+const raw = (res, k) => item(res, k).made;
+ok("start: the fuel cluster's fluids balance by its own numbers", ["LiquidFuel", "LiquidTurboFuel", "RocketFuel", "IonizedFuel", "HeavyOilResidue"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
+ok("start: sulfur drawn is exactly 650 /min, Sulfuric Acid trims to 5 at 88 %", Math.abs(raw(r0, "Sulfur") - 650) < 1e-9 && row(r0, "SulfuricAcid").n === 5 && Math.abs(row(r0, "SulfuricAcid").clock - 88) < 1e-9, [raw(r0, "Sulfur"), row(r0, "SulfuricAcid")]);
+ok("start: compacted coal is used up exactly", Math.abs(item(r0, "CompactedCoal").net) < 1e-9, item(r0, "CompactedCoal").net);
+ok("start: copper ingots come from Copper Alloy Ingot only", r0.rows.filter((r) => r.main === "CopperIngot" && r.level > 0).map((r) => r.id).join() === "Alternate_CopperAlloyIngot", null);
 ok("start: every clock in the table is one the game can set exactly", SET.start.every((s) => Number.isInteger(s.clock * 1e4)), null);
 ok("start: nothing is short and nothing is unbalanced", r0.issues.length === 0 && r0.rows.every((r) => !r.short), r0.issues);
 ok("start: all 31 geysers run", row(r0, "Geothermal").n === 31, row(r0, "Geothermal").n);
@@ -54,7 +59,8 @@ ok("Photonic Matter on auto: trimmed back to 5 at 84 %", row(r2b, "QuantumEnergy
 // Dark Matter Residue: maker or sink takes the difference
 const st3 = JSON.parse(JSON.stringify(st0));
 delete st3.rows.DarkEnergy;
-st3.rows.SuperpositionOscillator = { n: 5, clock: 90 };
+st3.rows.SuperpositionOscillator = { n: 6, clock: 100 };
+st3.rows.Alternate_DarkMatter_Trap = { n: 0, clock: 100 };   // or the Trap, on auto, would take the residue to make crystals
 const r3 = P.solve(st3);
 ok("more residue than is used: the sink (Crystallization) trims it", row(r3, "Alternate_DarkMatter_Crystallization").role === "trim" && Math.abs(item(r3, "DarkEnergy").net) < 1e-6,
   [row(r3, "Alternate_DarkMatter_Crystallization"), item(r3, "DarkEnergy").net]);
@@ -65,10 +71,10 @@ ok("less residue than is used: the maker (Dark Matter Residue) trims it", row(r3
 
 // a minimum net pulls its maker up
 const st4 = JSON.parse(JSON.stringify(st0));
-st4.min.Alternate_CoatedCable = 500;
+st4.min.Cable = 500;
 const r4 = P.solve(st4);
-ok("minimum net of Cable: its row grows and the net meets it", row(r4, "Alternate_CoatedCable").n > row(r0, "Alternate_CoatedCable").n && item(r4, "Cable").net >= 500 - 1e-6,
-  [row(r4, "Alternate_CoatedCable").n, item(r4, "Cable").net]);
+ok("minimum net of Cable: its row grows and the net meets it", row(r4, "Cable").n > row(r0, "Cable").n && item(r4, "Cable").net >= 500 - 1e-6,
+  [row(r4, "Cable").n, item(r4, "Cable").net]);
 
 // exact-demand mode
 const r5 = P.solve(Object.assign(JSON.parse(JSON.stringify(st0)), { lean: true }));

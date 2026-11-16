@@ -84,8 +84,8 @@ WASTE = {"NuclearWaste", "PlutoniumWaste"}
 DARK = ["DarkEnergy", "DarkMatter", "Alternate_DarkMatter_Crystallization", "Alternate_DarkMatter_Trap"]
 # The planner's frame for fluids (see "frame" below): the recipe that takes up a
 # fluid's surplus when its by-product supply runs ahead of its use.
-SINK = {"DarkEnergy": "Alternate_DarkMatter_Crystallization", "HeavyOilResidue": "Alternate_DilutedFuel",
-        "LiquidFuel": "Burn_LiquidFuel_GeneratorFuel", "DissolvedSilica": "Alternate_Silica_Distilled"}
+SINK = {"DarkEnergy": "Alternate_DarkMatter_Crystallization", "HeavyOilResidue": "PetroleumCoke",
+        "DissolvedSilica": "Alternate_Silica_Distilled"}
 
 # Where the planner page starts: (machines, clock %, recipe id) for the top of the factory.
 # The linear program does not have to meet these; it only keeps these recipes in the set.
@@ -108,10 +108,41 @@ START = [
     (1, 75, "SpaceElevatorPart_6"),    # Magnetic Field Generator
     (1, 40, "TemporalProcessor"),      # Neural-Quantum Processor
     (2, 100, "AlienPowerFuel"), (4, 90, "SuperpositionOscillator"), (4, 85, "SyntheticPowerShard"),
-    (1, 10, "IonizedFuel"), (1, 5, "PackagedIonizedFuel"),
     (5, 84, "QuantumEnergy"), (1, 100, "DarkEnergy"), (6, 100, "DarkMatter"),
+    (1, 10, "NobeliskShockwave"),      # Pulse Nobelisk, from the cluster's spare Nobelisks
+    # the acid side: with Non-Fissile Uranium these take 220 sulfuric acid a minute, so Sulfuric
+    # Acid trims to 5 at 88 % and the sulfur total is 430 (cluster) + 220 = 650
+    (2, 80, "UraniumCell"), (2, 70, "Alternate_NuclearFuelRod_1"),      # Encased Uranium Cell, Uranium Fuel Unit
+    (3, 70, "Battery"), (2, 80, "Alternate_SuperStateComputer"),
+    (2, 55, "Alternate_InstantScrap"),  # also 110 coal: 290 (cluster) + 110 = 400
 ]
-PINNED = {"Burn_FicsoniumFuelRod_GeneratorNuclear": 1.0}   # requirement 4; everything else is free
+PINNED = {"Burn_FicsoniumFuelRod_GeneratorNuclear": 1.0}   # requirement 4
+
+# The fuel and munitions cluster, decided by hand (tools/fuel_cluster.py checks it exactly):
+# (machines, clock %, recipe id).  Here it runs at exactly these levels, and no other
+# recipe may touch its fluids, so they balance by these numbers alone.
+CLUSTER = [
+    (8, 100, "Alternate_HeavyOilResidue"), (6, 100, "Alternate_DilutedFuel"), (4, 100, "Alternate_RocketFuel_Nitro"),
+    (6, 100, "Alternate_Turbofuel"), (1, 27.5, "IonizedFuel"),
+    (141, 100, "Burn_RocketFuel_GeneratorFuel"), (3, 100, "Burn_IonizedFuel_GeneratorFuel"),
+    (3, 100, "Burn_LiquidFuel_GeneratorFuel"), (5, 250, "Burn_LiquidTurboFuel_GeneratorFuel"),
+    (1, 1.25, "PackagedRocketFuel"), (1, 2.5, "PackagedIonizedFuel"), (1, 37.5, "PackagedTurboFuel"), (1, 12.5, "Fuel"),
+    (2, 100, "GunpowderMK2"),          # Smokeless Powder
+    (2, 100, "Gunpowder"),             # Black Powder
+    (2, 100, "Cartridge"),             # Rifle Ammo
+    (1, 75, "CartridgeChaos"),         # Turbo Rifle Ammo
+    (1, 100, "CartridgeSmart"),        # Homing Rifle Ammo
+    (1, 100, "Nobelisk"), (1, 50, "NobeliskCluster"), (1, 50, "NobeliskNuke"), (1, 100, "Rebar_Explosive"),
+    (2, 100, "FilterGasMask"), (1, 100, "Alternate_PolyesterFabric"),
+    (5, 91, "Alternate_IngotSteel_2"),  # Compacted Steel Ingot: takes the compacted coal that is left
+]
+CLUSTER_FLUIDS = {"LiquidFuel", "LiquidTurboFuel", "RocketFuel", "IonizedFuel"}
+# Left out by choice: every copper ingot recipe but Copper Alloy Ingot (iron is plentiful and
+# Leached Copper is a chore to set up), and the two recipes that would make polymer resin or
+# compacted coal on the side of the cluster.
+BANNED = ["IngotCopper", "Alternate_PureCopperIngot", "Alternate_CopperIngot_Tempered", "Alternate_CopperIngot_Leached",
+          "Alternate_IronIngot_Leached", "Alternate_CateriumIngot_Leached",   # the other acid-leaching recipes, same chore
+          "Alternate_PolymerResin", "Alternate_EnrichedCoal"]
 
 # A tenth of the optimizer's extra buildings (the production sheet's defaults), one shop,
 # one Main Portal and one augmentor.
@@ -173,7 +204,11 @@ def sources():
 def recipe_scope():
     recs, raw, have = O.scope()
     recs = [r for r in recs if not (r["m"] == "Packager" and r["id"] not in KEEP_PACKAGER)]
-    return recs, raw, have, []
+    cl = {rid for _, _, rid in CLUSTER}
+    out = [r for r in recs if r["id"] in BANNED or
+           (r["id"] not in cl and any(k in CLUSTER_FLUIDS for k, _ in r["ins"] + r["outs"]))]
+    recs = [r for r in recs if r not in out]
+    return recs, raw, have, out
 
 
 # -------------------------------------------------------------------- model ----
@@ -190,6 +225,9 @@ class Model:
                 v.lb = 0.0
             if v.id in PINNED:
                 v.lb = v.ub = PINNED[v.id]
+        for n, c, rid in CLUSTER:
+            v = V[[w.id for w in V].index(rid)]
+            v.lb = v.ub = n * c / 100
         self.col = {v.id: j for j, v in enumerate(V)}
         self.equip = {k: q for k, q in EQUIP.items() if k in self.have}
         self.dropped_equipment = sorted(set(EQUIP) - set(self.equip))
@@ -378,6 +416,7 @@ def frame(model, x, keep, T):
     program's Phase 5 pace to the pace of START, rounded to whole machines."""
     V = model.V
     sh = shares(model, x)
+    fixed = {rid for _, _, rid in START + CLUSTER}   # set on the page: followers of nothing if anything else makes the item
     maker = {}
     for k in model.items:
         best = None
@@ -389,14 +428,14 @@ def frame(model, x, keep, T):
                 continue
             if k not in outs:
                 continue
-            key = (v.kind != "recipe", bool(outs) and outs[0] == k, sh.get(j, {}).get(k, 0.0), -j)
+            key = (v.kind != "recipe", v.id not in fixed, bool(outs) and outs[0] == k, sh.get(j, {}).get(k, 0.0), -j)
             if best is None or key > best[0]:
                 best = (key, v.id)
         if best:
             maker[k] = best[1]
     # power follows demand through a generator that leaves no waste behind
     maker["Power"] = max((j for j in keep if V[j].gen and V[j].kind == "recipe" and not (set(V[j].rates) & WASTE)
-                          and "Ficsonium" not in V[j].id), key=lambda j: (V[j].gen * x[j], V[j].id in SINK.values()), default=None)
+                          and "Ficsonium" not in V[j].id and V[j].id not in {r for _, _, r in CLUSTER}), key=lambda j: (V[j].gen * x[j], V[j].id in SINK.values()), default=None)
     maker["Power"] = V[maker["Power"]].id if maker["Power"] is not None else None
     for k in WASTE:            # nuclear waste is only checked, never steered
         maker.pop(k, None)
@@ -415,10 +454,10 @@ def main():
     t0 = time.time()
     model = Model(args.free_fluids)
     V = model.V
-    log("%d recipes in scope" % sum(1 for v in V if v.kind == "recipe"))
+    log("%d recipes in scope; left out: %s" % (sum(1 for v in V if v.kind == "recipe"), ", ".join(r["name"] for r in model.left_out)))
     if model.dropped_equipment:
         log("equipment that needs gathered items, dropped: " + ", ".join(model.dropped_equipment))
-    protected = {rid for _, _, rid in START} | set(DARK) | set(SINK.values())
+    protected = {rid for _, _, rid in START} | set(DARK) | set(SINK.values()) | {rid for _, _, rid in CLUSTER}
     T0, x0, lam, x, banned, trace = select(model, args.budget, protected)
     T = 1 / lam
     act = active(model, x)
@@ -445,7 +484,7 @@ def main():
                          "max": v.ub, "lp_units": round(float(x[j]), 4),
                          "buildings": {b: float(q) for b, q in v.build.items()}})
     maker, scale = frame(model, x, keep, T)
-    start_ids = {rid for _, _, rid in START}
+    start_ids = {rid for _, _, rid in START + CLUSTER}
     makes = set(maker.values())
     defaults = {r["id"]: {"n": max(1, round(r["lp_machines"] * scale)), "clock": 100} for r in recipes
                 if r["id"] not in makes and r["id"] not in start_ids and r["id"] not in DARK
@@ -463,7 +502,7 @@ def main():
         "power": {"generated_mw": round(gen, 1), "with_augmentor_mw": round((1 + AUG_BOOST) * gen + AUG_MW, 1), "drawn_mw": round(draw, 1)},
         "phase5": PHASE5, "equipment": model.equip, "extra_buildings": FIXED, "rules": O.RULES,
         "expendable": O.EXPENDABLE,
-        "start": [{"n": n, "clock": c, "id": rid} for n, c, rid in START],
+        "start": [{"n": n, "clock": c, "id": rid} for n, c, rid in START + CLUSTER],
         "recipes": recipes, "sources": srcs,
         "maker": {k: v for k, v in sorted(maker.items()) if v},
         "sink": {k: v for k, v in SINK.items() if v in {r["id"] for r in recipes}},

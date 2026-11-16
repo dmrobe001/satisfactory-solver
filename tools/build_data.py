@@ -183,8 +183,10 @@ def main():
         kw.setdefault("pe", CLOCK_EXP)  # clock exponent of power
         kw.setdefault("kind", "machine")
         kw.setdefault("mc", MAX_CLOCK)  # max clock; 1 = fixed clock (on/off)
-        kw["ins"] = [[k, round(v, 6)] for k, v in kw["ins"]]
-        kw["outs"] = [[k, round(v, 6)] for k, v in kw["outs"]]
+        # 12 decimals: 6 left a rocket-fuel generator burning 4.16667 instead of 25/6, a visible
+        # residue in an exact fluid balance
+        kw["ins"] = [[k, round(v, 12)] for k, v in kw["ins"]]
+        kw["outs"] = [[k, round(v, 12)] for k, v in kw["outs"]]
         recipes.append(kw)
 
     # ---- Machine recipes ---------------------------------------------------

@@ -413,10 +413,16 @@ Assumptions, each a constant at the top of the script:
   here, because neither can be sunk; this costs nothing (T is the same to four
   digits with fluids free, `--free-fluids`). No Packager recipes except the
   four packaged fuels; nothing that needs a hand-gathered item.
-* Only the Ficsonium plant is fixed. The planner's starting table plays no part
-  in the optimization. Three groups of recipes are kept in the result whatever
-  the program uses, because the planner needs them: the recipes of the starting
-  table, all four Dark Matter recipes, and the fluid sinks.
+* The Ficsonium plant is fixed, and so is the **fuel and munitions cluster**
+  (`CLUSTER` in the script, worked out by `tools/fuel_cluster.py`): it runs at
+  exactly its counts and clocks, and no other recipe may touch Fuel, Turbofuel,
+  Rocket Fuel or Ionized Fuel. The rest of the planner's starting table plays
+  no part in the optimization; its recipes, all four Dark Matter recipes and
+  the fluid sinks are only kept in the result.
+* Left out by choice (`BANNED`): every copper ingot recipe except Copper Alloy
+  Ingot, the Leached Iron and Leached Caterium Ingot (the same acid plumbing;
+  dropping those two costs 0.05 % of T), Polymer Resin and the Compacted Coal
+  assembler.
 
 Selection. A vertex of a linear program is already sparse: the unrestricted
 optimum uses 119 recipes for about as many items. What redundancy is left is
@@ -426,12 +432,26 @@ remaining recipes each time (so a banned recipe can be replaced by an idle one,
 and its partner can change level), until the next ban would push T more than
 `--budget` (default 1 %) above the unrestricted optimum.
 
-Result (reproducible; 10 s): T0 = 427.9 min unrestricted; **117 recipes, T =
-431.2 min** (+0.78 %). What binds: crude oil, SAM, bauxite, and nearly sulfur
-and quartz. Power is 42.7 GW drawn, from 7.1 uranium plants, 2 plutonium
-plants, the ficsonium plant and the geysers; with every geyser running the
-program burns no fuel (Fuel generators are in the set only as the fluid sink).
-It makes more plutonium than the two plutonium plants burn and sinks the rest.
+Result (reproducible; 4 s): T0 = 431.6 min with every remaining recipe
+allowed; **124 recipes, T = 434.4 min** (+0.64 %). Fixing the cluster and
+copper alloy costs under 1 % against the earlier free optimum (427.9 min).
+What binds: crude oil, bauxite, SAM, and nearly coal, sulfur, quartz and
+nitrogen. The cluster, 7 nuclear plants' worth of the program's own choosing
+and the geysers generate more power than is drawn (75 GW against 44 GW).
+
+### Fuel and munitions cluster: `python3 tools/fuel_cluster.py`
+
+One clock per recipe; the four backbone recipes and every generator at 100 %
+(turbofuel generators at 250 %); Fuel, Turbofuel, Rocket Fuel, Ionized Fuel and
+Heavy Oil Residue net exactly 0, as do compacted coal and steel pipe. The
+script holds the table and checks it in exact fractions. Draws that no whole
+number of machines could absorb are met by shunting whole machines' worth:
+three generators' worth of rocket fuel (12.5/min) to Ionized Fuel and
+packaging, one refinery's worth of turbofuel to Turbo Rifle Ammo and packaging,
+whole Smokeless Powder refineries on heavy oil residue, and the compacted coal
+Turbofuel leaves to five Compacted Steel Ingot foundries at 91 %. Raw inputs:
+240 oil, 630 water, 300 nitrogen, 430 sulfur, 290 coal, 22.75 iron ore;
+39.9 GW generated.
 
 ### Nice clocks for the top: `python3 tools/nice_top.py`
 
@@ -472,7 +492,9 @@ denominator of 40 or less. The first result is the planner's starting table:
 | 1 | 100 | Dark Matter Residue |
 | 6 | 100 | Dark Matter Crystal |
 
-plus the nuclear chain that one Ficsonium reactor fixes (Ficsonium Fuel Rod
+(In the planner's start, Ionized Fuel and Packaged Ionized Fuel now run at the
+cluster's 27.5 % and 2.5 %, which leaves 1.3125 shards a minute spare.) Add
+the nuclear chain that one Ficsonium reactor fixes (Ficsonium Fuel Rod
 40 %, Ficsonium 20 %, 2 Plutonium plants, Plutonium Fuel Rod 80 %, 2 Encased
 Plutonium Cell at 60 %, Plutonium Pellet 40 %, Non-Fissile Uranium 80 %,
 4 Uranium plants). Largest denominator 25 (the 16 % and the 84 %). Spare per
@@ -512,14 +534,27 @@ demand.
 "Auto rows run at: exact demand" keeps the same rules but clocks every auto
 row down to exactly what is asked, which is the least the plan can draw.
 
-At the start: nothing short, nothing unbalanced; 1,094 machines and 59 GW with
-auto rows at 100 % (814 machines and 48 GW at exact demand). Crude oil is drawn
-at 3.6 times a tenth of the world (2.3 times at exact demand), because the
-table's 4 uranium plants leave 82 fuel generators (50) to cover the power; the
-linear program covers it with about 7 uranium plants and no fuel. SAM, bauxite
-and quartz run 110 to 185 % of a tenth.
+The start is the top table, the fuel and munitions cluster, and the acid side.
+Nothing is short and nothing unbalanced; 1,032 machines, 53 GW drawn against
+84 GW available with auto rows at 100 % (903 machines and 48 GW at exact
+demand). Power no longer follows demand: every generator is a set row.
+
+The acid side is set so that the sulfur total is round. Sulfuric acid goes to
+Non-Fissile Uranium (80 %, 12/min), Encased Uranium Cell (2 at 80 %, 48 net),
+Battery (3 at 70 %, 105) and Instant Scrap (2 at 55 %, 55): 220 a minute, so
+Sulfuric Acid trims to 5 at 88 % and the factory draws **650 sulfur** (430 for
+the cluster). Uranium Fuel Unit (2 at 70 %) and Super-State Computer (2 at
+80 %) are set so the cells and batteries cover them. Instant Scrap at 55 % also
+brings coal to 290 + 110 = 400 before the whole-machine rows (Solid Steel Ingot
+at 40 each, Diamonds at 600 each).
+
+Heavy oil residue from the Rubber and Plastic refineries is trimmed away by
+Petroleum Coke; that plastics chain, not the fuel cluster, is what takes crude
+oil to about 1.7 times a tenth of the world (1.2 at exact demand).
 
 Data fix made along the way: the source data marks Singularity Cell, Ballistic
 Warp Drive and Biochemical Sculptor (Manufacturer and Blender recipes) as
 variable-power, which gave them 0, 1000 and 1000 MW. They now draw their
-machine's power (55, 55, 75 MW); `tools/build_data.py` applies the same rule.
+machine's power (55, 55, 75 MW); `tools/build_data.py` applies the same rule. The same pass
+stores recipe rates to 12 decimals instead of 6 (a rocket-fuel generator burns
+25/6 per minute, and 4.16667 left a visible residue in the exact balance).
