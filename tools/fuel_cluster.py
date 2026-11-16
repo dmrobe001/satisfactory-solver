@@ -79,30 +79,34 @@ PLAN = [
     (8, "100", "Heavy Oil Residue", {"Heavy Oil Residue": 40, "Polymer Resin": 20, "Crude Oil": -30}),
     (6, "100", "Diluted Fuel", {"Fuel": 100, "Heavy Oil Residue": -50, "Water": -100}),
     (4, "100", "Nitro Rocket Fuel", {"Rocket Fuel": 150, "Compacted Coal": 25, "Fuel": -100, "Nitrogen Gas": -75, "Sulfur": -100, "Coal": -50}),
-    (5, "100", "Turbofuel", {"Turbofuel": F(75, 4), "Fuel": F(-45, 2), "Compacted Coal": -15}),
+    (6, "100", "Turbofuel", {"Turbofuel": F(75, 4), "Fuel": F(-45, 2), "Compacted Coal": -15}),
     (1, "27.5", "Ionized Fuel", {"Ionized Fuel": 40, "Compacted Coal": 5, "Rocket Fuel": -40, "Power Shard": F(-5, 2)}),
     (141, "100", "Rocket Fuel generator", {"MW": 250, "Rocket Fuel": -R}),
     (3, "100", "Ionized Fuel generator", {"MW": 250, "Ionized Fuel": -3}),
-    (4, "100", "Fuel generator", {"MW": 250, "Fuel": -20}),
-    (4, "250", "Turbofuel generator", {"MW": 250, "Turbofuel": F(-15, 2)}),
+    (3, "100", "Fuel generator", {"MW": 250, "Fuel": -20}),
+    (5, "250", "Turbofuel generator", {"MW": 250, "Turbofuel": F(-15, 2)}),
     (1, "1.25", "Packaged Rocket Fuel", {"Packaged Rocket Fuel": 60, "Rocket Fuel": -120}),
     (1, "2.5", "Packaged Ionized Fuel", {"Packaged Ionized Fuel": 40, "Ionized Fuel": -80}),
     (1, "37.5", "Packaged Turbofuel", {"Packaged Turbofuel": 20, "Turbofuel": -20}),
-    (1, "18.75", "Packaged Fuel", {"Packaged Fuel": 40, "Fuel": -40}),
+    (1, "12.5", "Packaged Fuel", {"Packaged Fuel": 40, "Fuel": -40}),
     (2, "100", "Smokeless Powder", {"Smokeless Powder": 20, "Black Powder": -20, "Heavy Oil Residue": -10}),
     (2, "100", "Black Powder", {"Black Powder": 30, "Coal": -15, "Sulfur": -15}),
     (2, "100", "Rifle Ammo", {"Rifle Ammo": 75, "Smokeless Powder": -10}),
     (1, "75", "Turbo Rifle Ammo (Blender)", {"Turbo Rifle Ammo": 250, "Rifle Ammo": -125, "Turbofuel": -15}),
     (1, "100", "Homing Rifle Ammo", {"Homing Rifle Ammo": 25, "Rifle Ammo": -50}),
-    (1, "100", "Nobelisk", {"Nobelisk": 10, "Black Powder": -20}),
+    (1, "100", "Nobelisk", {"Nobelisk": 10, "Black Powder": -20, "Steel Pipe": -20}),
+    # the compacted coal Turbofuel leaves (11.375/min, Ionized Fuel's 1.375 included) becomes the
+    # steel pipe that Nobelisk and Explosive Rebar take
+    (5, "91", "Compacted Steel Ingot", {"Steel Ingot": 10, "Compacted Coal": F(-5, 2), "Iron Ore": -5}),
+    (2, "75", "Steel Pipe", {"Steel Pipe": 20, "Steel Ingot": -30}),
     (1, "50", "Cluster Nobelisk", {"Cluster Nobelisk": F(5, 2), "Nobelisk": F(-15, 2), "Smokeless Powder": -10}),
     (1, "50", "Nuke Nobelisk", {"Nuke Nobelisk": F(1, 2), "Nobelisk": F(-5, 2), "Smokeless Powder": -5}),
-    (1, "100", "Explosive Rebar", {"Explosive Rebar": 5, "Smokeless Powder": -10}),
+    (1, "100", "Explosive Rebar", {"Explosive Rebar": 5, "Smokeless Powder": -10, "Steel Pipe": -10}),
     (2, "100", "Gas Filter", {"Gas Filter": F(15, 2), "Fabric": -15, "Coal": -30}),
     (1, "100", "Polyester Fabric", {"Fabric": 30, "Polymer Resin": -30, "Water": -30}),
 ]
 FLUIDS = ("Heavy Oil Residue", "Fuel", "Turbofuel", "Rocket Fuel", "Ionized Fuel")
-RAW = ("Crude Oil", "Water", "Nitrogen Gas", "Sulfur", "Coal")
+RAW = ("Crude Oil", "Water", "Nitrogen Gas", "Sulfur", "Coal", "Iron Ore")
 
 
 def plan(base):
@@ -114,10 +118,10 @@ def plan(base):
         print("  %3d x %6s %%  %s" % (n, c, name))
         for k, q in flow.items():
             net[k] = net.get(k, 0) + q * lvl
-    for k in FLUIDS:
+    for k in FLUIDS + ("Compacted Coal", "Steel Pipe"):
         assert net[k] == 0, (k, net[k])
     assert all(v >= 0 for k, v in net.items() if k not in RAW and k != "Power Shard"), net
-    print("  fluids (%s): net exactly 0" % ", ".join(FLUIDS))
+    print("  fluids (%s), compacted coal and steel pipe: net exactly 0" % ", ".join(FLUIDS))
     print("  raw per minute: " + ", ".join("%s %g" % (k, float(-net[k])) for k in RAW) + "; power shards %g" % float(-net["Power Shard"]))
     print("  power: %g MW generated; with %g MW elsewhere and the augmentor, %g MW" % (float(net["MW"]), base, 1.3 * (base + float(net["MW"])) + 500))
     print("  left per minute: " + ", ".join("%s %g" % (k, float(v)) for k, v in sorted(net.items())
