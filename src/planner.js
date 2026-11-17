@@ -8,8 +8,9 @@
  *   set      you typed machines and clock; nothing changes them
  *   auto     whole machines at 100 %: the fewest that cover the demand for the
  *            items the row is the MAKER of (one maker per item, from the data)
- *   trim     an auto row that currently balances a fluid: its level is solved,
- *            not rounded, and shown as ceil(level) machines at an equal clock
+ *   trim     an auto row that currently balances a fluid: its level is solved, not
+ *            rounded, and shown on the fewest machines at an equal clock, or a few more
+ *            machines if that makes the clock one the game can set exactly (niceSplit)
  *   source   draws exactly what is used (miners at up to 250 %).  A tenth of the world's
  *            nodes is the yardstick, not a limit: drawing more is reported, not refused
  *
@@ -30,6 +31,9 @@
 (function (root) {
   "use strict";
   const EPS = 1e-7;
+  const DENS = [];   // 2^a 5^b dividing 10^6, ascending
+  for (let a = 0; a <= 6; a++) for (let b = 0; b <= 6; b++) DENS.push(2 ** a * 5 ** b);
+  DENS.sort((x, y) => x - y);
   const BELTS = [1, 2, 3, 4, 5, 6].map((k) => "ConveyorBeltMk" + k);
 
   function create(G, SET) {
@@ -162,6 +166,26 @@
       for (const [b, t] of Object.entries(total)) for (const [k, q] of B[b].cost) bom[itemIdx[k]] += t * q;
       for (const [k, q] of Object.entries(SET.equipment)) bom[itemIdx[k]] += q;
       return { total, bom, basis };
+    }
+
+    /* Machines for a trimmed level L.  The game sets clocks in steps of 0.0001 %, so a clock
+     * can only be exact when it is a fraction whose denominator divides 10^6 (2s and 5s only).
+     * Keep the fewest machines when that clock is already clean (denominator up to 40, as
+     * 96 % = 24/25); otherwise, of the counts up to 25 % more, take the one whose clock has
+     * the smallest such denominator (6.4 -> 8 at 80 %, not 7 at 91.43 %); the fewest if none
+     * is exact. */
+    function niceSplit(L) {
+      if (!(L > 1e-9)) return [0, 1];
+      const n0 = Math.ceil(L - 1e-7);
+      let best = null;
+      for (let n = n0; n <= Math.max(n0 + 1, Math.ceil(L * 1.25 - 1e-7)); n++) {
+        const c = L / n;
+        for (const q of DENS) {
+          if (Math.abs(c * q - Math.round(c * q)) < 1e-6) { if (!best || q < best[2]) best = [n, c, q]; break; }
+        }
+        if (n === n0 && best && best[2] <= 40) break;
+      }
+      return best ? [best[0], best[1]] : [n0, L / n0];
     }
 
     /* Dense Gaussian elimination with partial pivoting; null if singular. */
@@ -304,7 +328,7 @@
         pickCombo();
         for (let i = 0; i < R; i++) if (auto[i]) {
           if (free[i] < 0) L[i] = n[i];
-          N[i] = L[i] > 1e-9 ? Math.ceil(L[i] - 1e-7) : 0; C[i] = N[i] ? L[i] / N[i] : 1;
+          [N[i], C[i]] = niceSplit(L[i]);
         }
         // sources draw what is used
         for (const i of Object.values(rawSources).flat()) { L[i] = 0; N[i] = 0; C[i] = 1; }
@@ -441,7 +465,7 @@
 
     function fmt(x) { return Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(2); }
 
-    return { rows, rowIdx, keys, itemIdx, maker: SET.maker, sink: SET.sink, defaultState, solve, itemName: (k) => (IT[k] ? IT[k].n : k) };
+    return { niceSplit, rows, rowIdx, keys, itemIdx, maker: SET.maker, sink: SET.sink, defaultState, solve, itemName: (k) => (IT[k] ? IT[k].n : k) };
   }
 
   const api = { create };

@@ -19,8 +19,18 @@ ok("start: the given rows keep their machines and clocks",
   SET.start.every((s) => row(r0, s.id).role === "set" && row(r0, s.id).n === s.n && Math.abs(row(r0, s.id).clock - s.clock) < 1e-9), null);
 ok("start: auto rows are whole machines at 100 %",
   r0.rows.every((r) => r.role !== "auto" || (Number.isInteger(r.n) && Math.abs(r.clock - 100) < 1e-9)), null);
-ok("start: trims run at or below 100 % on the fewest machines",
-  r0.rows.every((r) => r.role !== "trim" || (r.clock <= 100 + 1e-9 && r.n === Math.ceil(r.level - 1e-7))), r0.rows.filter((r) => r.role === "trim"));
+const raw = (res, k) => item(res, k).made;
+const exactClock = (c) => Math.abs(c * 1e4 - Math.round(c * 1e4)) < 1e-6;   // the game's 0.0001 % step
+ok("start: every trim runs at or below 100 % on a clock the game can set exactly",
+  r0.rows.every((r) => r.role !== "trim" || (r.clock <= 100 + 1e-9 && exactClock(r.clock))), r0.rows.filter((r) => r.role === "trim"));
+ok("start: Nitric Acid trims to 8 at 80 % (not 7 at 91.43 %), Petroleum Coke to 22 at 100 %",
+  row(r0, "NitricAcid").n === 8 && Math.abs(row(r0, "NitricAcid").clock - 80) < 1e-9 && row(r0, "PetroleumCoke").n === 22 && Math.abs(row(r0, "PetroleumCoke").clock - 100) < 1e-9,
+  [row(r0, "NitricAcid"), row(r0, "PetroleumCoke")]);
+ok("start: petroleum coke nets exactly 0 (24 generators burn what Electrode Scrap and Petroleum Diamonds leave)", Math.abs(item(r0, "PetroleumCoke").net) < 1e-9, item(r0, "PetroleumCoke").net);
+ok("start: crude oil drawn is exactly 2000 /min", Math.abs(raw(r0, "LiquidOil") - 2000) < 1e-9, raw(r0, "LiquidOil"));
+const sp = P.niceSplit;
+ok("niceSplit: fewest machines when that clock is clean, more when it makes the clock exact",
+  JSON.stringify([sp(4.8), sp(6.4), sp(19.75)].map(([n, c]) => [n, Math.round(c * 1e6) / 1e4])) === JSON.stringify([[5, 96], [8, 80], [20, 98.75]]), [sp(4.8), sp(6.4), sp(19.75)]);
 ok("start: no auto row is short", shortAuto(r0).length === 0, shortAuto(r0));
 ok("start: power covers the draw", r0.power.supply >= r0.power.draw - 1e-6, r0.power);
 ok("start: Phase 5 takes 400 min", Math.abs(r0.T5 - 400) < 1e-6, r0.T5);
@@ -28,7 +38,6 @@ const p5 = Object.entries(SET.phase5).map(([k, q]) => item(r0, k).net / q);
 ok("start: Phase 5 parts in exact proportion", p5.every((v) => Math.abs(v - p5[0]) < 1e-12), p5);
 ok("start: Singularity Cell and Alien Power Matrix made exactly as used", ["SingularityCell", "AlienPowerFuel"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
 ok("start: 1.3125 power shards a minute spare (17 made, 15 to Alien Power Matrix, 0.6875 to Ionized Fuel)", Math.abs(item(r0, "CrystalShard").net - 1.3125) < 1e-9, item(r0, "CrystalShard").net);
-const raw = (res, k) => item(res, k).made;
 ok("start: the fuel cluster's fluids balance by its own numbers", ["LiquidFuel", "LiquidTurboFuel", "RocketFuel", "IonizedFuel", "HeavyOilResidue"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);
 ok("start: sulfur drawn is exactly 650 /min, Sulfuric Acid trims to 5 at 88 %", Math.abs(raw(r0, "Sulfur") - 650) < 1e-9 && row(r0, "SulfuricAcid").n === 5 && Math.abs(row(r0, "SulfuricAcid").clock - 88) < 1e-9, [raw(r0, "Sulfur"), row(r0, "SulfuricAcid")]);
 ok("start: alumina solution, aluminum scrap and aluminum ingots net exactly 0", ["AluminaSolution", "AluminumScrap", "AluminumIngot"].every((k) => Math.abs(item(r0, k).net) < 1e-9), null);

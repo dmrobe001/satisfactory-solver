@@ -55,8 +55,8 @@
           <th>Recipe</th>
           <th class="n" title="Whole machines. Typing here sets the row; Auto hands it back.">Machines</th>
           <th class="n" title="Clock of each machine, percent">Clock %</th>
-          <th class="n" title="Machines at 100 % it takes to cover what is asked of this row">Needed</th>
-          <th class="n" title="Net production of the first product, per minute: made minus used by everything">Net /min</th>
+          <th class="n" title="Per minute: the first product's share of the bill of materials, the equipment list and Phase 5 over the build time, plus any minimum net. Blank for parts nothing builds with.">Need /min</th>
+          <th class="n" title="Net production of the first product, per minute: made minus everything the factory uses of it. Net at or above Need means the stock is building fast enough.">Net /min</th>
           <th class="n" title="Minimum net production of the first product you ask for, per minute, on top of the build need">Min net</th>
           <th class="n">MW</th>
           <th></th>
@@ -111,7 +111,8 @@
         <li><b>Set</b>: you typed machines and clock. Nothing changes them. The page starts with the top of the chain set as given.</li>
         <li><b>Auto</b>: whole machines at 100 %, the fewest that cover the demand for what the row makes. Each item has one recipe that follows its demand; the Items tab names it.</li>
         <li><b>Trim</b>: an auto row that is balancing a fluid. Its level is solved exactly and shown as the fewest machines at an equal clock.</li>
-        <li><b>Needed</b> is the level (machines at 100 %) the row must reach. A set row below it is marked. <b>Fit</b> sets the row to exactly that; <b>Auto</b> hands it back.</li>
+        <li><b>Need /min</b> is what has to accumulate of the row's first product: its share of the bill of materials, the equipment list and Phase 5 over the build time, plus any minimum net. Parts nothing builds with have none. <b>Net /min</b> is what is left after every consumer in the factory, so Net at or above Need means the stock is on pace; both turn red when it is not.</li>
+        <li>A set row that cannot cover its consumers plus that need is marked red and named in the issues. <b>Fit</b> sets it to the fewest machines that do, at an equal clock; <b>Auto</b> hands it back. The side panel shows the level it takes.</li>
       </ul>
       <h3>Rules</h3>
       <ul>

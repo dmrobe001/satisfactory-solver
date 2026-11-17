@@ -570,9 +570,30 @@ by 90 while keeping the acid total at 220. Fused Modular Frame is set to 5 at
 Alclad Casing assemblers make. The parts downstream of ingots (sheets, casing,
 steel beams, iron rods, tanks, ficsite) run a little ahead of their use.
 
-Heavy oil residue from the Rubber and Plastic refineries is trimmed away by
-Petroleum Coke; that plastics chain, not the fuel cluster, is what takes crude
-oil to about 1.7 times a tenth of the world (1.2 at exact demand).
+Nitric acid and petroleum coke are set up so their trims land on clean clocks:
+
+* Nitric acid goes to Non-Fissile Uranium (12) and Quartz Purification (10 per
+  machine), and Quartz Purification runs at twice Distilled Silica (dissolved
+  silica 60 against 120). So Nitric Acid runs at 0.4 + 2/3 x (Distilled Silica
+  machines), which is clean only for a multiple of 3. Distilled Silica is set
+  to 9: Quartz Purification trims to 18 and Nitric Acid to 6.4 = 8 at 80 %.
+* With the cluster's heavy oil residue balanced, Petroleum Coke trims to
+  Rubber/2 + Plastic/4 machines. Rubber (36) and Plastic (16) are set so that
+  is 22 at 100 %: 2,640 coke, of which Electrode Aluminum Scrap takes 600,
+  Petroleum Diamonds (2) 1,440, and 24 coal generators at 100 % burn the 600
+  left. Crude oil comes to exactly 2,000 a minute.
+
+Trim rows choose their machine count so the clock can be set exactly: the
+fewest machines when that clock's denominator is 40 or less (96 % = 24/25),
+otherwise the count, up to 25 % more machines, with the smallest denominator
+made of 2s and 5s (6.4 becomes 8 at 80 %, not 7 at 91.43 %).
+
+**Need /min** (the recipe table) is the first product's share of the bill of
+materials, the equipment list and Phase 5 over the build time, plus any
+minimum net, per minute. Parts nothing builds with have none. Net /min is what
+is left after every consumer, so the pair shows whether each stock is filling
+on pace. The machine level a row must reach to cover its consumers as well is
+in the side panel and drives Fit.
 
 Data fix made along the way: the source data marks Singularity Cell, Ballistic
 Warp Drive and Biochemical Sculptor (Manufacturer and Blender recipes) as

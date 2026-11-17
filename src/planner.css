@@ -32,3 +32,4 @@
 .meter.over i { background: var(--red-edge); }
 tr.bad > td { background: var(--red-bg); }
 .stat .seg button { padding: 1px 8px; font-size: 0.85rem; }
+#rtab td.behind { color: var(--red-edge); font-weight: 600; }

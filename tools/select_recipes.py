@@ -126,7 +126,23 @@ START = [
     (2, 100, "Alternate_AluminumRod"),         # Aluminum Rod (iron rods)
     (1, 75, "GasTank"),                        # Empty Fluid Tank
     (2, 100, "FicsiteIngot_AL"),
-    (5, 90, "FusedModularFrame"),   # Fused Modular Frame: at 100 % the five would take more Aluminum Casing than 8 Alclad Casing make
+    (5, 90, "FusedModularFrame"),
+    # nitric acid: Non-Fissile Uranium takes 12 and Quartz Purification 10 per machine, and
+    # Quartz Purification runs at twice Distilled Silica (dissolved silica 60 vs 120), so nitric
+    # acid is 0.4 + 2/3 x Distilled Silica machines: clean only for a multiple of 3.  At 9,
+    # Quartz Purification trims to 18 and Nitric Acid to 6.4 = 8 at 80 %.
+    (9, 100, "Alternate_Silica_Distilled"),
+    # petroleum coke: with the cluster's own heavy oil residue balanced, Petroleum Coke trims to
+    # Rubber/2 + Plastic/4 machines and makes 60 x Rubber + 30 x Plastic coke.  Electrode
+    # Aluminum Scrap takes 600 and Petroleum Diamonds 1,440; the rest burns in coal generators at
+    # 25 each, so 2 x Rubber + Plastic = 3 (mod 5).  Rubber must cover at least 33 machines' worth
+    # and Plastic 15, and the only clean coke clocks in reach are whole machines: 36 Rubber and
+    # 16 Plastic give 22 Petroleum Coke at 100 %, 2,640 coke, 600 to burn in 24 generators.
+    # (Sinking it in more Petroleum Diamonds takes extra Particle Accelerators, whose bill of
+    # materials costs more than it saves.)
+    (36, 100, "Rubber"), (16, 100, "Plastic"),
+    (2, 100, "Alternate_Diamond_Petroleum"), (1, 100, "Alternate_Diamond_OilBased"),
+    (24, 100, "Burn_PetroleumCoke_GeneratorCoal"),   # Fused Modular Frame: at 100 % the five would take more Aluminum Casing than 8 Alclad Casing make
 ]
 PINNED = {"Burn_FicsoniumFuelRod_GeneratorNuclear": 1.0}   # requirement 4
 
@@ -145,7 +161,7 @@ CLUSTER = [
     (1, 75, "CartridgeChaos"),         # Turbo Rifle Ammo
     (1, 100, "CartridgeSmart"),        # Homing Rifle Ammo
     (1, 100, "Nobelisk"), (1, 50, "NobeliskCluster"), (1, 50, "NobeliskNuke"), (1, 100, "Rebar_Explosive"),
-    (2, 100, "FilterGasMask"), (1, 100, "Alternate_PolyesterFabric"),
+    (1, 100, "FilterGasMask"), (1, 100, "Alternate_PolyesterFabric"),
     (5, 91, "Alternate_IngotSteel_2"),  # Compacted Steel Ingot: takes the compacted coal that is left
 ]
 CLUSTER_FLUIDS = {"LiquidFuel", "LiquidTurboFuel", "RocketFuel", "IonizedFuel"}

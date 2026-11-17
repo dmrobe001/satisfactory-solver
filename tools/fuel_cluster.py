@@ -102,7 +102,7 @@ PLAN = [
     (1, "50", "Cluster Nobelisk", {"Cluster Nobelisk": F(5, 2), "Nobelisk": F(-15, 2), "Smokeless Powder": -10}),
     (1, "50", "Nuke Nobelisk", {"Nuke Nobelisk": F(1, 2), "Nobelisk": F(-5, 2), "Smokeless Powder": -5}),
     (1, "100", "Explosive Rebar", {"Explosive Rebar": 5, "Smokeless Powder": -10, "Steel Pipe": -10}),
-    (2, "100", "Gas Filter", {"Gas Filter": F(15, 2), "Fabric": -15, "Coal": -30}),
+    (1, "100", "Gas Filter", {"Gas Filter": F(15, 2), "Fabric": -15, "Coal": -30}),
     (1, "100", "Polyester Fabric", {"Fabric": 30, "Polymer Resin": -30, "Water": -30}),
 ]
 FLUIDS = ("Heavy Oil Residue", "Fuel", "Turbofuel", "Rocket Fuel", "Ionized Fuel")

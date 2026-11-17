@@ -93,8 +93,14 @@
         (fixed ? '<td class="n">1</td><td class="n">100</td>'
           : '<td class="n"><input class="num-in' + (isSet ? " is-set" : "") + '" id="n-' + row.id + '" data-f="n" type="number" min="0" step="1" value="' + r.n + '" aria-label="Machines, ' + esc(row.name) + '"></td>' +
             '<td class="n"><input class="num-in' + (isSet ? " is-set" : "") + '" id="c-' + row.id + '" data-f="clock" type="number" min="0" max="250" step="any" value="' + clockText(r.clock) + '" aria-label="Clock, ' + esc(row.name) + '"></td>') +
-        '<td class="n need">' + (r.req > 1e-9 || r.short ? num(r.req, 3) : "") + "</td>" +
-        '<td class="n">' + (it ? num(it.net) : "") + "</td>" +
+        // need: what the build gun, the equipment list, Phase 5 and any minimum net ask for, per
+        // minute; downstream consumption is already taken out of net, so the pair shows what piles up
+        (() => {
+          const want = it ? it.need + it.min : 0;
+          const behind = it && want > 1e-9 && it.net < want - 1e-6 * Math.max(1, want);
+          return '<td class="n need' + (behind ? " behind" : "") + '">' + (want > 1e-9 ? num(want) : "") + "</td>" +
+            '<td class="n' + (behind ? " behind" : "") + '">' + (it ? num(it.net) : "") + "</td>";
+        })() +
         '<td class="n">' + (fixed || !r.main ? "" : '<input class="num-in" id="m-' + row.id + '" data-f="min" type="number" min="0" step="any" value="' + (st.min[row.id] || "") + '" aria-label="Minimum net, ' + esc(row.name) + '">') + "</td>" +
         '<td class="n">' + (r.gen ? '<span class="gen">+' + num(r.gen, 0) + "</span>" : r.mw ? num(r.mw, 0) : "") + "</td>" +
         "<td>" + (fixed ? "" : (isSet ? '<button class="btn sm" type="button" data-act="auto" title="Let the page size this row">Auto</button> ' : "") +
@@ -121,7 +127,7 @@
     }).join("");
     const head = '<thead><tr><th>Item</th><th class="n">This row /min</th><th class="n">Factory net</th></tr></thead>';
     el.innerHTML = '<div class="side-head"><h2>' + esc(row.name) + '</h2><div class="meta">' + esc(row.machineName) + " · " + num(r.n, 0) + " at " + clockText(r.clock) + " % = " + num(r.level, 3) +
-      " machines at 100 %" + (r.req > 1e-9 ? " · needs " + num(r.req, 3) : "") + (r.mw ? " · " + num(r.mw, 0) + " MW" : "") + (r.gen ? " · makes " + num(r.gen, 0) + " MW" : "") + "</div></div>" +
+      " machines at 100 %" + (r.req > 1e-9 ? " · consumers and the build need take " + num(r.req, 3) + " at 100 %" : "") + (r.mw ? " · " + num(r.mw, 0) + " MW" : "") + (r.gen ? " · makes " + num(r.gen, 0) + " MW" : "") + "</div></div>" +
       (r.short ? '<div class="issues"><div class="iss">Below what is asked of it. Fit sets it to ' + Math.ceil(r.req - 1e-7) + " at " + clockText(100 * r.req / Math.ceil(r.req - 1e-7)) + " %.</div></div>" : "") +
       (row.ins.length ? '<h3>Takes</h3><table class="flowtab">' + head + "<tbody>" + flow(row.ins, -1) + "</tbody></table>" : "") +
       (row.outs.length ? '<h3>Makes</h3><table class="flowtab">' + head + "<tbody>" + flow(row.outs, 1) + "</tbody></table>" : "") +
